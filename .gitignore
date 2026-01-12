@@ -1,14 +1,14 @@
-# Virtual environments
-.venv/
-venv/
-
-# Django
+# Python
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.env
+.env
+.venv/
 db.sqlite3
 
-# Environment variables
-.env
+# Django
+/staticfiles/
+media/
 
-# VS Code
-.vscode/
