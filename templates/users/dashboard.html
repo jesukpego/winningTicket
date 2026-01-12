@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - WINNING TICKET{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Welcome Banner -->
+    <div class="card bg-primary text-white mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-3">Welcome back, {{ user.username }}! <i class="fas fa-hand-wave"></i></h2>
+                    <p class="mb-0">You have <strong>3 active tickets</strong> in upcoming draws. Good luck!</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="display-4 text-warning">$50.00</div>
+                    <p class="mb-0">Available Balance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 text-primary mb-2">15</div>
+                    <p class="text-muted mb-0">Total Tickets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 text-success mb-2">$250</div>
+                    <p class="text-muted mb-0">Total Winnings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 text-warning mb-2">3</div>
+                    <p class="text-muted mb-0">Active Tickets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center h-100">
+                <div class="card-body">
+                    <div class="display-6 text-info mb-2">2</div>
+                    <p class="text-muted mb-0">Unclaimed Prizes</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8">
+            <!-- Active Tickets -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-ticket-alt me-2"></i> Your Active Tickets</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Game</th>
+                                    <th>Numbers</th>
+                                    <th>Draw Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#123456</td>
+                                    <td>Mega Jackpot</td>
+                                    <td>
+                                        <span class="badge bg-primary">3</span>
+                                        <span class="badge bg-primary">7</span>
+                                        <span class="badge bg-primary">15</span>
+                                        <span class="badge bg-primary">22</span>
+                                        <span class="badge bg-primary">29</span>
+                                        <span class="badge bg-primary">35</span>
+                                        <span class="badge bg-danger">7</span>
+                                    </td>
+                                    <td>Today 8:00 PM</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#789012</td>
+                                    <td>Daily Lotto</td>
+                                    <td>
+                                        <span class="badge bg-primary">8</span>
+                                        <span class="badge bg-primary">15</span>
+                                        <span class="badge bg-primary">23</span>
+                                        <span class="badge bg-primary">34</span>
+                                        <span class="badge bg-primary">41</span>
+                                    </td>
+                                    <td>Today 9:00 PM</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>#345678</td>
+                                    <td>Mega Jackpot</td>
+                                    <td>
+                                        <span class="badge bg-primary">5</span>
+                                        <span class="badge bg-primary">12</span>
+                                        <span class="badge bg-primary">23</span>
+                                        <span class="badge bg-primary">34</span>
+                                        <span class="badge bg-primary">45</span>
+                                        <span class="badge bg-primary">12</span>
+                                        <span class="badge bg-danger">12</span>
+                                    </td>
+                                    <td>Jan 13, 2024</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <a href="{% url 'my_tickets' %}" class="btn btn-outline-primary">
+                            View All Tickets <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="{% url 'buy_ticket' %}" class="card text-center text-decoration-none h-100">
+                                <div class="card-body">
+                                    <i class="fas fa-plus-circle fa-2x text-primary mb-3"></i>
+                                    <h6>Buy Ticket</h6>
+                                    <p class="text-muted small">Purchase new lottery tickets</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{% url 'results' %}" class="card text-center text-decoration-none h-100">
+                                <div class="card-body">
+                                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
+                                    <h6>Check Results</h6>
+                                    <p class="text-muted small">Check if you've won</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="card text-center text-decoration-none h-100">
+                                <div class="card-body">
+                                    <i class="fas fa-money-bill-wave fa-2x text-warning mb-3"></i>
+                                    <h6>Withdraw</h6>
+                                    <p class="text-muted small">Withdraw your winnings</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <!-- Account Summary -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i> Account Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <small class="text-muted">Username</small>
+                        <p class="mb-0">{{ user.username }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Member Since</small>
+                        <p class="mb-0">January 1, 2024</p>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Account Status</small>
+                        <p class="mb-0"><span class="badge bg-success">Verified</span></p>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Last Login</small>
+                        <p class="mb-0">Today, 10:30 AM</p>
+                    </div>
+                    <hr>
+                    <a href="#" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-cog me-1"></i> Account Settings
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-history me-2"></i> Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="activity-timeline">
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-ticket-alt text-primary"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="mb-0">Purchased Mega Jackpot ticket</p>
+                                    <small class="text-muted">Today, 10:00 AM</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="mb-0">Checked lottery results</p>
+                                    <small class="text-muted">Yesterday, 8:30 PM</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item mb-3">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-dollar-sign text-warning"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="mb-0">Deposited $50.00</p>
+                                    <small class="text-muted">Jan 9, 2024</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-trophy text-info"></i>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="mb-0">Won $100.00 prize</p>
+                                    <small class="text-muted">Jan 5, 2024</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Draw -->
+            <div class="card bg-dark text-white">
+                <div class="card-body text-center">
+                    <h5><i class="fas fa-clock me-2"></i> Next Draw</h5>
+                    <div class="display-4 mb-3" id="dashboardCountdown">23:45:12</div>
+                    <p class="mb-0">Mega Jackpot - Tonight 8:00 PM</p>
+                    <a href="{% url 'buy_ticket' %}" class="btn btn-gold mt-3">
+                        <i class="fas fa-plus-circle me-1"></i> Get Your Ticket
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .activity-item {
+        border-left: 3px solid #0A2463;
+        padding-left: 15px;
+    }
+    
+    .activity-item:last-child {
+        margin-bottom: 0 !important;
+    }
+</style>
+
+<script>
+    // Countdown for dashboard
+    function updateDashboardCountdown() {
+        const now = new Date();
+        const tonight = new Date(now);
+        tonight.setHours(20, 0, 0, 0); // 8 PM today
+        
+        // If it's past 8 PM, set for tomorrow
+        if (now > tonight) {
+            tonight.setDate(tonight.getDate() + 1);
+        }
+        
+        const diff = tonight - now;
+        
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('dashboardCountdown').textContent = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    setInterval(updateDashboardCountdown, 1000);
+    updateDashboardCountdown();
+</script>
+{% endblock %}

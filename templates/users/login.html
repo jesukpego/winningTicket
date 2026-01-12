@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - WINNING TICKET{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3><i class="fas fa-sign-in-alt me-2"></i> Welcome Back!</h3>
+                    <p class="mb-0">Login to access your tickets and winnings</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                <i class="fas fa-user me-1"></i> Username or Email
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Enter your username or email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-1"></i> Password
+                            </label>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   placeholder="Enter your password" required>
+                            <div class="text-end mt-1">
+                                <a href="#" class="small text-decoration-none">Forgot password?</a>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-gold btn-lg">
+                                <i class="fas fa-sign-in-alt me-1"></i> Login
+                            </button>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <p class="mb-0">Don't have an account? 
+                                <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
+                                    Register here
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-center">
+                        <p class="text-muted mb-3">Or login with</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <button class="btn btn-outline-primary">
+                                <i class="fab fa-google"></i> Google
+                            </button>
+                            <button class="btn btn-outline-dark">
+                                <i class="fab fa-apple"></i> Apple
+                            </button>
+                            <button class="btn btn-outline-info">
+                                <i class="fab fa-facebook"></i> Facebook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Notice -->
+            <div class="alert alert-info mt-4">
+                <div class="d-flex">
+                    <i class="fas fa-shield-alt fa-2x me-3"></i>
+                    <div>
+                        <h6 class="alert-heading mb-1">Secure Login</h6>
+                        <p class="mb-0 small">Your account is protected with bank-level security and encryption.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

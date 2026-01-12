@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - WINNING TICKET{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-3 mb-4 fw-bold">YOUR WINNING TICKET AWAITS!</h1>
+        <p class="lead mb-4">Join thousands of winners who found their lucky numbers with us</p>
+        
+        <!-- Jackpot Counter -->
+        <div class="jackpot-counter mb-4">
+            <i class="fas fa-trophy"></i> $12,450,000
+        </div>
+        
+        <a href="{% url 'buy_ticket' %}" class="btn btn-gold btn-lg">
+            <i class="fas fa-ticket-alt"></i> BUY YOUR TICKET NOW
+        </a>
+        
+        <div class="mt-4">
+            <small class="text-light">Next draw in: 
+                <span id="countdown" class="fw-bold">23:45:12</span>
+            </small>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Games -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">FIND YOUR WINNING TICKET</h2>
+        
+        <div class="row g-4">
+            <!-- Game 1 -->
+            <div class="col-md-4">
+                <div class="ticket-card p-4 text-center h-100">
+                    <div class="game-icon mb-3">
+                        <i class="fas fa-crown fa-3x text-warning"></i>
+                    </div>
+                    <h3>Mega Jackpot</h3>
+                    <p class="text-muted">Jackpot starts at $10M</p>
+                    <div class="jackpot-amount mb-3">
+                        <h4 class="text-warning">$12.45M</h4>
+                    </div>
+                    <p><i class="fas fa-clock"></i> Draws: Wed & Sat</p>
+                    <a href="{% url 'game_detail' 1 %}" class="btn btn-outline-primary">Play Now</a>
+                </div>
+            </div>
+            
+            <!-- Game 2 -->
+            <div class="col-md-4">
+                <div class="ticket-card p-4 text-center h-100">
+                    <div class="game-icon mb-3">
+                        <i class="fas fa-bolt fa-3x text-danger"></i>
+                    </div>
+                    <h3>Daily Lotto</h3>
+                    <p class="text-muted">Draws every day</p>
+                    <div class="jackpot-amount mb-3">
+                        <h4 class="text-warning">$500,000</h4>
+                    </div>
+                    <p><i class="fas fa-clock"></i> Draws: Daily</p>
+                    <a href="{% url 'game_detail' 2 %}" class="btn btn-outline-primary">Play Now</a>
+                </div>
+            </div>
+            
+            <!-- Game 3 -->
+            <div class="col-md-4">
+                <div class="ticket-card p-4 text-center h-100">
+                    <div class="game-icon mb-3">
+                        <i class="fas fa-gem fa-3x text-info"></i>
+                    </div>
+                    <h3>Quick Win</h3>
+                    <p class="text-muted">Scratch & Win instantly</p>
+                    <div class="jackpot-amount mb-3">
+                        <h4 class="text-warning">$100,000</h4>
+                    </div>
+                    <p><i class="fas fa-clock"></i> Instant Results</p>
+                    <a href="{% url 'game_detail' 3 %}" class="btn btn-outline-primary">Play Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Winners -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">RECENT WINNERS</h2>
+        
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="winner-avatar mb-3">
+                            <i class="fas fa-user-circle fa-4x text-warning"></i>
+                        </div>
+                        <h5>Anonymous Winner</h5>
+                        <p class="text-muted">Won</p>
+                        <h4 class="text-success">$1,250,000</h4>
+                        <small class="text-muted">Mega Jackpot • Jan 10, 2024</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="winner-avatar mb-3">
+                            <i class="fas fa-user-circle fa-4x text-warning"></i>
+                        </div>
+                        <h5>Lucky Player</h5>
+                        <p class="text-muted">Won</p>
+                        <h4 class="text-success">$500,000</h4>
+                        <small class="text-muted">Daily Lotto • Jan 9, 2024</small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="winner-avatar mb-3">
+                            <i class="fas fa-user-circle fa-4x text-warning"></i>
+                        </div>
+                        <h5>Winner 88</h5>
+                        <p class="text-muted">Won</p>
+                        <h4 class="text-success">$250,000</h4>
+                        <small class="text-muted">Quick Win • Jan 8, 2024</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How to Play -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">FROM TICKET TO WINNING TICKET</h2>
+        
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="step-number">1</div>
+                <h4>Choose Game</h4>
+                <p class="text-muted">Select your preferred lottery game</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="step-number">2</div>
+                <h4>Pick Numbers</h4>
+                <p class="text-muted">Select lucky numbers or Quick Pick</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="step-number">3</div>
+                <h4>Buy Ticket</h4>
+                <p class="text-muted">Complete secure payment</p>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="step-number">4</div>
+                <h4>Wait & Win!</h4>
+                <p class="text-muted">Check results and claim prizes</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Results -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">LATEST RESULTS</h2>
+        
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Mega Jackpot - Jan 10, 2024</h5>
+                        <div class="d-flex justify-content-center my-4">
+                            <span class="number-ball">5</span>
+                            <span class="number-ball">12</span>
+                            <span class="number-ball">23</span>
+                            <span class="number-ball">34</span>
+                            <span class="number-ball">45</span>
+                            <span class="number-ball">12</span>
+                            <span class="number-ball powerball">12</span>
+                        </div>
+                        <p class="text-center">Jackpot: <strong>$12,000,000</strong> • Winners: <strong>0</strong></p>
+                        <div class="text-center">
+                            <a href="{% url 'results' %}" class="btn btn-outline-primary">
+                                View All Results <i class="fas fa-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Age Verification Modal -->
+<div class="modal fade" id="ageModal" data-bs-backdrop="static" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Age Verification</h5>
+            </div>
+            <div class="modal-body text-center">
+                <i class="fas fa-ban fa-4x text-danger mb-3"></i>
+                <h4>You must be 18+ to play</h4>
+                <p>WINNING TICKET is only for players 18 years and older.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">I'm under 18</button>
+                <button type="button" class="btn btn-primary" id="confirmAge">I'm 18 or older</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Countdown Timer
+    function updateCountdown() {
+        const now = new Date();
+        const tomorrow = new Date(now);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(20, 0, 0, 0); // 8 PM next day
+        
+        const diff = tomorrow - now;
+        
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('countdown').textContent = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+    
+    // Age verification
+    $(document).ready(function() {
+        if(!localStorage.getItem('ageVerified')) {
+            setTimeout(function() {
+                $('#ageModal').modal('show');
+            }, 2000);
+        }
+        
+        $('#confirmAge').click(function() {
+            localStorage.setItem('ageVerified', 'true');
+            $('#ageModal').modal('hide');
+        });
+    });
+</script>
+{% endblock %}

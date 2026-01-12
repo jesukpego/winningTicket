@@ -1,0 +1,435 @@
+{% extends 'base.html' %}
+
+{% block title %}Buy Ticket - WINNING TICKET{% endblock %}
+
+{% block extra_css %}
+<style>
+    .number-selector {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        margin: 5px;
+        border-radius: 50%;
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s;
+    }
+    
+    .number-selector:hover {
+        background: #e9ecef;
+        transform: scale(1.1);
+    }
+    
+    .number-selector.selected {
+        background: linear-gradient(135deg, #0A2463, #1E40AF);
+        color: white;
+        border-color: #0A2463;
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(10, 36, 99, 0.3);
+    }
+    
+    .powerball-selector {
+        background: #f8d7da;
+        border-color: #dc3545;
+    }
+    
+    .powerball-selector.selected {
+        background: linear-gradient(135deg, #dc3545, #c82333);
+        color: white;
+    }
+    
+    .ticket-preview {
+        border: 3px dashed #0A2463;
+        border-radius: 15px;
+        background: #f8f9fa;
+        padding: 20px;
+        min-height: 200px;
+    }
+    
+    .selected-numbers-display {
+        min-height: 80px;
+    }
+    
+    .quick-pick-btn {
+        background: #20c997;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: all 0.3s;
+    }
+    
+    .quick-pick-btn:hover {
+        background: #1ba87e;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Game Selection -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-gamepad me-2"></i> Select Game</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="game" id="megaJackpot" checked>
+                                <label class="form-check-label" for="megaJackpot">
+                                    <h5>Mega Jackpot</h5>
+                                    <p class="text-muted mb-0">$2.00 per ticket • Jackpot: $12.45M</p>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="game" id="dailyLotto">
+                                <label class="form-check-label" for="dailyLotto">
+                                    <h5>Daily Lotto</h5>
+                                    <p class="text-muted mb-0">$1.00 per ticket • Jackpot: $500K</p>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Number Selection -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-dice me-2"></i> Select Your Numbers</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Main Numbers -->
+                    <h5>Main Numbers (Select 6)</h5>
+                    <div class="mb-4" id="mainNumbers">
+                        {% for i in "123456789"|make_list %}
+                        <div class="d-flex justify-content-center mb-2">
+                            {% for j in "123456"|make_list %}
+                            {% with num=forloop.counter0|add:forloop.parentloop.counter0|add:1|add:forloop.parentloop.counter0|add:6 %}
+                            <div class="number-selector" data-number="{{ num }}">
+                                {{ num }}
+                            </div>
+                            {% endwith %}
+                            {% endfor %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Powerball -->
+                    <h5>Powerball (Select 1)</h5>
+                    <div class="mb-4" id="powerballNumbers">
+                        <div class="d-flex justify-content-center flex-wrap">
+                            {% for i in "123456789"|make_list %}
+                            {% for j in "12"|make_list %}
+                            {% with num=forloop.counter0|add:forloop.parentloop.counter0|add:1|add:forloop.parentloop.counter0 %}
+                            {% if num <= 20 %}
+                            <div class="number-selector powerball-selector" data-powerball="{{ num }}">
+                                {{ num }}
+                            </div>
+                            {% endif %}
+                            {% endwith %}
+                            {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Pick Options -->
+                    <div class="text-center mb-3">
+                        <button class="btn quick-pick-btn me-2" id="quickPick">
+                            <i class="fas fa-random me-1"></i> Quick Pick
+                        </button>
+                        <button class="btn btn-outline-secondary" id="clearSelection">
+                            <i class="fas fa-trash me-1"></i> Clear Selection
+                        </button>
+                    </div>
+                    
+                    <!-- Multiple Draws -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-calendar me-2"></i> Number of Draws</h5>
+                        <div class="btn-group" role="group">
+                            {% for i in "12345678"|make_list %}
+                            <input type="radio" class="btn-check" name="draws" id="draws{{ i }}" autocomplete="off" {% if i == "1" %}checked{% endif %}>
+                            <label class="btn btn-outline-primary" for="draws{{ i }}">{{ i }}</label>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <!-- Order Summary -->
+            <div class="card sticky-top" style="top: 90px;">
+                <div class="card-header bg-warning">
+                    <h4 class="mb-0"><i class="fas fa-shopping-cart me-2"></i> Order Summary</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Ticket Preview -->
+                    <div class="ticket-preview mb-4">
+                        <h6 class="text-center text-muted">YOUR TICKET</h6>
+                        <div class="selected-numbers-display text-center my-3">
+                            <div id="selectedMainNumbers" class="mb-2">
+                                <!-- Main numbers will appear here -->
+                                <span class="badge bg-primary me-1">--</span>
+                                <span class="badge bg-primary me-1">--</span>
+                                <span class="badge bg-primary me-1">--</span>
+                                <span class="badge bg-primary me-1">--</span>
+                                <span class="badge bg-primary me-1">--</span>
+                                <span class="badge bg-primary me-1">--</span>
+                            </div>
+                            <div id="selectedPowerball">
+                                <span class="badge bg-danger">--</span>
+                            </div>
+                        </div>
+                        <p class="text-center mb-0">
+                            <small class="text-muted">Draw: Tonight 8:00 PM</small>
+                        </p>
+                    </div>
+                    
+                    <!-- Price Breakdown -->
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Ticket Price:</span>
+                            <span>$2.00</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Number of Draws:</span>
+                            <span>× 1</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Service Fee:</span>
+                            <span>$0.50</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <strong>Total:</strong>
+                            <strong>$2.50</strong>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    {% if user.is_authenticated %}
+                    <button class="btn btn-gold w-100 mb-3" id="addToCart">
+                        <i class="fas fa-cart-plus me-2"></i> Add to Cart
+                    </button>
+                    <button class="btn btn-outline-primary w-100" id="buyNow">
+                        <i class="fas fa-bolt me-2"></i> Buy Now
+                    </button>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Please <a href="{% url 'login' %}" class="alert-link">login</a> or 
+                        <a href="{% url 'register' %}" class="alert-link">register</a> to purchase tickets.
+                    </div>
+                    <a href="{% url 'login' %}" class="btn btn-gold w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login to Purchase
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <i class="fas fa-lock me-1"></i>
+                        Secure payment • 100% guaranteed
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Frequently Bought Together -->
+    <div class="mt-5">
+        <h4 class="mb-4">FREQUENTLY BOUGHT TOGETHER</h4>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x text-info mb-3"></i>
+                        <h5>Syndicate Play</h5>
+                        <p class="text-muted">Join a group to increase your chances</p>
+                        <button class="btn btn-outline-info btn-sm">Learn More</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-redo fa-2x text-success mb-3"></i>
+                        <h5>Subscription</h5>
+                        <p class="text-muted">Never miss a draw with auto-renew</p>
+                        <button class="btn btn-outline-success btn-sm">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-gift fa-2x text-warning mb-3"></i>
+                        <h5>Gift Cards</h5>
+                        <p class="text-muted">Give the gift of chance</p>
+                        <button class="btn btn-outline-warning btn-sm">Buy Gift Card</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        let selectedMainNumbers = [];
+        let selectedPowerball = null;
+        const maxMainNumbers = 6;
+        
+        // Main number selection
+        $('.number-selector:not(.powerball-selector)').click(function() {
+            const number = $(this).data('number');
+            const index = selectedMainNumbers.indexOf(number);
+            
+            if (index === -1) {
+                if (selectedMainNumbers.length < maxMainNumbers) {
+                    selectedMainNumbers.push(number);
+                    $(this).addClass('selected');
+                } else {
+                    alert(`You can only select ${maxMainNumbers} main numbers.`);
+                }
+            } else {
+                selectedMainNumbers.splice(index, 1);
+                $(this).removeClass('selected');
+            }
+            
+            updateDisplay();
+        });
+        
+        // Powerball selection
+        $('.powerball-selector').click(function() {
+            const number = $(this).data('powerball');
+            
+            $('.powerball-selector').removeClass('selected');
+            $(this).addClass('selected');
+            selectedPowerball = number;
+            
+            updateDisplay();
+        });
+        
+        // Quick Pick functionality
+        $('#quickPick').click(function() {
+            // Clear current selection
+            selectedMainNumbers = [];
+            selectedPowerball = null;
+            $('.number-selector').removeClass('selected');
+            
+            // Generate 6 unique random numbers (1-49)
+            while (selectedMainNumbers.length < 6) {
+                const num = Math.floor(Math.random() * 49) + 1;
+                if (!selectedMainNumbers.includes(num)) {
+                    selectedMainNumbers.push(num);
+                }
+            }
+            
+            // Sort numbers
+            selectedMainNumbers.sort((a, b) => a - b);
+            
+            // Generate random powerball (1-20)
+            selectedPowerball = Math.floor(Math.random() * 20) + 1;
+            
+            // Update UI
+            selectedMainNumbers.forEach(num => {
+                $(`.number-selector[data-number="${num}"]`).addClass('selected');
+            });
+            
+            $(`.powerball-selector[data-powerball="${selectedPowerball}"]`).addClass('selected');
+            
+            updateDisplay();
+            
+            // Animation effect
+            $('.ticket-preview').css({
+                'border': '3px solid #FFD700',
+                'background': '#fff9e6'
+            });
+            
+            setTimeout(function() {
+                $('.ticket-preview').css({
+                    'border': '3px dashed #0A2463',
+                    'background': '#f8f9fa'
+                });
+            }, 1000);
+        });
+        
+        // Clear selection
+        $('#clearSelection').click(function() {
+            selectedMainNumbers = [];
+            selectedPowerball = null;
+            $('.number-selector').removeClass('selected');
+            updateDisplay();
+        });
+        
+        // Update display function
+        function updateDisplay() {
+            // Update main numbers display
+            const mainNumbersHtml = selectedMainNumbers
+                .sort((a, b) => a - b)
+                .map(num => `<span class="badge bg-primary me-1">${num}</span>`)
+                .join('');
+            
+            $('#selectedMainNumbers').html(
+                selectedMainNumbers.length > 0 ? 
+                mainNumbersHtml : 
+                '<span class="badge bg-secondary me-1">--</span>'.repeat(6)
+            );
+            
+            // Update powerball display
+            $('#selectedPowerball').html(
+                selectedPowerball ? 
+                `<span class="badge bg-danger">${selectedPowerball}</span>` : 
+                '<span class="badge bg-secondary">--</span>'
+            );
+            
+            // Update price if needed
+            const numDraws = $('input[name="draws"]:checked').val();
+            const ticketPrice = $('input[name="game"]:checked').attr('id') === 'dailyLotto' ? 1.00 : 2.00;
+            const total = (ticketPrice * numDraws + 0.50).toFixed(2);
+            
+            $('.card-body .d-flex:contains("Total:") strong').last().text('$' + total);
+        }
+        
+        // Draw selection
+        $('input[name="draws"]').change(function() {
+            updateDisplay();
+        });
+        
+        // Game selection
+        $('input[name="game"]').change(function() {
+            updateDisplay();
+        });
+        
+        // Buy now button
+        $('#buyNow').click(function() {
+            if (selectedMainNumbers.length !== 6 || !selectedPowerball) {
+                alert('Please select 6 main numbers and 1 powerball.');
+                return;
+            }
+            
+            if (confirm('Confirm purchase for $2.50?')) {
+                // In real app, this would submit to server
+                alert('Ticket purchased successfully! Good luck!');
+                window.location.href = "{% url 'my_tickets' %}";
+            }
+        });
+        
+        // Initialize with random numbers
+        $('#quickPick').click();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tombola Ticket Selection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+            padding: 20px;
+            transition: background 0.5s ease;
+        }
+
+        /* Container styling */
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 1200px;
+            margin-bottom: 30px;
+            transition: all 0.5s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .container.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            display: none;
+        }
+
+        /* Login container */
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 450px;
+            margin-bottom: 30px;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .login-container.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            display: none;
+        }
+
+        /* Header and general text styling */
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #FF8A00, #E52E71);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #36D1DC, #5B86E5);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .user-info i {
+            font-size: 1.5rem;
+            color: #5B86E5;
+        }
+
+        .user-info span {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .selected-ticket {
+            margin-top: 30px;
+            font-size: 1.4rem;
+            color: #333;
+            padding: 15px;
+            background: linear-gradient(90deg, #f8f9fa, #e9ecef);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .selected-ticket span {
+            font-weight: bold;
+            color: #E52E71;
+            font-size: 1.8rem;
+        }
+
+        /* Ticket grid layout */
+        .ticket-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        /* Ticket styles */
+        .ticket {
+            background: linear-gradient(145deg, #FF8A00, #E52E71);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 20px 10px;
+            border-radius: 10px;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ticket::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Ticket hover effect */
+        .ticket:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .ticket:hover::before {
+            opacity: 1;
+        }
+
+        /* Style for selected ticket */
+        .ticket.selected {
+            background: linear-gradient(145deg, #36D1DC, #5B86E5);
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(54, 209, 220, 0.4);
+        }
+
+        .ticket.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #fff;
+            color: #36D1DC;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        /* Ticket number */
+        .ticket-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #5B86E5;
+            box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.2);
+        }
+
+        .form-control.error {
+            border-color: #FF3B30;
+        }
+
+        .error-message {
+            color: #FF3B30;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Control buttons */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #FF8A00, #E52E71);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(90deg, #36D1DC, #5B86E5);
+            color: white;
+        }
+
+        .btn-logout {
+            background: linear-gradient(90deg, #FF3B30, #D32F2F);
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Footer */
+        .footer {
+            color: white;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 1100px) {
+            .ticket-container {
+                grid-template-columns: repeat(8, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .ticket-container {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .ticket-container {
+                grid-template-columns: repeat(5, 1fr);
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container, .login-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .ticket-container {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .ticket-container {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Animation for ticket selection */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .ticket.selected {
+            animation: pulse 0.5s ease;
+        }
+
+        /* Instructions */
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #666;
+            border-left: 4px solid #FF8A00;
+        }
+
+        /* Login message */
+        .login-message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1rem;
+            display: none;
+        }
+
+        .login-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+            display: block;
+        }
+
+        .login-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+            display: block;
+        }
+
+        /* Demo credentials */
+        .demo-credentials {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: #31708f;
+            border-left: 4px solid #5bc0de;
+        }
+
+        .demo-credentials h3 {
+            margin-bottom: 10px;
+            color: #31708f;
+        }
+
+        .demo-credentials ul {
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .demo-credentials li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Container -->
+    <div class="login-container" id="loginContainer">
+        <h2><i class="fas fa-sign-in-alt"></i> Tombola Login</h2>
+        <p class="subtitle">Please login to select your tombola ticket</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username"><i class="fas fa-user"></i> Username</label>
+                <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+                <div class="error-message" id="usernameError">Username is required</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                <div class="error-message" id="passwordError">Password is required</div>
+            </div>
+            
+            <div class="demo-credentials">
+                <h3><i class="fas fa-info-circle"></i> Demo Credentials</h3>
+                <ul>
+                    <li><strong>Username:</strong> user1 <strong>Password:</strong> pass123</li>
+                    <li><strong>Username:</strong> user2 <strong>Password:</strong> pass456</li>
+                    <li><strong>Username:</strong> admin <strong>Password:</strong> admin123</li>
+                </ul>
+            </div>
+            
+            <div class="login-message" id="loginMessage"></div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+    </div>
+    
+    <!-- Main Tombola Container -->
+    <div class="container hidden" id="mainContainer">
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i>
+            <span id="loggedInUser">Guest</span>
+            <button class="btn btn-logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+        
+        <h1><i class="fas fa-ticket-alt"></i> Tombola Ticket Selection</h1>
+        <p class="subtitle">Select your lucky ticket for the tombola draw. Only one ticket can be selected at a time.</p>
+        
+        <div class="instructions">
+            <p><i class="fas fa-info-circle"></i> Click on any ticket to select it. Click the "Clear Selection" button to deselect your ticket.</p>
+        </div>
+        
+        <div class="ticket-container" id="ticketContainer">
+            <!-- Tickets will be generated dynamically with JavaScript -->
+        </div>
+        
+        <div class="selected-ticket">
+            <p>Your selected ticket: <span id="selectedTicket">None</span></p>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="clearBtn">
+                <i class="fas fa-times-circle"></i> Clear Selection
+            </button>
+            <button class="btn btn-secondary" id="randomBtn">
+                <i class="fas fa-random"></i> Pick Random Ticket
+            </button>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Tombola Ticket Selection System | 50 Tickets Available | Secure Login Required</p>
+    </div>
+
+    <script>
+        // DOM elements
+        const loginContainer = document.getElementById('loginContainer');
+        const mainContainer = document.getElementById('mainContainer');
+        const loginForm = document.getElementById('loginForm');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loggedInUserSpan = document.getElementById('loggedInUser');
+        const ticketContainer = document.getElementById('ticketContainer');
+        const selectedTicketSpan = document.getElementById('selectedTicket');
+        const clearBtn = document.getElementById('clearBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        const loginMessage = document.getElementById('loginMessage');
+        
+        // Demo user database (in a real app, this would be on the server)
+        const users = [
+            { username: 'user1', password: 'pass123', name: 'John Doe' },
+            { username: 'user2', password: 'pass456', name: 'Jane Smith' },
+            { username: 'admin', password: 'admin123', name: 'Administrator' }
+        ];
+        
+        // State
+        let selectedTicket = null;
+        let currentUser = null;
+        const totalTickets = 50;
+        
+        // Check if user is already logged in (from session storage)
+        function checkLoginStatus() {
+            const savedUser = sessionStorage.getItem('tombolaUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showMainApp();
+            }
+        }
+        
+        // Show login form
+        function showLogin() {
+            loginContainer.classList.remove('hidden');
+            mainContainer.classList.add('hidden');
+            loginForm.reset();
+            clearErrors();
+            loginMessage.classList.remove('success', 'error');
+            loginMessage.textContent = '';
+            
+            // Focus on username field
+            setTimeout(() => {
+                usernameInput.focus();
+            }, 300);
+        }
+        
+        // Show main app
+        function showMainApp() {
+            loginContainer.classList.add('hidden');
+            mainContainer.classList.remove('hidden');
+            
+            // Update user info
+            loggedInUserSpan.textContent = currentUser.name;
+            
+            // Generate tickets
+            generateTickets();
+            
+            // Load user's previously selected ticket from localStorage
+            loadUserSelection();
+        }
+        
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            // Clear previous errors and messages
+            clearErrors();
+            loginMessage.classList.remove('success', 'error');
+            loginMessage.textContent = '';
+            
+            // Get input values
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Validate inputs
+            let isValid = true;
+            
+            if (!username) {
+                usernameError.classList.add('show');
+                usernameInput.classList.add('error');
+                isValid = false;
+            }
+            
+            if (!password) {
+                passwordError.classList.add('show');
+                passwordInput.classList.add('error');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Check credentials
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                // Successful login
+                currentUser = {
+                    username: user.username,
+                    name: user.name
+                };
+                
+                // Save to session storage
+                sessionStorage.setItem('tombolaUser', JSON.stringify(currentUser));
+                
+                // Show success message
+                loginMessage.textContent = `Welcome ${user.name}! Redirecting to ticket selection...`;
+                loginMessage.classList.add('success');
+                
+                // Show main app after a short delay
+                setTimeout(() => {
+                    showMainApp();
+                }, 1500);
+            } else {
+                // Failed login
+                loginMessage.textContent = 'Invalid username or password. Please try again.';
+                loginMessage.classList.add('error');
+                
+                // Shake animation for form
+                loginForm.style.animation = 'none';
+                setTimeout(() => {
+                    loginForm.style.animation = 'shake 0.5s ease';
+                }, 10);
+            }
+        }
+        
+        // Handle logout
+        function handleLogout() {
+            // Clear session storage
+            sessionStorage.removeItem('tombolaUser');
+            
+            // Clear current user
+            currentUser = null;
+            
+            // Show login form
+            showLogin();
+        }
+        
+        // Clear form errors
+        function clearErrors() {
+            usernameError.classList.remove('show');
+            passwordError.classList.remove('show');
+            usernameInput.classList.remove('error');
+            passwordInput.classList.remove('error');
+        }
+        
+        // Generate tickets dynamically
+        function generateTickets() {
+            ticketContainer.innerHTML = '';
+            
+            for (let i = 1; i <= totalTickets; i++) {
+                const ticketElement = document.createElement('div');
+                ticketElement.className = 'ticket';
+                ticketElement.dataset.ticket = i;
+                
+                const ticketNumber = document.createElement('span');
+                ticketNumber.className = 'ticket-number';
+                ticketNumber.textContent = i;
+                
+                ticketElement.appendChild(ticketNumber);
+                
+                // Add click event listener
+                ticketElement.addEventListener('click', () => selectTicket(i));
+                
+                ticketContainer.appendChild(ticketElement);
+            }
+        }
+        
+        // Select a ticket
+        function selectTicket(ticketNumber) {
+            // If clicking the already selected ticket, deselect it
+            if (selectedTicket === ticketNumber) {
+                clearSelection();
+                return;
+            }
+            
+            // Deselect previously selected ticket
+            if (selectedTicket) {
+                const prevTicket = document.querySelector(`.ticket[data-ticket="${selectedTicket}"]`);
+                if (prevTicket) {
+                    prevTicket.classList.remove('selected');
+                }
+            }
+            
+            // Select new ticket
+            selectedTicket = ticketNumber;
+            const ticketElement = document.querySelector(`.ticket[data-ticket="${ticketNumber}"]`);
+            ticketElement.classList.add('selected');
+            
+            // Update the selected ticket display
+            selectedTicketSpan.textContent = ticketNumber;
+            selectedTicketSpan.style.color = '#5B86E5';
+            
+            // Save user selection to localStorage
+            saveUserSelection();
+            
+            // Scroll ticket into view on mobile
+            if (window.innerWidth < 700) {
+                ticketElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        
+        // Clear selection
+        function clearSelection() {
+            if (selectedTicket) {
+                const ticketElement = document.querySelector(`.ticket[data-ticket="${selectedTicket}"]`);
+                if (ticketElement) {
+                    ticketElement.classList.remove('selected');
+                }
+            }
+            
+            selectedTicket = null;
+            selectedTicketSpan.textContent = 'None';
+            selectedTicketSpan.style.color = '#E52E71';
+            
+            // Clear user selection from localStorage
+            if (currentUser) {
+                localStorage.removeItem(`tombola_selection_${currentUser.username}`);
+            }
+        }
+        
+        // Select a random ticket
+        function selectRandomTicket() {
+            // Generate a random ticket number between 1 and totalTickets
+            const randomTicket = Math.floor(Math.random() * totalTickets) + 1;
+            selectTicket(randomTicket);
+        }
+        
+        // Save user's ticket selection to localStorage
+        function saveUserSelection() {
+            if (currentUser && selectedTicket) {
+                localStorage.setItem(`tombola_selection_${currentUser.username}`, selectedTicket.toString());
+            }
+        }
+        
+        // Load user's previously selected ticket from localStorage
+        function loadUserSelection() {
+            if (currentUser) {
+                const savedSelection = localStorage.getItem(`tombola_selection_${currentUser.username}`);
+                if (savedSelection) {
+                    const ticketNumber = parseInt(savedSelection);
+                    if (ticketNumber >= 1 && ticketNumber <= totalTickets) {
+                        // Delay selection to allow DOM to render
+                        setTimeout(() => {
+                            selectTicket(ticketNumber);
+                        }, 100);
+                    }
+                }
+            }
+        }
+        
+        // Initialize the app
+        function init() {
+            // Check if user is already logged in
+            checkLoginStatus();
+            
+            // Add event listeners
+            loginForm.addEventListener('submit', handleLogin);
+            logoutBtn.addEventListener('click', handleLogout);
+            clearBtn.addEventListener('click', clearSelection);
+            randomBtn.addEventListener('click', selectRandomTicket);
+            
+            // Clear errors when user starts typing
+            usernameInput.addEventListener('input', () => {
+                usernameInput.classList.remove('error');
+                usernameError.classList.remove('show');
+            });
+            
+            passwordInput.addEventListener('input', () => {
+                passwordInput.classList.remove('error');
+                passwordError.classList.remove('show');
+            });
+            
+            // Add shake animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Initially focus on username field
+            if (!currentUser) {
+                usernameInput.focus();
+            }
+        }
+        
+        // Start the app
+        init();
+    </script>
+</body>
+</html>

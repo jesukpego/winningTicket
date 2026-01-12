@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+
+{% block title %}My Tickets - WINNING TICKET{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-ticket-alt me-2"></i> My Tickets</h1>
+        <a href="{% url 'buy_ticket' %}" class="btn btn-gold">
+            <i class="fas fa-plus-circle me-1"></i> Buy New Ticket
+        </a>
+    </div>
+    
+    <!-- Stats Overview -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="text-primary">15</h2>
+                    <p class="text-muted mb-0">Total Tickets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="text-success">$250.00</h2>
+                    <p class="text-muted mb-0">Total Wins</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="text-warning">3</h2>
+                    <p class="text-muted mb-0">Active Tickets</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="text-info">$50.00</h2>
+                    <p class="text-muted mb-0">Available Balance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Ticket Tabs -->
+    <ul class="nav nav-tabs mb-4" id="ticketTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active">
+                <i class="fas fa-clock me-1"></i> Active (3)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="won-tab" data-bs-toggle="tab" data-bs-target="#won">
+                <i class="fas fa-trophy me-1"></i> Won (2)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="lost-tab" data-bs-toggle="tab" data-bs-target="#lost">
+                <i class="fas fa-times-circle me-1"></i> Lost (10)
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all">
+                <i class="fas fa-list me-1"></i> All Tickets
+            </button>
+        </li>
+    </ul>
+    
+    <div class="tab-content" id="ticketTabsContent">
+        <!-- Active Tickets -->
+        <div class="tab-pane fade show active" id="active" role="tabpanel">
+            <div class="row">
+                {% for ticket in tickets %}
+                {% if ticket.status == 'pending' %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-warning">
+                        <div class="card-header bg-warning bg-opacity-10 border-warning">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ ticket.game }}</h5>
+                                <span class="badge bg-warning">Pending</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Ticket Numbers -->
+                            <div class="text-center mb-3">
+                                {% for num in ticket.numbers|slice:":5" %}
+                                <span class="number-ball">{{ num }}</span>
+                                {% endfor %}
+                                {% if ticket.numbers|length > 5 %}
+                                <span class="number-ball powerball">{{ ticket.numbers.5 }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Ticket Details -->
+                            <div class="row">
+                                <div class="col-6">
+                                    <small class="text-muted">Draw Date</small>
+                                    <p class="mb-0"><strong>{{ ticket.draw_date|date:"M d, Y H:i" }}</strong></p>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Ticket ID</small>
+                                    <p class="mb-0"><strong>#{{ ticket.id }}</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <div class="d-flex justify-content-between">
+                                <a href="#" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i> View Details
+                                </a>
+                                <button class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-redo me-1"></i> Replay Numbers
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Won Tickets -->
+        <div class="tab-pane fade" id="won" role="tabpanel">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card border-success mb-4">
+                        <div class="card-header bg-success bg-opacity-10 border-success">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="fas fa-trophy text-success me-2"></i> Winning Ticket!</h5>
+                                <span class="badge bg-success">Won $100.00</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="me-3">
+                                            {% for i in "37152229"|slice:":6" %}
+                                            <span class="number-ball">{{ i }}</span>
+                                            {% endfor %}
+                                            <span class="number-ball powerball">7</span>
+                                        </div>
+                                        <div>
+                                            <h6>Mega Jackpot</h6>
+                                            <p class="text-muted mb-0">Draw: Jan 5, 2024 • Ticket #789012</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-dollar-sign me-1"></i> Claim Prize
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card border-success">
+                        <div class="card-header bg-success bg-opacity-10 border-success">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0"><i class="fas fa-trophy text-success me-2"></i> Winning Ticket!</h5>
+                                <span class="badge bg-success">Won $150.00</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="me-3">
+                                            {% for i in "8152334"|slice:":5" %}
+                                            <span class="number-ball">{{ i }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <div>
+                                            <h6>Daily Lotto</h6>
+                                            <p class="text-muted mb-0">Draw: Jan 3, 2024 • Ticket #456789</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <span class="badge bg-success">Claimed</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Lost Tickets -->
+        <div class="tab-pane fade" id="lost" role="tabpanel">
+            <div class="row">
+                {% for i in "12345"|make_list %}
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 border-secondary">
+                        <div class="card-header bg-light border-secondary">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0">Ticket #{{ i }}000</h6>
+                                <span class="badge bg-secondary">No Win</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-3">
+                                {% for j in "123456"|make_list %}
+                                <span class="number-ball">{{ forloop.counter|add:forloop.parentloop.counter|add:5 }}</span>
+                                {% endfor %}
+                                <span class="number-ball powerball">{{ forloop.counter|add:3 }}</span>
+                            </div>
+                            <p class="text-muted text-center mb-0">
+                                <small>Draw: Jan {{ i }}, 2024 • Mega Jackpot</small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- All Tickets -->
+        <div class="tab-pane fade" id="all" role="tabpanel">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Ticket ID</th>
+                            <th>Game</th>
+                            <th>Numbers</th>
+                            <th>Draw Date</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#789012</td>
+                            <td>Mega Jackpot</td>
+                            <td>
+                                <span class="badge bg-primary">3</span>
+                                <span class="badge bg-primary">7</span>
+                                <span class="badge bg-primary">15</span>
+                                <span class="badge bg-primary">22</span>
+                                <span class="badge bg-primary">29</span>
+                                <span class="badge bg-primary">35</span>
+                                <span class="badge bg-danger">7</span>
+                            </td>
+                            <td>Jan 5, 2024</td>
+                            <td><span class="badge bg-success">Won $100</span></td>
+                            <td>$100.00</td>
+                            <td><button class="btn btn-sm btn-success">Claim</button></td>
+                        </tr>
+                        <tr>
+                            <td>#456789</td>
+                            <td>Daily Lotto</td>
+                            <td>
+                                <span class="badge bg-primary">8</span>
+                                <span class="badge bg-primary">15</span>
+                                <span class="badge bg-primary">23</span>
+                                <span class="badge bg-primary">34</span>
+                                <span class="badge bg-primary">41</span>
+                            </td>
+                            <td>Jan 3, 2024</td>
+                            <td><span class="badge bg-success">Won $150</span></td>
+                            <td>$150.00</td>
+                            <td><span class="badge bg-secondary">Claimed</span></td>
+                        </tr>
+                        {% for i in "123"|make_list %}
+                        <tr>
+                            <td>#{{ i }}23456</td>
+                            <td>Mega Jackpot</td>
+                            <td>
+                                {% for j in "1234567"|make_list %}
+                                <span class="badge {% if j == '7' %}bg-danger{% else %}bg-primary{% endif %}">
+                                    {{ forloop.counter|add:forloop.parentloop.counter|add:5 }}
+                                </span>
+                                {% endfor %}
+                            </td>
+                            <td>Jan {{ forloop.counter|add:5 }}, 2024</td>
+                            <td><span class="badge bg-warning">Pending</span></td>
+                            <td>--</td>
+                            <td><button class="btn btn-sm btn-outline-primary">View</button></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+{% endblock %}

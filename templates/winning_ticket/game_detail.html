@@ -1,0 +1,610 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if game_id == 1 %}Mega Jackpot{% elif game_id == 2 %}Daily Lotto{% else %}Quick Win{% endif %} - WINNING TICKET{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-hero {
+        background: linear-gradient(135deg, 
+            {% if game_id == 1 %}#0A2463{% elif game_id == 2 %}#1e7e34{% else %}#6f42c1{% endif %}, 
+            {% if game_id == 1 %}#1E40AF{% elif game_id == 2 %}#28a745{% else %}#8c68cd{% endif %});
+        color: white;
+        padding: 60px 0;
+        border-radius: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .jackpot-display {
+        font-size: 3.5rem;
+        font-weight: bold;
+        color: #FFD700;
+        text-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        animation: pulse 2s infinite;
+    }
+    
+    .game-card {
+        border: 3px solid;
+        border-color: {% if game_id == 1 %}#0A2463{% elif game_id == 2 %}#1e7e34{% else %}#6f42c1{% endif %};
+        border-radius: 15px;
+        transition: transform 0.3s;
+    }
+    
+    .game-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .badge-game {
+        background: {% if game_id == 1 %}#0A2463{% elif game_id == 2 %}#1e7e34{% else %}#6f42c1{% endif %};
+        color: white;
+    }
+    
+    .rule-item {
+        padding: 10px 15px;
+        border-left: 4px solid;
+        border-color: {% if game_id == 1 %}#0A2463{% elif game_id == 2 %}#1e7e34{% else %}#6f42c1{% endif %};
+        background: #f8f9fa;
+        margin-bottom: 10px;
+        border-radius: 0 8px 8px 0;
+    }
+    
+    .odds-table tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .play-button {
+        padding: 15px 40px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Game Hero Section -->
+    <div class="game-hero text-center">
+        <div class="container">
+            {% if game_id == 1 %}
+            <i class="fas fa-crown fa-4x mb-3"></i>
+            <h1 class="display-4 mb-3">MEGA JACKPOT</h1>
+            {% elif game_id == 2 %}
+            <i class="fas fa-bolt fa-4x mb-3"></i>
+            <h1 class="display-4 mb-3">DAILY LOTTO</h1>
+            {% else %}
+            <i class="fas fa-gem fa-4x mb-3"></i>
+            <h1 class="display-4 mb-3">QUICK WIN</h1>
+            {% endif %}
+            
+            <div class="jackpot-display mb-3">
+                {% if game_id == 1 %}
+                $12,450,000
+                {% elif game_id == 2 %}
+                $500,000
+                {% else %}
+                $100,000
+                {% endif %}
+            </div>
+            
+            <p class="lead mb-4">
+                {% if game_id == 1 %}
+                The biggest lottery with life-changing jackpots
+                {% elif game_id == 2 %}
+                Draw every day with great odds
+                {% else %}
+                Instant win scratch cards
+                {% endif %}
+            </p>
+            
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <span class="badge bg-light text-dark">
+                    <i class="fas fa-ticket-alt me-1"></i>
+                    {% if game_id == 1 %}
+                    $2.00 per ticket
+                    {% elif game_id == 2 %}
+                    $1.00 per ticket
+                    {% else %}
+                    $5.00 per card
+                    {% endif %}
+                </span>
+                <span class="badge bg-light text-dark">
+                    <i class="fas fa-clock me-1"></i>
+                    {% if game_id == 1 %}
+                    Draws: Wed & Sat 8:00 PM
+                    {% elif game_id == 2 %}
+                    Draws: Daily 9:00 PM
+                    {% else %}
+                    Results: Instant
+                    {% endif %}
+                </span>
+                <span class="badge bg-light text-dark">
+                    <i class="fas fa-chart-line me-1"></i>
+                    {% if game_id == 1 %}
+                    1 in 302M odds
+                    {% elif game_id == 2 %}
+                    1 in 7M odds
+                    {% else %}
+                    1 in 4 odds
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column: Game Info -->
+        <div class="col-lg-8">
+            <!-- How to Play -->
+            <div class="card game-card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-play-circle me-2"></i> How to Play
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if game_id == 1 %}
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6">
+                            <h5>Select Your Numbers:</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Pick 6 numbers from 1-50</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Pick 1 Powerball from 1-20</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Or use Quick Pick for random numbers</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="p-3 bg-light rounded">
+                                <h6>Example Ticket:</h6>
+                                <div class="d-flex justify-content-center flex-wrap">
+                                    <span class="number-ball">5</span>
+                                    <span class="number-ball">12</span>
+                                    <span class="number-ball">23</span>
+                                    <span class="number-ball">34</span>
+                                    <span class="number-ball">45</span>
+                                    <span class="number-ball">12</span>
+                                    <span class="number-ball powerball">12</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% elif game_id == 2 %}
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6">
+                            <h5>Select Your Numbers:</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Pick 5 numbers from 1-35</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Or use Quick Pick for random numbers</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="p-3 bg-light rounded">
+                                <h6>Example Ticket:</h6>
+                                <div class="d-flex justify-content-center flex-wrap">
+                                    <span class="number-ball">7</span>
+                                    <span class="number-ball">14</span>
+                                    <span class="number-ball">21</span>
+                                    <span class="number-ball">28</span>
+                                    <span class="number-ball">35</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6">
+                            <h5>How Quick Win Works:</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Purchase a digital scratch card</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Reveal symbols by scratching</li>
+                                <li><i class="fas fa-check text-success me-2"></i> Match symbols to win instantly</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="p-3 bg-light rounded">
+                                <h6>Scratch Card Example:</h6>
+                                <div class="scratch-card-preview">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="scratch-symbol">🎰</div>
+                                        <div class="scratch-symbol">💰</div>
+                                        <div class="scratch-symbol">🎯</div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                        <div class="scratch-symbol">🎲</div>
+                                        <div class="scratch-symbol">🎉</div>
+                                        <div class="scratch-symbol">💎</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="row text-center mt-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <i class="fas fa-1 fa-2x text-primary mb-2"></i>
+                                <h5>1. Choose Numbers</h5>
+                                <p class="text-muted small">Select your lucky numbers or use Quick Pick</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <i class="fas fa-2 fa-2x text-primary mb-2"></i>
+                                <h5>2. Purchase Ticket</h5>
+                                <p class="text-muted small">Complete secure payment</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="p-3">
+                                <i class="fas fa-3 fa-2x text-primary mb-2"></i>
+                                <h5>3. Check Results</h5>
+                                <p class="text-muted small">Watch draw live or check results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prize Structure -->
+            <div class="card game-card mb-4">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-trophy me-2"></i> Prize Structure
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover odds-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Match</th>
+                                    <th>Odds of Winning</th>
+                                    <th>Prize Amount</th>
+                                    {% if game_id == 1 %}
+                                    <th>Last Draw Winners</th>
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if game_id == 1 %}
+                                <tr>
+                                    <td><strong>6 + Powerball</strong></td>
+                                    <td>1 in 302,575,350</td>
+                                    <td class="text-success fw-bold">JACKPOT ($12M+)</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <td>6 numbers</td>
+                                    <td>1 in 12,607,306</td>
+                                    <td class="text-success">$250,000</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>5 + Powerball</td>
+                                    <td>1 in 931,001</td>
+                                    <td class="text-success">$10,000</td>
+                                    <td>15</td>
+                                </tr>
+                                <tr>
+                                    <td>5 numbers</td>
+                                    <td>1 in 38,792</td>
+                                    <td class="text-success">$500</td>
+                                    <td>120</td>
+                                </tr>
+                                <tr>
+                                    <td>4 + Powerball</td>
+                                    <td>1 in 14,494</td>
+                                    <td class="text-success">$100</td>
+                                    <td>450</td>
+                                </tr>
+                                {% elif game_id == 2 %}
+                                <tr>
+                                    <td><strong>5 numbers</strong></td>
+                                    <td>1 in 7,059,052</td>
+                                    <td class="text-success fw-bold">JACKPOT ($500K)</td>
+                                </tr>
+                                <tr>
+                                    <td>4 numbers</td>
+                                    <td>1 in 12,913</td>
+                                    <td class="text-success">$5,000</td>
+                                </tr>
+                                <tr>
+                                    <td>3 numbers</td>
+                                    <td>1 in 302</td>
+                                    <td class="text-success">$100</td>
+                                </tr>
+                                <tr>
+                                    <td>2 numbers</td>
+                                    <td>1 in 28</td>
+                                    <td class="text-success">$5</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td><strong>3 Gems</strong></td>
+                                    <td>1 in 100</td>
+                                    <td class="text-success fw-bold">$100,000</td>
+                                </tr>
+                                <tr>
+                                    <td>3 Gold Bars</td>
+                                    <td>1 in 250</td>
+                                    <td class="text-success">$25,000</td>
+                                </tr>
+                                <tr>
+                                    <td>3 Diamonds</td>
+                                    <td>1 in 500</td>
+                                    <td class="text-success">$10,000</td>
+                                </tr>
+                                <tr>
+                                    <td>Any 3 matching</td>
+                                    <td>1 in 4</td>
+                                    <td class="text-success">$5 - $1,000</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Rules -->
+            <div class="card game-card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-book me-2"></i> Game Rules & Information
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="rule-item">
+                                <h6>Ticket Price</h6>
+                                <p class="mb-0">
+                                    {% if game_id == 1 %}
+                                    $2.00 per play
+                                    {% elif game_id == 2 %}
+                                    $1.00 per play
+                                    {% else %}
+                                    $5.00 per card
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="rule-item">
+                                <h6>Draw Schedule</h6>
+                                <p class="mb-0">
+                                    {% if game_id == 1 %}
+                                    Every Wednesday and Saturday at 8:00 PM EST
+                                    {% elif game_id == 2 %}
+                                    Every day at 9:00 PM EST
+                                    {% else %}
+                                    Instant results after purchase
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="rule-item">
+                                <h6>Claim Period</h6>
+                                <p class="mb-0">180 days from draw date</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="rule-item">
+                                <h6>Age Requirement</h6>
+                                <p class="mb-0">Must be 18 years or older</p>
+                            </div>
+                            <div class="rule-item">
+                                <h6>Tax Information</h6>
+                                <p class="mb-0">All prizes subject to applicable taxes</p>
+                            </div>
+                            <div class="rule-item">
+                                <h6>Where to Play</h6>
+                                <p class="mb-0">Available in 45 US states</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info mt-4">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Important:</strong> 
+                        {% if game_id == 1 %}
+                        Jackpot prizes are paid as 30-year annuity or cash lump sum. All prizes must be claimed within 180 days of the draw date.
+                        {% elif game_id == 2 %}
+                        Daily Lotto tickets can be purchased up to 10 minutes before each draw. Multiple draws available.
+                        {% else %}
+                        Quick Win prizes are instantly credited to your account balance. Maximum win per card is $100,000.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Quick Actions -->
+        <div class="col-lg-4">
+            <!-- Quick Play Card -->
+            <div class="card game-card mb-4 sticky-top" style="top: 90px;">
+                <div class="card-header bg-dark text-white">
+                    <h4 class="mb-0 text-center">
+                        <i class="fas fa-play-circle me-2"></i> Play Now
+                    </h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <h5 class="text-success">
+                            {% if game_id == 1 %}
+                            $12,450,000
+                            {% elif game_id == 2 %}
+                            $500,000
+                            {% else %}
+                            $100,000
+                            {% endif %}
+                        </h5>
+                        <p class="text-muted">Current Jackpot</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6>Next Draw:</h6>
+                        <div class="display-6" id="gameCountdown">
+                            {% if game_id == 3 %}INSTANT{% else %}23:45:12{% endif %}
+                        </div>
+                        <p class="text-muted small">
+                            {% if game_id == 1 %}
+                            Tonight 8:00 PM EST
+                            {% elif game_id == 2 %}
+                            Tonight 9:00 PM EST
+                            {% else %}
+                            Results available immediately
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6>Ticket Price:</h6>
+                        <h3>
+                            {% if game_id == 1 %}
+                            $2.00
+                            {% elif game_id == 2 %}
+                            $1.00
+                            {% else %}
+                            $5.00
+                            {% endif %}
+                        </h3>
+                    </div>
+                    
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'buy_ticket' %}?game={{ game_id }}" class="btn btn-gold play-button w-100 mb-3">
+                        <i class="fas fa-ticket-alt me-2"></i> Buy Ticket Now
+                    </a>
+                    {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-1"></i>
+                        Please <a href="{% url 'login' %}" class="alert-link">login</a> or 
+                        <a href="{% url 'register' %}" class="alert-link">register</a> to play
+                    </div>
+                    <a href="{% url 'login' %}" class="btn btn-gold play-button w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i> Login to Play
+                    </a>
+                    {% endif %}
+                    
+                    <hr class="my-4">
+                    
+                    <div class="text-start">
+                        <h6><i class="fas fa-lightbulb me-2"></i> Quick Tips:</h6>
+                        <ul class="small text-muted">
+                            <li>Multiple tickets increase your chances</li>
+                            <li>Consider playing in a syndicate</li>
+                            <li>Set a budget and play responsibly</li>
+                            <li>Sign up for draw reminders</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Results -->
+            <div class="card game-card">
+                <div class="card-header">
+                    <h6 class="mb-0">
+                        <i class="fas fa-history me-2"></i> Recent Results
+                    </h6>
+                </div>
+                <div class="card-body">
+                    {% if game_id == 1 %}
+                    <div class="mb-3">
+                        <p class="small text-muted mb-1">January 10, 2024</p>
+                        <div class="d-flex flex-wrap gap-1">
+                            <span class="number-ball small">5</span>
+                            <span class="number-ball small">12</span>
+                            <span class="number-ball small">23</span>
+                            <span class="number-ball small">34</span>
+                            <span class="number-ball small">45</span>
+                            <span class="number-ball small">12</span>
+                            <span class="number-ball powerball small">12</span>
+                        </div>
+                        <p class="small mb-0">Jackpot: $12M • Winners: 0</p>
+                    </div>
+                    {% elif game_id == 2 %}
+                    <div class="mb-3">
+                        <p class="small text-muted mb-1">January 10, 2024</p>
+                        <div class="d-flex flex-wrap gap-1">
+                            <span class="number-ball small">7</span>
+                            <span class="number-ball small">14</span>
+                            <span class="number-ball small">21</span>
+                            <span class="number-ball small">28</span>
+                            <span class="number-ball small">35</span>
+                        </div>
+                        <p class="small mb-0">Jackpot: $450K • Winners: 3</p>
+                    </div>
+                    {% else %}
+                    <div class="mb-3">
+                        <p class="small text-muted mb-1">Instant Win Games</p>
+                        <p class="small mb-2">Results are instant after purchase</p>
+                        <div class="text-center">
+                            <i class="fas fa-bolt fa-2x text-warning"></i>
+                            <p class="small mb-0 mt-2">Know your win immediately</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'results' %}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="fas fa-chart-bar me-1"></i> View All Results
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if game_id != 3 %}
+<script>
+    // Countdown timer for draw games
+    function updateGameCountdown() {
+        const now = new Date();
+        let drawTime = new Date(now);
+        
+        {% if game_id == 1 %}
+        // Mega Jackpot: Tonight at 8 PM
+        drawTime.setHours(20, 0, 0, 0);
+        {% else %}
+        // Daily Lotto: Tonight at 9 PM
+        drawTime.setHours(21, 0, 0, 0);
+        {% endif %}
+        
+        // If past draw time, set for tomorrow
+        if (now > drawTime) {
+            drawTime.setDate(drawTime.getDate() + 1);
+        }
+        
+        const diff = drawTime - now;
+        
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        document.getElementById('gameCountdown').textContent = 
+            `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+    
+    {% if game_id != 3 %}
+    setInterval(updateGameCountdown, 1000);
+    updateGameCountdown();
+    {% endif %}
+</script>
+{% endif %}
+
+<style>
+    .scratch-symbol {
+        font-size: 2rem;
+        margin: 5px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 10px;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .number-ball.small {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}

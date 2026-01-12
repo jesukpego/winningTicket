@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - WINNING TICKET{% endblock %}
+
+{% block extra_css %}
+<style>
+    .about-hero {
+        background: linear-gradient(135deg, #0A2463 0%, #1E40AF 100%);
+        color: white;
+        padding: 80px 0;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .about-hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="50" font-size="12" fill="rgba(255,255,255,0.05)">🎫</text></svg>') repeat;
+    }
+    
+    .mission-card {
+        border: 2px solid #FFD700;
+        border-radius: 15px;
+        transition: transform 0.3s;
+        background: white;
+    }
+    
+    .mission-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(255, 215, 0, 0.2);
+    }
+    
+    .value-card {
+        text-align: center;
+        padding: 30px 20px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        height: 100%;
+        transition: all 0.3s;
+    }
+    
+    .value-card:hover {
+        background: white;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        transform: translateY(-5px);
+    }
+    
+    .value-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #0A2463, #1E40AF);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 2rem;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 40px;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(to bottom, #FFD700, #0A2463);
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+    
+    .timeline-dot {
+        position: absolute;
+        left: -40px;
+        top: 5px;
+        width: 30px;
+        height: 30px;
+        background: #FFD700;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: 0 0 0 3px #0A2463;
+    }
+    
+    .stat-number {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #0A2463;
+        line-height: 1;
+    }
+    
+    .team-member {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        background: white;
+        transition: all 0.3s;
+        border: 1px solid #dee2e6;
+    }
+    
+    .team-member:hover {
+        border-color: #FFD700;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    
+    .team-photo {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 20px;
+        background: #f8f9fa;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        color: #0A2463;
+        border: 3px solid #FFD700;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="about-hero text-center">
+        <div class="container position-relative">
+            <h1 class="display-4 mb-4 fw-bold">ABOUT WINNING TICKET</h1>
+            <p class="lead mb-0">Transforming dreams into reality since 2024</p>
+        </div>
+    </div>
+
+    <!-- Our Story -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6">
+            <h2 class="mb-4">Our Story</h2>
+            <p class="lead mb-4">
+                Winning Ticket was founded with a simple yet powerful vision: to create exciting lottery experiences that bring joy and opportunity to people's lives.
+            </p>
+            <p>
+                What started as a small startup in 2024 has grown into one of the most trusted lottery platforms, connecting millions of players with life-changing jackpots. Our journey is built on innovation, security, and a commitment to responsible gaming.
+            </p>
+            <p>
+                Every day, we work tirelessly to ensure fair play, instant payouts, and an unforgettable gaming experience. We believe that everyone deserves a chance to turn their dreams into reality.
+            </p>
+        </div>
+        <div class="col-lg-6">
+            <div class="mission-card p-4">
+                <div class="text-center mb-4">
+                    <div class="value-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-primary">Our Mission</h3>
+                </div>
+                <p class="text-center">
+                    To provide the most secure, fair, and exciting lottery experience while creating millionaires and supporting communities through responsible gaming.
+                </p>
+                <div class="text-center mt-4">
+                    <div class="d-flex justify-content-center gap-4">
+                        <div class="text-center">
+                            <div class="stat-number">50K+</div>
+                            <small>Happy Players</small>
+                        </div>
+                        <div class="text-center">
+                            <div class="stat-number">$100M+</div>
+                            <small>In Prizes</small>
+                        </div>
+                        <div class="text-center">
+                            <div class="stat-number">1K+</div>
+                            <small>Daily Winners</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Values -->
+    <h2 class="text-center mb-5">OUR CORE VALUES</h2>
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4>Security First</h4>
+                <p class="text-muted">
+                    Bank-level encryption and certified random number generators ensure every game is 100% secure and fair.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h4>Instant Payouts</h4>
+                <p class="text-muted">
+                    Winners receive their prizes instantly. No waiting, no delays - just pure excitement.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="value-card">
+                <div class="value-icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h4>Responsible Gaming</h4>
+                <p class="text-muted">
+                    We promote safe play with tools, limits, and support for those who need it.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Our Journey Timeline -->
+    <h2 class="text-center mb-5">OUR JOURNEY</h2>
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-primary">2024 - The Beginning</h5>
+                            <p class="mb-0">
+                                Winning Ticket launches with Mega Jackpot and Daily Lotto games. First month sees 1,000 registered players.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-primary">2024 - First Millionaire</h5>
+                            <p class="mb-0">
+                                Sarah from California wins $5 million jackpot, becoming our first millionaire. Media coverage boosts platform growth.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-primary">2024 - Mobile App Launch</h5>
+                            <p class="mb-0">
+                                Launch of iOS and Android apps with instant ticket scanning and push notifications for results.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="text-primary">Present Day</h5>
+                            <p class="mb-0">
+                                50,000+ active players, $100+ million in prizes awarded, and expanding to new markets.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meet the Team -->
+    <h2 class="text-center mb-5">MEET OUR TEAM</h2>
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="team-member">
+                <div class="team-photo">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <h5>Alex Johnson</h5>
+                <p class="text-primary mb-2">CEO & Founder</p>
+                <p class="text-muted small">
+                    15+ years in gaming industry. Founded Winning Ticket to revolutionize lottery experiences.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="team-member">
+                <div class="team-photo">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <h5>Maria Garcia</h5>
+                <p class="text-primary mb-2">Chief Security Officer</p>
+                <p class="text-muted small">
+                    Cybersecurity expert ensuring our platform remains the most secure in the industry.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="team-member">
+                <div class="team-photo">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <h5>David Chen</h5>
+                <p class="text-primary mb-2">Customer Experience</p>
+                <p class="text-muted small">
+                    Leads our 24/7 support team dedicated to helping players and winners.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Licenses & Certifications -->
+    <div class="card mb-5">
+        <div class="card-header bg-light">
+            <h4 class="mb-0"><i class="fas fa-certificate me-2"></i> Licenses & Certifications</h4>
+        </div>
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <p class="mb-3">
+                        Winning Ticket operates under strict regulations and holds multiple gaming licenses:
+                    </p>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Licensed by the Nevada Gaming Control Board</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> Certified by eCOGRA (eCommerce Online Gaming Regulation and Assurance)</li>
+                        <li class="mb-2"><i class="fas fa-check text-success me-2"></i> SSL Encryption Certified</li>
+                        <li><i class="fas fa-check text-success me-2"></i> PCI DSS Compliant for payment security</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="p-3 border rounded">
+                        <i class="fas fa-shield-check fa-4x text-success mb-3"></i>
+                        <h6>100% Verified & Licensed</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center bg-primary text-white p-5 rounded">
+        <h2 class="mb-3">Ready to Join the Winning Family?</h2>
+        <p class="lead mb-4">Create your account today and get $5 free to start playing!</p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg">
+                <i class="fas fa-user-plus me-2"></i> Sign Up Free
+            </a>
+            <a href="{% url 'contact' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-question-circle me-2"></i> Ask Questions
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

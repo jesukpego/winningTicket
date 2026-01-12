@@ -1,0 +1,510 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - WINNING TICKET{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-hero {
+        background: linear-gradient(135deg, #1E40AF 0%, #0A2463 100%);
+        color: white;
+        padding: 60px 0;
+        border-radius: 15px;
+        margin-bottom: 40px;
+    }
+    
+    .contact-card {
+        border: 2px solid #FFD700;
+        border-radius: 15px;
+        transition: transform 0.3s;
+        height: 100%;
+    }
+    
+    .contact-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(255, 215, 0, 0.2);
+    }
+    
+    .contact-icon {
+        width: 70px;
+        height: 70px;
+        margin: 0 auto 20px;
+        background: linear-gradient(135deg, #0A2463, #1E40AF);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.8rem;
+    }
+    
+    .form-control:focus {
+        border-color: #FFD700;
+        box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25);
+    }
+    
+    .live-chat-widget {
+        background: linear-gradient(135deg, #28a745, #20c997);
+        color: white;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    
+    .office-hours {
+        background: #fff9e6;
+        border: 2px solid #FFD700;
+        border-radius: 10px;
+        padding: 20px;
+    }
+    
+    .social-contact {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border-radius: 10px;
+        background: #f8f9fa;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+    }
+    
+    .social-contact:hover {
+        background: white;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transform: translateX(5px);
+    }
+    
+    .social-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.5rem;
+    }
+    
+    .faq-item {
+        border: 1px solid #dee2e6;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+    
+    .faq-question {
+        padding: 15px;
+        background: #f8f9fa;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .faq-answer {
+        padding: 15px;
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="contact-hero text-center">
+        <div class="container">
+            <h1 class="display-4 mb-4">GET IN TOUCH</h1>
+            <p class="lead mb-0">We're here to help you 24/7. Contact us for any questions or support.</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+        <!-- Contact Information -->
+        <div class="col-lg-4 mb-4">
+            <h2 class="mb-4">Contact Information</h2>
+            
+            <div class="social-contact">
+                <div class="social-icon bg-primary text-white">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div>
+                    <h6 class="mb-1">Phone Support</h6>
+                    <p class="mb-0 text-muted">+1 (800) 555-LUCK (5825)</p>
+                    <small class="text-muted">24/7 Toll-Free</small>
+                </div>
+            </div>
+            
+            <div class="social-contact">
+                <div class="social-icon bg-success text-white">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                    <h6 class="mb-1">Email Support</h6>
+                    <p class="mb-0 text-muted">support@winningticket.com</p>
+                    <small class="text-muted">Response within 2 hours</small>
+                </div>
+            </div>
+            
+            <div class="social-contact">
+                <div class="social-icon bg-warning text-white">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div>
+                    <h6 class="mb-1">Live Chat</h6>
+                    <p class="mb-0 text-muted">Available 24/7</p>
+                    <small class="text-muted">Instant response</small>
+                </div>
+            </div>
+            
+            <div class="social-contact">
+                <div class="social-icon bg-info text-white">
+                    <i class="fab fa-whatsapp"></i>
+                </div>
+                <div>
+                    <h6 class="mb-1">WhatsApp</h6>
+                    <p class="mb-0 text-muted">+1 (555) 123-4567</p>
+                    <small class="text-muted">Text support</small>
+                </div>
+            </div>
+
+            <!-- Office Address -->
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5><i class="fas fa-map-marker-alt text-primary me-2"></i> Headquarters</h5>
+                    <p class="mb-2">
+                        123 Lottery Avenue<br>
+                        Las Vegas, NV 89109<br>
+                        United States
+                    </p>
+                    <a href="#" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-directions me-1"></i> Get Directions
+                    </a>
+                </div>
+            </div>
+
+            <!-- Office Hours -->
+            <div class="office-hours mt-4">
+                <h5><i class="fas fa-clock text-warning me-2"></i> Office Hours</h5>
+                <table class="table table-sm">
+                    <tr>
+                        <td>Monday - Friday</td>
+                        <td class="text-end">9:00 AM - 8:00 PM EST</td>
+                    </tr>
+                    <tr>
+                        <td>Saturday</td>
+                        <td class="text-end">10:00 AM - 6:00 PM EST</td>
+                    </tr>
+                    <tr>
+                        <td>Sunday</td>
+                        <td class="text-end">12:00 PM - 5:00 PM EST</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="pt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Phone and live chat support available 24/7
+                            </small>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-lg-8">
+            <div class="card contact-card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-envelope me-2"></i> Send us a Message</h4>
+                </div>
+                <div class="card-body">
+                    <form id="contactForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">First Name *</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Last Name *</label>
+                                <input type="text" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email Address *</label>
+                                <input type="email" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <input type="tel" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Account Username (if applicable)</label>
+                            <input type="text" class="form-control" placeholder="Leave blank if you don't have an account">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Subject *</label>
+                            <select class="form-select" required>
+                                <option value="">Select a topic</option>
+                                <option>General Inquiry</option>
+                                <option>Account Issues</option>
+                                <option>Winning Claim Assistance</option>
+                                <option>Technical Support</option>
+                                <option>Payment Issues</option>
+                                <option>Responsible Gaming</option>
+                                <option>Business Partnership</option>
+                                <option>Feedback & Suggestions</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Ticket ID (if related to a ticket)</label>
+                            <input type="text" class="form-control" placeholder="e.g., #123456">
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Message *</label>
+                            <textarea class="form-control" rows="6" placeholder="Please provide detailed information so we can help you better..." required></textarea>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Preferred Contact Method</label>
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="contactMethod" id="emailMethod" checked>
+                                    <label class="form-check-label" for="emailMethod">
+                                        <i class="fas fa-envelope me-1"></i> Email
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="contactMethod" id="phoneMethod">
+                                    <label class="form-check-label" for="phoneMethod">
+                                        <i class="fas fa-phone me-1"></i> Phone Call
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="contactMethod" id="chatMethod">
+                                    <label class="form-check-label" for="chatMethod">
+                                        <i class="fas fa-comment me-1"></i> Live Chat
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-gold btn-lg">
+                                <i class="fas fa-paper-plane me-2"></i> Send Message
+                            </button>
+                        </div>
+                        
+                        <p class="text-muted small mt-3 text-center">
+                            <i class="fas fa-lock me-1"></i>
+                            Your information is secure. We never share your details with third parties.
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Chat Widget -->
+    <div class="live-chat-widget p-4 mb-5">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h4 class="mb-3">
+                    <i class="fas fa-comment-dots me-2"></i> Need Instant Help?
+                </h4>
+                <p class="mb-0">
+                    Chat with our support team right now. Average wait time: <strong>2 minutes</strong>
+                </p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <button class="btn btn-light btn-lg" id="startChat">
+                    <i class="fas fa-comments me-2"></i> Start Live Chat
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <h2 class="text-center mb-4">FREQUENTLY ASKED QUESTIONS</h2>
+    <div class="row mb-5">
+        <div class="col-lg-6">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I claim my prize?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Prizes under $600 are automatically credited to your account. For larger prizes, you'll need to complete a claim form and provide identification. We'll guide you through the process step by step.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Is my personal information safe?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Yes! We use 256-bit SSL encryption and follow strict data protection regulations. We never sell or share your personal information with third parties.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How long do withdrawals take?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Most withdrawals are processed within 24 hours. Bank transfers take 1-3 business days, while e-wallets are usually instant.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>Can I play from outside the US?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>Currently, we only accept players from within the United States where online lottery is legal. We're working to expand to more regions soon.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What is the minimum age to play?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>You must be at least 18 years old to participate in any lottery games on our platform. Age verification is required during registration.</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How are the numbers drawn?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p>We use certified random number generators (RNGs) that are regularly audited by independent testing agencies to ensure 100% fairness.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="text-center">
+        <h4 class="mb-4">FOLLOW US ON SOCIAL MEDIA</h4>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="#" class="btn btn-outline-primary">
+                <i class="fab fa-facebook-f me-2"></i> Facebook
+            </a>
+            <a href="#" class="btn btn-outline-info">
+                <i class="fab fa-twitter me-2"></i> Twitter
+            </a>
+            <a href="#" class="btn btn-outline-danger">
+                <i class="fab fa-instagram me-2"></i> Instagram
+            </a>
+            <a href="#" class="btn btn-outline-dark">
+                <i class="fab fa-tiktok me-2"></i> TikTok
+            </a>
+            <a href="#" class="btn btn-outline-success">
+                <i class="fab fa-whatsapp me-2"></i> WhatsApp
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // FAQ Toggle
+        $('.faq-question').click(function() {
+            $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+            $(this).next('.faq-answer').slideToggle();
+        });
+        
+        // Form submission
+        $('#contactForm').submit(function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            const submitBtn = $(this).find('button[type="submit"]');
+            const originalText = submitBtn.html();
+            
+            submitBtn.html('<i class="fas fa-spinner fa-spin me-2"></i> Sending...')
+                .prop('disabled', true);
+            
+            // Simulate API call
+            setTimeout(function() {
+                alert('Thank you for your message! Our support team will contact you within 2 hours.');
+                $('#contactForm')[0].reset();
+                submitBtn.html(originalText).prop('disabled', false);
+            }, 1500);
+        });
+        
+        // Live chat simulation
+        $('#startChat').click(function() {
+            const chatWindow = window.open('', 'LiveChat', 'width=400,height=600');
+            chatWindow.document.write(`
+                <html>
+                <head>
+                    <title>Winning Ticket Live Chat</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+                        .chat-header { background: #0A2463; color: white; padding: 15px; text-align: center; }
+                        .chat-messages { height: 400px; overflow-y: auto; padding: 10px; }
+                        .message { margin: 10px 0; padding: 10px; border-radius: 10px; max-width: 80%; }
+                        .support { background: #e3f2fd; align-self: flex-start; }
+                        .user { background: #d4edda; align-self: flex-end; margin-left: auto; }
+                    </style>
+                </head>
+                <body>
+                    <div class="chat-header">
+                        <h3>Live Chat Support</h3>
+                        <p>Connected to agent: Maria</p>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message support">
+                            <strong>Maria (Support):</strong><br>
+                            Hello! Thank you for contacting Winning Ticket Support. How can I help you today?
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <input type="text" id="chatInput" placeholder="Type your message..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                        <button onclick="sendMessage()" style="width: 100%; padding: 10px; background: #0A2463; color: white; border: none; border-radius: 5px; margin-top: 10px;">Send</button>
+                    </div>
+                    <script>
+                        function sendMessage() {
+                            const input = document.getElementById('chatInput');
+                            const message = input.value.trim();
+                            if (message) {
+                                const messagesDiv = document.getElementById('chatMessages');
+                                const userMsg = document.createElement('div');
+                                userMsg.className = 'message user';
+                                userMsg.innerHTML = '<strong>You:</strong><br>' + message;
+                                messagesDiv.appendChild(userMsg);
+                                input.value = '';
+                                
+                                // Auto reply after 2 seconds
+                                setTimeout(function() {
+                                    const supportMsg = document.createElement('div');
+                                    supportMsg.className = 'message support';
+                                    supportMsg.innerHTML = '<strong>Maria (Support):</strong><br>Thank you for your message. Let me check that for you...';
+                                    messagesDiv.appendChild(supportMsg);
+                                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                                }, 2000);
+                                
+                                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+                            }
+                        }
+                    </script>
+                </body>
+                </html>
+            `);
+        });
+    });
+</script>
+{% endblock %}
