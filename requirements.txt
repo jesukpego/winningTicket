@@ -1,4 +1,4 @@
 Django==4.2.27
 gunicorn==23.0.0
-whitenoise==6.5.1
-psycopg2-binary==2.9.6
+whitenoise==6.11.0
+
