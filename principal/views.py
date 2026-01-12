@@ -1,4 +1,11 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
+
+@require_GET
+def health_check(request):
+    """Health check endpoint for Railway/Render"""
+    return HttpResponse("OK", status=200)
 
 def accueil(request):
     return render(request, 'winning_ticket/indx.html')

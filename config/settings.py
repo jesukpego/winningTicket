@@ -10,7 +10,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
-ALLOWED_HOSTS = ["*"]  # Railway prod, tu peux restreindre plus tard
+#ALLOWED_HOSTS = ["*"]  # Railway prod, tu peux restreindre plus tard
+
+# Add this after your existing imports
+
+# Railway specific
+if 'RAILWAY' in os.environ or 'DATABASE_URL' in os.environ:
+    # Railway PostgreSQL
+    import dj_database_url
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+    
+    # Your Railway domain
+    RAILWAY_DOMAIN = os.environ.get('RAILWAY_STATIC_URL', '').replace('/static/', '')
+    if RAILWAY_DOMAIN:
+        ALLOWED_HOSTS = [RAILWAY_DOMAIN, 'localhost', '127.0.0.1']
+        CSRF_TRUSTED_ORIGINS = [f'https://{RAILWAY_DOMAIN}']
+    else:
+        ALLOWED_HOSTS = ['*']
+else:
+    # Local development
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 
 # Application definition
 INSTALLED_APPS = [
@@ -107,3 +133,8 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
+
+WHITENOISE_MAX_AGE = 31536000  # 1 year
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_ROOT = BASE_DIR / 'staticfiles'

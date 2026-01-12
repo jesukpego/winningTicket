@@ -18,4 +18,5 @@ path('winners/', views.winners, name='winners'),
     path('login/', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('health/', views.health_check, name='health'),
 ]
