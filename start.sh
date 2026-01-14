@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 PORT=${PORT:-8000}
@@ -6,7 +6,7 @@ PORT=${PORT:-8000}
 echo "=== Starting Winning Ticket Django App ==="
 echo "Port: $PORT"
 
-# Apply database migrations
+# Apply migrations
 echo "Applying migrations..."
 python manage.py migrate --noinput
 
@@ -19,11 +19,7 @@ echo "Starting Gunicorn..."
 exec gunicorn config.wsgi:application \
     --bind 0.0.0.0:$PORT \
     --workers 2 \
-    --timeout 120 \
-    --keepalive 5 \
-    --max-requests 1000 \
-    --max-requests-jitter 50 \
+    --timeout 180 \
     --log-level info \
     --access-logfile - \
     --error-logfile -
-
