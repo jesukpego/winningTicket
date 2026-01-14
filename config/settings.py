@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
-ALLOWED_HOSTS = ["*"]  # Railway prod, tu peux restreindre plus tard
+ALLOWED_HOSTS = ["healthcheck.railway.app"]  # Railway prod, tu peux restreindre plus tard
 
 # Add this after your existing imports
 
