@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 # Load environment variables
 load_dotenv()
@@ -10,14 +11,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
-ALLOWED_HOSTS = ["healthcheck.railway.app"]  # Railway prod, tu peux restreindre plus tard
 
-# Add this after your existing imports
+# ALLOWED_HOSTS
+# Always allow Railway healthcheck + localhost
+ALLOWED_HOSTS = ["healthcheck.railway.app", "localhost", "127.0.0.1"]
 
-# Railway specific
-if 'RAILWAY' in os.environ or 'DATABASE_URL' in os.environ:
-    # Railway PostgreSQL
-    import dj_database_url
+# Optional: add your Railway domain if available
+RAILWAY_DOMAIN = os.environ.get("RAILWAY_STATIC_URL", "").replace("/static/", "")
+if RAILWAY_DOMAIN:
+    ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
+    CSRF_TRUSTED_ORIGINS = [f"https://{RAILWAY_DOMAIN}"]
+
+# DATABASE CONFIG
+if os.environ.get("DATABASE_URL"):
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
@@ -25,20 +31,15 @@ if 'RAILWAY' in os.environ or 'DATABASE_URL' in os.environ:
             conn_health_checks=True,
         )
     }
-    
-    # Your Railway domain
-    RAILWAY_DOMAIN = os.environ.get('RAILWAY_STATIC_URL', '').replace('/static/', '')
-    if RAILWAY_DOMAIN:
-        ALLOWED_HOSTS = [RAILWAY_DOMAIN, 'localhost', '127.0.0.1']
-        CSRF_TRUSTED_ORIGINS = [f'https://{RAILWAY_DOMAIN}']
-    else:
-        ALLOWED_HOSTS = ['*']
 else:
-    # Local development
-    ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
-
-# Application definition
+# APPLICATION DEFINITION
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'principal',
+    'principal',  # ton app principale
 ]
 
 MIDDLEWARE = [
@@ -79,25 +80,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Database
-if os.environ.get('DATABASE_URL'):
-    import dj_database_url
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=os.environ.get('DATABASE_URL'),
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-
-# Password validation
+# PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -105,24 +88,24 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# INTERNATIONALIZATION
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files
+# MEDIA FILES
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Production security
+# PRODUCTION SECURITY
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
@@ -133,8 +116,8 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
-
+# WHITENOISE CONFIG
 WHITENOISE_MAX_AGE = 31536000  # 1 year
 WHITENOISE_USE_FINDERS = True
 WHITENOISE_MANIFEST_STRICT = False
-WHITENOISE_ROOT = BASE_DIR / 'staticfiles'
+WHITENOISE_ROOT = STATIC_ROOT
