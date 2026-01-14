@@ -1,20 +1,21 @@
 #!/bin/sh
 set -e
 
+# Railway fournit le PORT automatiquement
 PORT=${PORT:-8000}
 
 echo "=== Starting Winning Ticket Django App ==="
 echo "Port: $PORT"
 
-# Apply migrations
+# Appliquer les migrations
 echo "Applying migrations..."
 python manage.py migrate --noinput
 
-# Collect static files
+# Collecter les fichiers statiques
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-# Start Gunicorn
+# Lancer Gunicorn
 echo "Starting Gunicorn..."
 exec gunicorn config.wsgi:application \
     --bind 0.0.0.0:$PORT \
