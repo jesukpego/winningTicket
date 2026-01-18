@@ -27,7 +27,7 @@ def home(request):
     Retourne un simple OK pour garantir le healthcheck
     """
     #return HttpResponse("OK")
-    return render(request, 'winning_ticket/indx.html')
+    return render(request, 'winning_ticket/index.html')
 
 
 # ======================================================
