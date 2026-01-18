@@ -1,0 +1,14 @@
+[build]
+builder = "nixpacks"
+
+[build.environment]
+PYTHON_VERSION = "3.11"
+
+[deploy]
+startCommand = "python manage.py migrate && gunicorn config.wsgi --bind 0.0.0.0:$PORT"
+
+[[services]]
+port = 8000
+
+[environments.production.variables]
+DEBUG = "False"

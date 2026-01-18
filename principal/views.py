@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_GET
@@ -25,7 +26,8 @@ def home(request):
     MAINTENANT :
     Retourne un simple OK pour garantir le healthcheck
     """
-    return HttpResponse("OK")
+    #return HttpResponse("OK")
+    return render(request, 'winning_ticket/indx.html')
 
 
 # ======================================================

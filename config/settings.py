@@ -13,25 +13,55 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-default-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # ALLOWED_HOSTS
-# Always allow Railway healthcheck + localhost
-ALLOWED_HOSTS = ["healthcheck.railway.app", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "healthcheck.railway.app", 
+    "localhost", 
+    "127.0.0.1",
+    ".railway.app",  # Allow all Railway subdomains
+]
 
-# Optional: add your Railway domain if available
+# CSRF Trusted Origins for Railway
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.railway.app",
+    "https://*.up.railway.app",
+]
+
+# Optional: add your specific Railway domain
 RAILWAY_DOMAIN = os.environ.get("RAILWAY_STATIC_URL", "").replace("/static/", "")
-if RAILWAY_DOMAIN:
+if RAILWAY_DOMAIN and RAILWAY_DOMAIN not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
-    CSRF_TRUSTED_ORIGINS = [f"https://{RAILWAY_DOMAIN}"]
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_DOMAIN}")
 
-# DATABASE CONFIG
-if os.environ.get("DATABASE_URL"):
+# ==================== DATABASE CONFIG ====================
+# Check if we're on Railway (production)
+if os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("DATABASE_URL"):
+    # Use dj_database_url for Railway
     DATABASES = {
         'default': dj_database_url.config(
             default=os.environ.get('DATABASE_URL'),
             conn_max_age=600,
             conn_health_checks=True,
+            ssl_require=True  # Railway requires SSL
         )
     }
+    
+    # Fallback to individual variables if DATABASE_URL not parsed correctly
+    if not DATABASES['default'].get('ENGINE'):
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.environ.get('PGDATABASE', 'railway'),
+                'USER': os.environ.get('PGUSER', 'postgres'),
+                'PASSWORD': os.environ.get('PGPASSWORD', ''),
+                'HOST': os.environ.get('PGHOST', 'localhost'),
+                'PORT': os.environ.get('PGPORT', '5432'),
+                'OPTIONS': {
+                    'sslmode': 'require',  # Railway requires SSL
+                }
+            }
+        }
 else:
+    # Local development - SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -97,6 +127,7 @@ USE_TZ = True
 # STATIC FILES
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']  # Add if you have static files directory
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # MEDIA FILES
