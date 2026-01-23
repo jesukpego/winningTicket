@@ -3,87 +3,333 @@
 {% block title %}Login - WINNING TICKET{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card border-0 shadow">
-                <div class="card-header bg-primary text-white text-center py-4">
-                    <h3><i class="fas fa-sign-in-alt me-2"></i> Welcome Back!</h3>
-                    <p class="mb-0">Login to access your tickets and winnings</p>
-                </div>
-                <div class="card-body p-4">
-                    <form method="post" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        
-                        <div class="mb-3">
-                            <label for="username" class="form-label">
-                                <i class="fas fa-user me-1"></i> Username or Email
-                            </label>
-                            <input type="text" class="form-control" id="username" name="username" 
-                                   placeholder="Enter your username or email" required>
+<div class="login-page-container d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-9">
+                <div class="card login-card shadow-lg border-0 overflow-hidden">
+                    <div class="row g-0">
+                        <!-- Left Side - Brand Panel -->
+                        <div class="col-md-6 d-none d-md-block brand-panel position-relative">
+                            <div
+                                class="brand-content h-100 p-5 d-flex flex-column justify-content-between position-relative z-2">
+                                <div>
+                                    <div class="brand-logo mb-4">
+                                        <i class="fas fa-ticket-alt fa-3x text-white"></i>
+                                    </div>
+                                    <h2 class="text-white fw-bold mb-3 display-6">Welcome Back</h2>
+                                    <p class="text-white-50 lead fs-6">Experience the thrill of winning with the world's
+                                        most trusted lottery platform.</p>
+                                </div>
+
+                                <div class="brand-footer">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="icon-box rounded-circle bg-white-10 p-2 me-3">
+                                            <i class="fas fa-shield-alt text-white"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-white mb-0 fw-medium">Secure & Encrypted</p>
+                                            <small class="text-white-50">Bank-level security protocols</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-box rounded-circle bg-white-10 p-2 me-3">
+                                            <i class="fas fa-certificate text-white"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-white mb-0 fw-medium">Officially Licensed</p>
+                                            <small class="text-white-50">Verified gaming authority</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Background Pattern/Overlay -->
+                            <div class="pattern-overlay"></div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">
-                                <i class="fas fa-lock me-1"></i> Password
-                            </label>
-                            <input type="password" class="form-control" id="password" name="password" 
-                                   placeholder="Enter your password" required>
-                            <div class="text-end mt-1">
-                                <a href="#" class="small text-decoration-none">Forgot password?</a>
+
+                        <!-- Right Side - Login Form -->
+                        <div class="col-md-6 bg-white">
+                            <div class="login-form-container p-5 h-100 d-flex flex-column justify-content-center">
+                                <div class="mb-4">
+                                    <a href="{% url 'home' %}"
+                                        class="text-decoration-none text-muted small hover-primary mb-3 d-inline-block">
+                                        <i class="fas fa-arrow-left me-2"></i>Back to Home
+                                    </a>
+                                    <h3 class="fw-bold text-dark mb-1">Sign In</h3>
+                                    <p class="text-muted">Enter your registered account details</p>
+                                </div>
+
+                                <!-- Messages -->
+                                {% if messages %}
+                                <div class="mb-3">
+                                    {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 small shadow-sm"
+                                        role="alert">
+                                        <i
+                                            class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+
+                                <!-- Non-field errors -->
+                                {% if form.errors and not form.username.errors and not form.password.errors %}
+                                <div class="alert alert-danger alert-dismissible fade show border-0 small shadow-sm mb-4"
+                                    role="alert">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Invalid credentials. Please check your username and password.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                        aria-label="Close"></button>
+                                </div>
+                                {% endif %}
+
+                                <form method="post" action="{% url 'login' %}" class="login-form">
+                                    {% csrf_token %}
+
+                                    <div class="form-floating mb-3">
+                                        <input type="text"
+                                            class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                                            id="id_username" name="username" placeholder="name@example.com" required
+                                            autofocus>
+                                        <label for="id_username">Username or Email</label>
+                                        {% if form.username.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.username.errors.0 }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="form-floating mb-3 position-relative">
+                                        <input type="password"
+                                            class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                                            id="id_password" name="password" placeholder="Password" required>
+                                        <label for="id_password">Password</label>
+                                        <button
+                                            class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none me-2"
+                                            type="button" id="togglePassword">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        {% if form.password.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.password.errors.0 }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="remember_me"
+                                                id="remember_me">
+                                            <label class="form-check-label text-muted small" for="remember_me">
+                                                Remember me
+                                            </label>
+                                        </div>
+                                        <a href="#" class="text-decoration-none small fw-medium">Forgot Password?</a>
+                                    </div>
+
+                                    <div class="d-grid mb-4">
+                                        <button type="submit"
+                                            class="btn btn-primary btn-lg fw-semibold py-3 shadow-sm btn-login">
+                                            Sign In
+                                        </button>
+                                    </div>
+
+                                    <!-- Hidden Redirect -->
+                                    {% if next %}
+                                    <input type="hidden" name="next" value="{{ next }}">
+                                    {% endif %}
+                                </form>
+
+                                <div class="text-center mt-3">
+                                    <p class="text-muted small mb-0">
+                                        New to Winning Ticket?
+                                        <a href="{% url 'register' %}"
+                                            class="text-primary fw-semibold text-decoration-none">Create an account</a>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                        
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="rememberMe">
-                            <label class="form-check-label" for="rememberMe">Remember me</label>
-                        </div>
-                        
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-gold btn-lg">
-                                <i class="fas fa-sign-in-alt me-1"></i> Login
-                            </button>
-                        </div>
-                        
-                        <div class="text-center mt-4">
-                            <p class="mb-0">Don't have an account? 
-                                <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
-                                    Register here
-                                </a>
-                            </p>
-                        </div>
-                    </form>
-                    
-                    <hr class="my-4">
-                    
-                    <div class="text-center">
-                        <p class="text-muted mb-3">Or login with</p>
-                        <div class="d-flex justify-content-center gap-3">
-                            <button class="btn btn-outline-primary">
-                                <i class="fab fa-google"></i> Google
-                            </button>
-                            <button class="btn btn-outline-dark">
-                                <i class="fab fa-apple"></i> Apple
-                            </button>
-                            <button class="btn btn-outline-info">
-                                <i class="fab fa-facebook"></i> Facebook
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Security Notice -->
-            <div class="alert alert-info mt-4">
-                <div class="d-flex">
-                    <i class="fas fa-shield-alt fa-2x me-3"></i>
-                    <div>
-                        <h6 class="alert-heading mb-1">Secure Login</h6>
-                        <p class="mb-0 small">Your account is protected with bank-level security and encryption.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 
+     * Standalone Page Overrides 
+     * Hiding global navigation and footer for a focused login experience
+     */
+    nav.navbar,
+    footer.footer,
+    .navbar-spacer {
+        display: none !important;
+    }
+
+    body {
+        background-color: #F3F4F6;
+        /* Light gray professional bg */
+        height: 100vh;
+        overflow-y: hidden;
+        /* Lock header/footer out of view if needed, though mostly container handles it */
+    }
+
+    main {
+        padding-top: 0 !important;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Container adjustments */
+    .login-page-container {
+        flex: 1;
+        min-height: 100vh;
+        padding: 2rem 0;
+    }
+
+    .login-card {
+        border-radius: 20px;
+        background: #fff;
+    }
+
+    /* Brand Panel (Left Side) */
+    .brand-panel {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        /* Deep darker blue */
+        overflow: hidden;
+    }
+
+    .brand-footer .bg-white-10 {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Subtle geometric overlay */
+    .pattern-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px;
+        opacity: 0.6;
+        z-index: 1;
+    }
+
+    /* Form Styles */
+    .form-floating>.form-control {
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        height: calc(3.5rem + 2px);
+    }
+
+    .form-floating>.form-control:focus {
+        border-color: #0f172a;
+        /* Brand primary */
+        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.1);
+    }
+
+    .form-floating>label {
+        color: #94a3b8;
+    }
+
+    .btn-login {
+        background-color: #0f172a;
+        border-color: #0f172a;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-login:hover {
+        background-color: #1e293b;
+        border-color: #1e293b;
+        transform: translateY(-1px);
+    }
+
+    .hover-primary:hover {
+        color: #0f172a !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        body {
+            overflow-y: auto;
+            height: auto;
+        }
+
+        .login-page-container {
+            padding: 1rem;
+            align-items: flex-start;
+            /* Allow scrolling on small screens */
+            padding-top: 2rem;
+        }
+
+        .login-card {
+            border-radius: 16px;
+        }
+    }
+
+    /* Loading state for button */
+    .btn-loading {
+        position: relative;
+        color: transparent !important;
+        pointer-events: none;
+    }
+
+    .btn-loading::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 50%;
+        left: 50%;
+        margin-left: -10px;
+        margin-top: -10px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function () {
+        // Password toggle
+        $('#togglePassword').click(function () {
+            const input = $('#id_password');
+            const icon = $(this).find('i');
+
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Form submission loading state
+        $('.login-form').on('submit', function () {
+            const btn = $(this).find('button[type="submit"]');
+            btn.addClass('btn-loading');
+        });
+    });
+</script>
 {% endblock %}

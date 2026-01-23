@@ -3,144 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Winning Ticket - Your Lucky Draw{% endblock %}</title>
+    <meta name="description" content="WINNING TICKET - Play lottery games and win big with secure, licensed gaming platform">
+    <meta name="keywords" content="lottery, tickets, win, jackpot, gaming">
+    
+    <title>{% block title %}WINNING TICKET - Play & Win Big{% endblock %}</title>
     
     <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&family=Luckiest+Guy&display=swap" rel="stylesheet">
+    
+  
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎫</text></svg>">
     
     <style>
         :root {
             --primary-blue: #0A2463;
-            --gold: #FFD700;
-            --dark-gold: #B8860B;
-            --light-bg: #f8f9fa;
+            --primary-blue-light: #1E40AF;
+            --primary-blue-dark: #071A4D;
+            --accent-gold: #FFD700;
+            --accent-gold-dark: #B8860B;
+            --accent-green: #10B981;
+            --danger-red: #EF4444;
+            --warning-orange: #F59E0B;
+            --light-bg: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-primary: #1F2937;
+            --text-secondary: #6B7280;
+            --border-color: #E5E7EB;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Inter', 'Poppins', sans-serif;
+            color: var(--text-primary);
             background-color: var(--light-bg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--accent-gold);
+            box-shadow: 0 4px 20px rgba(10, 36, 99, 0.15);
+            padding: 0;
+            height: 80px;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar.scrolled {
+            height: 70px;
+            box-shadow: 0 4px 30px rgba(10, 36, 99, 0.2);
         }
         
         .navbar-brand {
             font-family: 'Luckiest Guy', cursive;
             font-size: 1.8rem;
-            color: var(--gold) !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            color: var(--accent-gold) !important;
+            background: linear-gradient(135deg, var(--accent-gold), #FFF176);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 0.5px;
         }
         
-        .winning-navbar {
-            background: linear-gradient(90deg, var(--primary-blue) 0%, #1E40AF 100%);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        .navbar-brand:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
         }
         
+        .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 8px 16px !important;
+            margin: 0 2px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent-gold);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 60%;
+        }
+        
+        .nav-link.active {
+            color: white !important;
+            font-weight: 600;
+        }
+        
+        .nav-link i {
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* ===== BUTTONS ===== */
         .btn-gold {
-            background: var(--gold);
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
             color: var(--primary-blue);
-            font-weight: bold;
-            padding: 10px 25px;
-            border-radius: 25px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 12px;
             border: none;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+        
+        .btn-gold::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.6s ease;
         }
         
         .btn-gold:hover {
-            background: var(--dark-gold);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
-        }
-        
-        .jackpot-counter {
-            font-size: 3.5rem;
-            font-weight: bold;
-            color: var(--gold);
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
-        .ticket-card {
-            border: 2px solid var(--gold);
-            border-radius: 15px;
-            transition: transform 0.3s;
-            background: white;
-        }
-        
-        .ticket-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
-        }
-        
-        .number-ball {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--primary-blue), #1E40AF);
-            color: white;
-            border-radius: 50%;
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin: 5px;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-        }
-        
-        .powerball {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-        }
-        
-        .footer {
-            background: var(--primary-blue);
-            color: white;
-            padding: 40px 0 20px;
-            margin-top: 60px;
-        }
-        
-        .step-number {
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            background: var(--gold);
             color: var(--primary-blue);
-            border-radius: 50%;
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin: 0 auto 20px;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
         }
         
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--gold) 100%);
+        .btn-gold:hover::before {
+            left: 100%;
+        }
+        
+        .btn-gold:active {
+            transform: translateY(-1px);
+        }
+        
+        .btn-outline-gold {
+            background: transparent;
+            color: var(--accent-gold);
+            border: 2px solid var(--accent-gold);
+            font-weight: 600;
+            padding: 10px 26px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-gold:hover {
+            background: var(--accent-gold);
+            color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        main {
+            min-height: calc(100vh - 180px);
+            padding-top: 100px;
+        }
+        
+        .container-fluid {
+            padding: 0 15px;
+        }
+        
+        /* ===== FOOTER ===== */
+        .footer {
+            background: linear-gradient(135deg, var(--primary-blue-dark), var(--primary-blue));
             color: white;
-            padding: 100px 0;
+            padding: 60px 0 30px;
+            margin-top: 80px;
             position: relative;
             overflow: hidden;
         }
         
-        .hero-section::before {
-            content: "";
+        .footer::before {
+            content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            right: -50%;
-            bottom: -50%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="50" font-size="12" fill="rgba(255,255,255,0.1)">🎫</text></svg>') repeat;
-            opacity: 0.1;
-            animation: moveBackground 30s linear infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-green));
         }
         
-        @keyframes moveBackground {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(100px, 100px); }
+        .footer h5 {
+            color: var(--accent-gold);
+            font-weight: 600;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .footer h5::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 40px;
+            height: 2px;
+            background: var(--accent-gold);
+        }
+        
+        .footer ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer a:hover {
+            color: var(--accent-gold);
+            transform: translateX(5px);
+        }
+        
+        .social-icons a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            background: var(--accent-gold);
+            color: var(--primary-blue) !important;
+            transform: translateY(-3px);
+        }
+        
+        /* ===== UTILITY CLASSES ===== */
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4);
+            }
+            70% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(255, 215, 0, 0);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0);
+            }
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        /* ===== LOADING ===== */
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 215, 0, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-gold);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 992px) {
+            .navbar {
+                padding: 10px 0;
+            }
+            
+            .navbar-collapse {
+                background: var(--primary-blue);
+                border-radius: 12px;
+                padding: 20px;
+                margin-top: 10px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            }
+            
+            .nav-link {
+                padding: 12px 16px !important;
+                margin: 5px 0;
+            }
+            
+            main {
+                padding-top: 90px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.5rem;
+            }
+            
+            main {
+                padding-top: 85px;
+            }
+            
+            .footer {
+                padding: 40px 0 20px;
+            }
+            
+            .footer .col-md-4 {
+                margin-bottom: 30px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .navbar {
+                height: 70px;
+            }
+            
+            .navbar.scrolled {
+                height: 65px;
+            }
+            
+            main {
+                padding-top: 80px;
+            }
+            
+            .btn-gold, .btn-outline-gold {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        /* ===== PRINT STYLES ===== */
+        @media print {
+            .navbar, .footer, .btn {
+                display: none !important;
+            }
+            
+            main {
+                padding-top: 0;
+            }
         }
     </style>
     
@@ -148,61 +415,92 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark winning-navbar fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'home' %}">
                 <i class="fas fa-ticket-alt me-2"></i>
                 WINNING TICKET
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
                             <i class="fas fa-home"></i> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'games' %}">
+                        <a class="nav-link {% if 'games' in request.path %}active{% endif %}" href="{% url 'games' %}">
                             <i class="fas fa-dice"></i> Games
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'results' %}">
+                        <a class="nav-link {% if 'results' in request.path %}active{% endif %}" href="{% url 'results' %}">
                             <i class="fas fa-trophy"></i> Results
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'winners' %}">
+                        <a class="nav-link {% if 'winners' in request.path %}active{% endif %}" href="{% url 'winners' %}">
                             <i class="fas fa-crown"></i> Winners
                         </a>
                     </li>
                     
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i> {{ user.username }}
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" 
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-avatar me-2">
+                                <i class="fas fa-user-circle fa-lg"></i>
+                            </div>
+                            <span>{{ user.username|truncatechars:15 }}</span>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'dashboard' %}">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
-                            </a></li>
-                            <li><a class="dropdown-item" href="{% url 'my_tickets' %}">
-                                <i class="fas fa-ticket-alt"></i> My Tickets
-                            </a></li>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="min-width: 220px;">
+                            <li>
+                                <div class="dropdown-header">
+                                    <small>Account Balance</small>
+                                    <h6 class="mb-0 text-success">${{ user.profile.balance|default:"0.00" }}</h6>
+                                </div>
+                            </li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">
-                                <i class="fas fa-sign-out-alt"></i> Logout
-                            </a></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'my_tickets' %}">
+                                    <i class="fas fa-ticket-alt me-2"></i> My Tickets
+                                    <span class="badge bg-primary rounded-pill float-end">
+                                        {{ user.tickets.count|default:"0" }}
+                                    </span>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'profile' %}">
+                                    <i class="fas fa-user me-2"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'transactions' %}">
+                                    <i class="fas fa-history me-2"></i> Transactions
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Logout
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="btn btn-gold btn-sm" href="{% url 'buy_ticket' %}">
-                            <i class="fas fa-plus-circle"></i> Buy Ticket
+                        <a class="btn btn-gold" href="{% url 'buy_ticket' %}">
+                            <i class="fas fa-plus-circle me-2"></i> Buy Ticket
                         </a>
                     </li>
                     {% else %}
@@ -212,8 +510,8 @@
                         </a>
                     </li>
                     <li class="nav-item ms-2">
-                        <a class="btn btn-gold btn-sm" href="{% url 'register' %}">
-                            <i class="fas fa-user-plus"></i> Register
+                        <a class="btn btn-outline-gold" href="{% url 'register' %}">
+                            <i class="fas fa-user-plus me-2"></i> Register
                         </a>
                     </li>
                     {% endif %}
@@ -222,8 +520,23 @@
         </div>
     </nav>
 
+    <!-- Spacer to prevent overlap -->
+    <div class="navbar-spacer"></div>
+
     <!-- Main Content -->
-    <main style="padding-top: 76px;">
+    <main>
+        {% if messages %}
+        <div class="container mt-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </main>
 
@@ -231,51 +544,205 @@
     <footer class="footer">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-ticket-alt"></i> WINNING TICKET</h5>
-                    <p>Your chance to turn dreams into reality. Play responsibly.</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{% url 'home' %}" class="text-light text-decoration-none">Home</a></li>
-                        <li><a href="{% url 'games' %}" class="text-light text-decoration-none">Games</a></li>
-                        <li><a href="{% url 'results' %}" class="text-light text-decoration-none">Results</a></li>
-                        <li><a href="{% url 'winners' %}" class="text-light text-decoration-none">Winners</a></li>
-                        <li><a href="{% url 'about' %}" class="text-light text-decoration-none">About Us</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Legal</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#" class="text-light text-decoration-none">Terms & Conditions</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Privacy Policy</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Responsible Gaming</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Contact Us</a></li>
-                    </ul>
-                    <div class="mt-3">
-                        <span class="badge bg-warning text-dark">
-                            <i class="fas fa-exclamation-triangle"></i> 18+ Only
+                <div class="col-lg-4 col-md-6 mb-5">
+                    <div class="footer-brand mb-4">
+                        <h3 class="mb-2">
+                            <i class="fas fa-ticket-alt me-2"></i>
+                            WINNING TICKET
+                        </h3>
+                        <p class="text-light opacity-75">Your trusted platform for fair and exciting lottery games. Play responsibly and win big!</p>
+                    </div>
+                    <div class="trust-badges">
+                        <span class="badge bg-success me-2 mb-2">
+                            <i class="fas fa-shield-alt me-1"></i> Secure
+                        </span>
+                        <span class="badge bg-info me-2 mb-2">
+                            <i class="fas fa-certificate me-1"></i> Licensed
+                        </span>
+                        <span class="badge bg-warning me-2 mb-2">
+                            <i class="fas fa-lock me-1"></i> Encrypted
                         </span>
                     </div>
                 </div>
+                
+                <div class="col-lg-2 col-md-6 mb-5">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'home' %}"><i class="fas fa-chevron-right me-2"></i> Home</a></li>
+                        <li><a href="{% url 'games' %}"><i class="fas fa-chevron-right me-2"></i> Games</a></li>
+                        <li><a href="{% url 'results' %}"><i class="fas fa-chevron-right me-2"></i> Results</a></li>
+                        <li><a href="{% url 'winners' %}"><i class="fas fa-chevron-right me-2"></i> Winners</a></li>
+                        <li><a href="{% url 'about' %}"><i class="fas fa-chevron-right me-2"></i> About us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Terms & Conditions</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Privacy Policy</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Responsible Gaming</a></li>
+                        <li><a href="{% url 'faq' %}"><i class="fas fa-chevron-right me-2"></i> FAQ</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i> Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-5">
+                    <h5>Stay Connected</h5>
+                    <p class="text-light opacity-75 mb-3">Follow us for updates and promotions</p>
+                    <div class="social-icons mb-4">
+                        <a href="#" class="text-light" title="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-light" title="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-light" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-light" title="YouTube">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                    <div class="age-warning">
+                        <span class="badge bg-danger">
+                            <i class="fas fa-exclamation-triangle me-1"></i> 18+ Only
+                        </span>
+                        <small class="d-block text-light opacity-75 mt-2">Gambling can be addictive. Play responsibly.</small>
+                    </div>
+                </div>
             </div>
-            <hr class="bg-light">
-            <div class="text-center pt-3">
-                <p>&copy; 2024 WINNING TICKET. All rights reserved.</p>
-                <div class="social-icons">
-                    <a href="#" class="text-light me-3"><i class="fab fa-facebook fa-lg"></i></a>
-                    <a href="#" class="text-light me-3"><i class="fab fa-twitter fa-lg"></i></a>
-                    <a href="#" class="text-light"><i class="fab fa-instagram fa-lg"></i></a>
+            
+            <hr class="bg-light opacity-25">
+            
+            <div class="row pt-4">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0">&copy; <span id="currentYear">2024</span> WINNING TICKET. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="mb-0">
+                        <i class="fas fa-globe me-1"></i> English | 
+                        <i class="fas fa-phone me-1 ms-2"></i> Support: 1-800-LOTTERY
+                    </p>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="btn btn-gold btn-lg rounded-circle shadow-lg" 
+            style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; display: none; z-index: 100;">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <script>
+        // Navbar scroll effect
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 50) {
+                $('.navbar').addClass('scrolled');
+            } else {
+                $('.navbar').removeClass('scrolled');
+            }
+            
+            // Back to top button
+            if ($(this).scrollTop() > 300) {
+                $('#backToTop').fadeIn();
+            } else {
+                $('#backToTop').fadeOut();
+            }
+        });
+
+        // Back to top functionality
+        $('#backToTop').click(function() {
+            $('html, body').animate({ scrollTop: 0 }, 500);
+            return false;
+        });
+
+        // Smooth scrolling for anchor links
+        $('a[href^="#"]').on('click', function(e) {
+            if (this.hash !== "") {
+                e.preventDefault();
+                const hash = this.hash;
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top - 80
+                }, 800);
+            }
+        });
+
+        // Add animation to cards on scroll
+        function animateOnScroll() {
+            const cards = $('.card, .feature-card, .game-card');
+            cards.each(function() {
+                const elementTop = $(this).offset().top;
+                const elementBottom = elementTop + $(this).outerHeight();
+                const viewportTop = $(window).scrollTop();
+                const viewportBottom = viewportTop + $(window).height();
+                
+                if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                    $(this).addClass('animated');
+                }
+            });
+        }
+
+        // Initialize
+        $(document).ready(function() {
+            // Auto-dismiss alerts after 5 seconds
+            $('.alert').delay(5000).fadeOut(300);
+            
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+            
+            // Initialize popovers
+            $('[data-bs-toggle="popover"]').popover();
+            
+            // Animate elements on load
+            $('.card, .feature-card').css('animation', 'fadeInUp 0.6s ease forwards');
+            
+            // Animate on scroll
+            $(window).scroll(animateOnScroll);
+            animateOnScroll();
+            
+            // Update copyright year
+            $('#currentYear').text(new Date().getFullYear());
+            
+            // Mobile menu enhancement
+            $('.navbar-toggler').on('click', function() {
+                $(this).toggleClass('active');
+            });
+
+            // Close mobile menu when clicking outside
+            $(document).on('click', function(e) {
+                if (!$(e.target).closest('.navbar-collapse').length && 
+                    !$(e.target).closest('.navbar-toggler').length &&
+                    $('.navbar-collapse').hasClass('show')) {
+                    $('.navbar-collapse').collapse('hide');
+                    $('.navbar-toggler').removeClass('active');
+                }
+            });
+        });
+
+        // Form validation enhancement
+        $('form').on('submit', function(e) {
+            const submitBtn = $(this).find('button[type="submit"]');
+            if (!submitBtn.hasClass('no-loading')) {
+                submitBtn.prop('disabled', true);
+                submitBtn.html('<span class="loading-spinner me-2"></span> Processing...');
+            }
+        });
+
+        // Currency formatting
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2
+            }).format(amount);
+        }
+    </script>
     
     {% block extra_js %}{% endblock %}
 </body>
