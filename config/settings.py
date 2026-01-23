@@ -24,13 +24,15 @@ CSRF_TRUSTED_ORIGINS = [
 
 # ==================== DATABASE ====================
 # Detect Railway environment safely
-IS_RAILWAY = os.environ.get("RAILWAY_ENVIRONMENT") is not None
+RAILWAY_ENVIRONMENT = os.environ.get("RAILWAY_ENVIRONMENT")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if IS_RAILWAY:
+# Only use Railway config if we are in Railway AND have a database URL
+if RAILWAY_ENVIRONMENT and DATABASE_URL:
     # ===== PRODUCTION (Railway - PostgreSQL) =====
     DATABASES = {
         'default': dj_database_url.config(
-            default=os.environ.get("DATABASE_URL"),
+            default=DATABASE_URL,
             conn_max_age=600,
             ssl_require=True
         )
