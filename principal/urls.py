@@ -17,4 +17,10 @@ urlpatterns = [
     path("register/", views.register_view, name="register"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("health/", views.health_check, name="health"),
+    
+    # Admin
+    path("manage-games/", views.manage_games, name="manage_games"),
+    path("manage-games/create/", views.create_game, name="create_game"),
+    path("manage-games/edit/<int:game_id>/", views.edit_game, name="edit_game"),
+    path("manage-games/delete/<int:game_id>/", views.delete_game, name="delete_game"),
 ]

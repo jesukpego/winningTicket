@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Games - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3"><i class="fas fa-cogs me-2"></i>Game Management</h1>
+        <a href="{% url 'create_game' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create New Game
+        </a>
+    </div>
+
+    <!-- Games Table -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Game Name</th>
+                            <th>Next Draw</th>
+                            <th>Ticket Price</th>
+                            <th>Prize</th>
+                            <th>Status</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if games %}
+                        {% for game in games %}
+                        <tr>
+                            <td class="ps-4">
+                                <h6 class="mb-0 fw-semibold">{{ game.name }}</h6>
+                                {% if game.organizer_type == 'platform' %}
+                                <small class="text-muted"><i class="fas fa-globe me-1"></i>Platform Game</small>
+                                {% else %}
+                                <small class="text-muted"><i class="fas fa-building me-1"></i>{{
+                                    game.organizer_type|title }}</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ game.next_draw|date:"M d, Y H:i" }}</td>
+                            <td>${{ game.ticket_price }}</td>
+                            <td class="fw-bold text-success">${{ game.prize_amount }}</td>
+                            <td>
+                                <span
+                                    class="badge {% if game.status == 'active' %}bg-success{% elif game.status == 'pending' %}bg-warning{% elif game.status == 'closed' %}bg-secondary{% else %}bg-dark{% endif %}">
+                                    {{ game.get_status_display }}
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group">
+                                    <a href="{% url 'edit_game' game.id %}" class="btn btn-sm btn-outline-secondary"
+                                        title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal{{ game.id }}" title="Delete">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </div>
+
+                                <!-- Delete Modal -->
+                                <div class="modal fade" id="deleteModal{{ game.id }}" tabindex="-1"
+                                    aria-hidden="true text-start">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Delete Game?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body text-start text-wrap">
+                                                Are you sure you want to delete <strong>{{ game.name }}</strong>? This
+                                                action cannot be undone.
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">Cancel</button>
+                                                <form action="{% url 'delete_game' game.id %}" method="post"
+                                                    class="d-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger">Delete
+                                                        Completely</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="fas fa-search fa-3x mb-3 text-secondary opacity-50"></i>
+                                <p class="mb-0">No games found. Start by creating one!</p>
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

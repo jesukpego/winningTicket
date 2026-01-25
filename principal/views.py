@@ -176,5 +176,105 @@ def register_view(request):
     return render(request, 'users/register.html')
 
 
+    return render(request, 'users/register.html')
+
+
+# ======================================================
+# GAME ADMINISTRATION
+# ======================================================
+
+from django import forms
+from django.utils import timezone
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.shortcuts import get_object_or_404
+from .models import Game
+
+def is_staff(user):
+    return user.is_staff
+
+class GameForm(forms.ModelForm):
+    class Meta:
+        model = Game
+        fields = [
+            'name', 
+            'description', 
+            'ticket_price', 
+            'prize_amount', 
+            'next_draw', 
+            'ticket_sale_end'
+        ]
+        widgets = {
+            'next_draw': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+            'ticket_sale_end': forms.DateTimeInput(attrs={'type': 'datetime-local', 'class': 'form-control'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Game Name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Game Description'}),
+            'ticket_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'prize_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+        }
+        
+    def clean(self):
+        cleaned_data = super().clean()
+        next_draw = cleaned_data.get('next_draw')
+        ticket_sale_end = cleaned_data.get('ticket_sale_end')
+        
+        if next_draw and ticket_sale_end:
+            if ticket_sale_end >= next_draw:
+                raise forms.ValidationError("Ticket sales must end before the draw time.")
+                
+            if next_draw <= timezone.now():
+                 raise forms.ValidationError("Draw time must be in the future.")
+        
+        return cleaned_data
+
+@login_required
+@user_passes_test(is_staff)
+def manage_games(request):
+    """List all games for administration"""
+    games = Game.objects.all().order_by('-created_at')
+    return render(request, 'admins/manage_games.html', {'games': games})
+
+@login_required
+@user_passes_test(is_staff)
+def create_game(request):
+    if request.method == 'POST':
+        form = GameForm(request.POST)
+        if form.is_valid():
+            game = form.save(commit=False)
+            game.organizer_type = 'platform'  # Default for admin created
+            game.status = 'active' # Auto-activate for now, or use draft
+            game.save()
+            messages.success(request, "Game created successfully!")
+            return redirect('manage_games')
+    else:
+        form = GameForm()
+    
+    return render(request, 'admins/game_form.html', {'form': form, 'title': 'Create Game'})
+
+@login_required
+@user_passes_test(is_staff)
+def edit_game(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    if request.method == 'POST':
+        form = GameForm(request.POST, instance=game)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Game updated successfully!")
+            return redirect('manage_games')
+    else:
+        form = GameForm(instance=game)
+    
+    return render(request, 'admins/game_form.html', {'form': form, 'title': 'Edit Game', 'game': game})
+
+@login_required
+@user_passes_test(is_staff)
+def delete_game(request, game_id):
+    game = get_object_or_404(Game, id=game_id)
+    if request.method == 'POST':
+        game.delete()
+        messages.success(request, "Game deleted successfully!")
+        return redirect('manage_games')
+    return redirect('manage_games')
+
+
 def dashboard(request):
     return render(request, 'users/dashboard.html')

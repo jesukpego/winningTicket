@@ -19,7 +19,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Quick Stats -->
     <div class="row mb-5">
         <div class="col-md-3">
@@ -55,7 +55,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row">
         <!-- Left Column -->
         <div class="col-lg-8">
@@ -130,7 +130,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Quick Actions -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -169,7 +169,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Right Column -->
         <div class="col-lg-4">
             <!-- Account Summary -->
@@ -200,7 +200,7 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Recent Activity -->
             <div class="card mb-4">
                 <div class="card-header">
@@ -255,7 +255,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <!-- Next Draw -->
             <div class="card bg-dark text-white">
                 <div class="card-body text-center">
@@ -276,7 +276,7 @@
         border-left: 3px solid #0A2463;
         padding-left: 15px;
     }
-    
+
     .activity-item:last-child {
         margin-bottom: 0 !important;
     }
@@ -288,22 +288,22 @@
         const now = new Date();
         const tonight = new Date(now);
         tonight.setHours(20, 0, 0, 0); // 8 PM today
-        
+
         // If it's past 8 PM, set for tomorrow
         if (now > tonight) {
             tonight.setDate(tonight.getDate() + 1);
         }
-        
+
         const diff = tonight - now;
-        
+
         const hours = Math.floor(diff / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        
-        document.getElementById('dashboardCountdown').textContent = 
+
+        document.getElementById('dashboardCountdown').textContent =
             `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
-    
+
     setInterval(updateDashboardCountdown, 1000);
     updateDashboardCountdown();
 </script>

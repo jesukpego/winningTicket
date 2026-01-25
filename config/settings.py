@@ -26,9 +26,21 @@ CSRF_TRUSTED_ORIGINS = [
 # Detect Railway environment safely
 RAILWAY_ENVIRONMENT = os.environ.get("RAILWAY_ENVIRONMENT")
 DATABASE_URL = os.environ.get("DATABASE_URL")
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'pcznpmUWZTZxvfsBTdrPGXxZYoeSSGpW',
+        'HOST': 'gondola.proxy.rlwy.net',
+        'PORT': '46452',
+        'OPTIONS': {
+            'sslmode': 'require',
+        }
+    }
+}
 # Only use Railway config if we are in Railway AND have a database URL
-if RAILWAY_ENVIRONMENT and DATABASE_URL:
+""" if RAILWAY_ENVIRONMENT and DATABASE_URL:
     # ===== PRODUCTION (Railway - PostgreSQL) =====
     DATABASES = {
         'default': dj_database_url.config(
@@ -44,7 +56,9 @@ else:
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
-    }
+    } """
+
+   
 
 # ==================== APPLICATION ====================
 INSTALLED_APPS = [
