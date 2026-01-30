@@ -1,29 +1,10 @@
 
-"""
-=======================================================
-WINNING TICKET - LOTTERY PLATFORM DATABASE MODELS
-=======================================================
-
-Core Models for Multi-Tenant Lottery Platform
-- Supports Players, Individual Organizers, and Companies
-- Full financial tracking and compliance features
-- Real-time dashboards and reporting
-
-Author: [Your Name]
-Version: 1.0.0
-Last Updated: [Date]
-"""
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 import uuid
 
-
-# ===========================================================================
-# 1. USER PROFILE MODEL
-# ===========================================================================
 class UserProfile(models.Model):
     """
     Extended user profile for lottery players.
@@ -60,21 +41,7 @@ class UserProfile(models.Model):
         verbose_name="Total Tickets Purchased"
     )
     
-    # Responsible gaming controls
-    daily_limit = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        default=100.00,
-        verbose_name="Maximum Daily Spending Limit"
-    )
-    weekly_limit = models.DecimalField(
-        max_digits=10, 
-        decimal_places=2, 
-        default=500.00,
-        verbose_name="Maximum Weekly Spending Limit",
-        help_text="0 means no limit"
-    )
-    
+
     # Compliance fields
     age_verified = models.BooleanField(
         default=False,
@@ -96,6 +63,9 @@ class UserProfile(models.Model):
         verbose_name="Receive SMS Notifications"
     )
     
+   
+
+
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -161,9 +131,7 @@ class UserProfile(models.Model):
         return (self.user.tickets.filter(status='won').count() / self.games_played) * 100
 
 
-# ===========================================================================
-# 2. COMPANY MODELS
-# ===========================================================================
+
 class Company(models.Model):
     """
     Registered company that can organize lottery games.
@@ -333,9 +301,7 @@ class CompanyUser(models.Model):
         super().save(*args, **kwargs)
 
 
-# ===========================================================================
-# 3. GAME MODELS
-# ===========================================================================
+
 class Game(models.Model):
     """
     Lottery game definition.
@@ -344,11 +310,7 @@ class Game(models.Model):
     Defines all rules, pricing, and timing for a lottery game.
     """
     
-    ORGANIZER_TYPE = [
-        ('platform', 'Platform - Official Game'),
-        ('company', 'Company - Business Partner'),
-        ('individual', 'Individual - Verified User'),
-    ]
+    
     
     STATUS = [
         ('draft', 'Draft - Not Published'),
@@ -376,31 +338,12 @@ class Game(models.Model):
         help_text="Detailed description for players"
     )
     
-    # Organizer Information
-    organizer_type = models.CharField(
-        max_length=15, 
-        choices=ORGANIZER_TYPE,
-        verbose_name="Organizer Type"
-    )
-    
-    # Organizer reference - based on organizer_type
-    organizer_user = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='organized_games',
-        verbose_name="Individual Organizer",
-        help_text="Required if organizer_type is 'individual'"
-    )
+    # Company is the organizer
     company = models.ForeignKey(
         Company,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name='games',
-        verbose_name="Company Organizer",
-        help_text="Required if organizer_type is 'company'"
+        verbose_name="Company Organizer"
     )
     
     # Pricing
@@ -427,36 +370,13 @@ class Game(models.Model):
     )
     
     # Game Rules
-    min_numbers = models.PositiveIntegerField(
-        default=1,
-        verbose_name="Minimum Numbers to Select"
-    )
-    max_numbers = models.PositiveIntegerField(
-        default=6,
-        verbose_name="Maximum Numbers to Select"
-    )
+  
     number_range = models.PositiveIntegerField(
         default=50,
         verbose_name="Number Range (1 to X)"
     )
-    has_powerball = models.BooleanField(
-        default=False,
-        verbose_name="Includes Powerball Number"
-    )
-    powerball_range = models.PositiveIntegerField(
-        default=10,
-        verbose_name="Powerball Range (1 to X)",
-        help_text="Only used if has_powerball is True"
-    )
     
-    # Timing
-    next_draw = models.DateTimeField(
-        verbose_name="Next Draw Date & Time"
-    )
-    ticket_sale_end = models.DateTimeField(
-        verbose_name="Ticket Sales End",
-        help_text="Last moment to buy tickets for next draw"
-    )
+    
     
     # Status
     status = models.CharField(
@@ -480,11 +400,11 @@ class Game(models.Model):
     class Meta:
         verbose_name = "Game"
         verbose_name_plural = "Games"
-        ordering = ['-next_draw']
+        ordering = ['-created_at']
         indexes = [
-            models.Index(fields=['status', 'next_draw']),
-            models.Index(fields=['organizer_type']),
+            models.Index(fields=['status', 'created_at']),
             models.Index(fields=['slug']),
+            models.Index(fields=['company']),
         ]
     
     def __str__(self):
@@ -494,33 +414,35 @@ class Game(models.Model):
         """Validate game data"""
         errors = {}
         
-        # Validate organizer based on type
-        if self.organizer_type == 'company' and not self.company:
-            errors['company'] = "Company organizer must have a company selected"
-        
-        if self.organizer_type == 'individual' and not self.organizer_user:
-            errors['organizer_user'] = "Individual organizer must have a user selected"
-        
-        # Validate numbers
-        if self.min_numbers > self.max_numbers:
-            errors['min_numbers'] = "Minimum numbers cannot exceed maximum numbers"
-        
-        if self.max_numbers > self.number_range:
-            errors['max_numbers'] = "Maximum numbers cannot exceed number range"
-        
-        # Validate timing
-        if self.ticket_sale_end and self.next_draw:
-            if self.ticket_sale_end >= self.next_draw:
-                errors['ticket_sale_end'] = "Ticket sales must end before draw time"
+        # Validate company is provided (use company_id to avoid RelatedObjectDoesNotExist)
+        if not self.company_id:
+            errors['company'] = "L'entreprise est requise pour tous les jeux"
         
         if errors:
             raise ValidationError(errors)
     
     def save(self, *args, **kwargs):
-        """Auto-set published_at when status becomes active"""
+        """Auto-set published_at when status becomes active and create GameFinance"""
+        is_new = self.pk is None
+        
+        if not self.slug:
+            from django.utils.text import slugify
+            self.slug = slugify(self.name)
+            
         if self.status == 'active' and not self.published_at:
             self.published_at = timezone.now()
+        
         super().save(*args, **kwargs)
+        
+        # Auto-create GameFinance for new games
+        if is_new:
+            from principal.models import GameFinance
+            GameFinance.objects.get_or_create(
+                game=self,
+                defaults={
+                    'total_prize_pool': self.prize_amount,
+                }
+            )
     
     @property
     def total_sales(self):
@@ -590,9 +512,6 @@ class Game(models.Model):
         return True, "OK"
 
 
-# ===========================================================================
-# 4. TICKET MODEL
-# ===========================================================================
 class Ticket(models.Model):
     """
     Individual lottery ticket purchase.
@@ -726,9 +645,13 @@ class Ticket(models.Model):
             random_str = ''.join(random.choices(string.digits, k=5))
             self.ticket_id = f"{game_prefix}-{date_str}-{random_str}"
         
-        # Set draw_date from game if not set
-        if not self.draw_date and self.game:
-            self.draw_date = self.game.next_draw
+        # Set draw_date from game if not set, default to now if game has no next_draw logic
+        if not self.draw_date:
+            if self.game and hasattr(self.game, 'next_draw'):
+                self.draw_date = self.game.next_draw
+            else:
+                from django.utils import timezone
+                self.draw_date = timezone.now()
         
         super().save(*args, **kwargs)
     
@@ -849,9 +772,6 @@ class Ticket(models.Model):
         return nums
 
 
-# ===========================================================================
-# 5. DRAW MODEL
-# ===========================================================================
 class Draw(models.Model):
     """
     Lottery draw event with winning numbers.
@@ -1046,9 +966,6 @@ class Draw(models.Model):
         return breakdown
 
 
-# ===========================================================================
-# 6. WINNER MODEL
-# ===========================================================================
 class Winner(models.Model):
     """
     Record of a winning ticket and its prize.
@@ -1226,9 +1143,6 @@ class Winner(models.Model):
         return delta.days
 
 
-# ===========================================================================
-# 7. PAYMENT MODEL
-# ===========================================================================
 class Payment(models.Model):
     """
     All financial transactions in the system.
@@ -1426,9 +1340,6 @@ class Payment(models.Model):
         return delta.total_seconds() / 60
 
 
-# ===========================================================================
-# 8. GAME FINANCE MODEL
-# ===========================================================================
 class GameFinance(models.Model):
     """
     Financial summary for each game.
@@ -1527,8 +1438,29 @@ class GameFinance(models.Model):
     settled_at = models.DateTimeField(
         null=True,
         blank=True,
-        verbose_name="Full Settlement Date"
     )
+
+    def update_from_sales(self, ticket_price):
+        """
+        Update financial stats after a new sale.
+        """
+        from django.utils import timezone
+        
+        # Update aggregate fields
+        self.total_sales = models.F('total_sales') + ticket_price
+        self.total_tickets = models.F('total_tickets') + 1
+        
+        # Calculate fees (simplified, recalculate on save for precision if needed)
+        fee_percent = self.game.platform_fee_percent
+        fee_amount = (ticket_price * fee_percent) / 100
+        
+        self.platform_fee_amount = models.F('platform_fee_amount') + fee_amount
+        self.organizer_profit = models.F('organizer_profit') + (ticket_price - fee_amount)
+        
+        self.last_sale_at = timezone.now()
+        self.save()
+        self.refresh_from_db()  # Refresh to get updated values from F expressions
+
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -1601,9 +1533,6 @@ class GameFinance(models.Model):
         return (self.total_prize_pool / self.total_sales) * 100
 
 
-# ===========================================================================
-# 9. SYNDICATE MODELS (OPTIONAL)
-# ===========================================================================
 class Syndicate(models.Model):
     """
     Group of users pooling money to buy tickets together.
@@ -1769,9 +1698,6 @@ class SyndicateMember(models.Model):
         return f"{self.user.username} - {self.syndicate.name} ({self.shares} shares)"
 
 
-# ===========================================================================
-# 10. AUDIT LOG MODEL
-# ===========================================================================
 class AuditLog(models.Model):
     """
     System audit trail for security and compliance.
@@ -1893,222 +1819,21 @@ class AuditLog(models.Model):
         return f"{self.get_action_display()} - {self.user or 'System'} - {self.created_at}"
 
 
-# ===========================================================================
-# SIGNALS (Add to signals.py or bottom of models.py)
-# ===========================================================================
-"""
-Create Django signals to automate:
-1. UserProfile creation when User is created
-2. GameFinance creation when Game is created
-3. Auto-update statistics
-"""
-
-# Example signal (would be in signals.py):
-# @receiver(post_save, sender=User)
-# def create_user_profile(sender, instance, created, **kwargs):
-#     if created:
-#         UserProfile.objects.create(user=instance)
-
-
-
-
-""" 
-from django.db import models
-from django.contrib.auth.models import User
-
-
-# =========================
-# USER PROFILE
-# =========================
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    total_spent = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    total_won = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    games_played = models.PositiveIntegerField(default=0)
-    daily_limit = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    age_verified = models.BooleanField(default=False)
-    email_notifications = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.user.username
-
-
-# =========================
-# COMPANY
-# =========================
-class Company(models.Model):
-    name = models.CharField(max_length=150)
-    registration_number = models.CharField(max_length=100, unique=True)
-    contact_email = models.EmailField()
-    verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-class CompanyUser(models.Model):
-    ROLE_CHOICES = [
-        ('admin', 'Admin'),
-        ('manager', 'Manager'),
-        ('viewer', 'Viewer'),
+class Wallet(models.Model):
+    """
+    User wallet for managing funds.
+    """
+    WALLET_TYPE = [
+        ('main', 'Main Wallet'),
+        ('bonus', 'Bonus Wallet'),
+        ('winnings', 'Winnings Wallet'),
     ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wallets')
+    wallet_type = models.CharField(max_length=10, choices=WALLET_TYPE, default='main')
+    balance = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     is_active = models.BooleanField(default=True)
-
+    
     class Meta:
-        unique_together = ('user', 'company')
+        unique_together = ('user', 'wallet_type')
 
-    def __str__(self):
-        return f"{self.user.username} - {self.company.name}"
-
-
-# =========================
-# GAME
-# =========================
-class Game(models.Model):
-    ORGANIZER_TYPE = [
-        ('platform', 'Platform'),
-        ('company', 'Company'),
-        ('individual', 'Individual'),
-    ]
-
-    STATUS = [
-        ('draft', 'Draft'),
-        ('active', 'Active'),
-        ('closed', 'Closed'),
-        ('canceled', 'Canceled'),
-    ]
-
-    name = models.CharField(max_length=100)
-    organizer_type = models.CharField(max_length=15, choices=ORGANIZER_TYPE)
-
-    organizer_user = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True, blank=True
-    )
-    company = models.ForeignKey(
-        Company, on_delete=models.SET_NULL, null=True, blank=True
-    )
-
-    ticket_price = models.DecimalField(max_digits=10, decimal_places=2)
-    prize_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    platform_fee_percent = models.DecimalField(max_digits=5, decimal_places=2)
-
-    min_numbers = models.PositiveIntegerField()
-    max_numbers = models.PositiveIntegerField()
-    number_range = models.PositiveIntegerField()
-    has_powerball = models.BooleanField(default=False)
-
-    next_draw = models.DateTimeField()
-    status = models.CharField(max_length=10, choices=STATUS, default='draft')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name
-
-
-# =========================
-# TICKET
-# =========================
-class Ticket(models.Model):
-    STATUS = [
-        ('pending', 'Pending'),
-        ('won', 'Won'),
-        ('lost', 'Lost'),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    numbers = models.JSONField()
-    powerball = models.IntegerField(null=True, blank=True)
-    draw_date = models.DateTimeField()
-
-    status = models.CharField(max_length=10, choices=STATUS, default='pending')
-    win_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0)
-    checked = models.BooleanField(default=False)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-# =========================
-# DRAW
-# =========================
-class Draw(models.Model):
-    game = models.ForeignKey(Game, on_delete=models.CASCADE)
-    draw_date = models.DateTimeField()
-    winning_numbers = models.JSONField()
-    winning_powerball = models.IntegerField(null=True, blank=True)
-
-    jackpot_amount = models.DecimalField(max_digits=15, decimal_places=2)
-    jackpot_won = models.BooleanField(default=False)
-    total_winners = models.PositiveIntegerField(default=0)
-
-    class Meta:
-        unique_together = ('game', 'draw_date')
-
-    def __str__(self):
-        return f"{self.game.name} - {self.draw_date}"
-
-
-# =========================
-# WINNER
-# =========================
-class Winner(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    ticket = models.OneToOneField(Ticket, on_delete=models.CASCADE)
-    draw = models.ForeignKey(Draw, on_delete=models.CASCADE)
-
-    prize_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    prize_tier = models.CharField(max_length=100)
-
-    claimed = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
-    paid_at = models.DateTimeField(null=True, blank=True)
-
-    tax_withheld = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-
-
-# =========================
-# PAYMENT
-# =========================
-class Payment(models.Model):
-    PAYMENT_TYPE = [
-        ('ticket', 'Ticket Purchase'),
-        ('payout', 'Prize Payout'),
-        ('refund', 'Refund'),
-        ('commission', 'Platform Commission'),
-    ]
-
-    STATUS = [
-        ('pending', 'Pending'),
-        ('completed', 'Completed'),
-        ('failed', 'Failed'),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=12, decimal_places=2)
-    payment_type = models.CharField(max_length=15, choices=PAYMENT_TYPE)
-    status = models.CharField(max_length=10, choices=STATUS)
-    transaction_id = models.CharField(max_length=150, unique=True)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-# =========================
-# GAME FINANCE
-# =========================
-class GameFinance(models.Model):
-    game = models.OneToOneField(Game, on_delete=models.CASCADE)
-
-    total_sales = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    platform_fee = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-    organizer_profit = models.DecimalField(max_digits=15, decimal_places=2, default=0)
-
-    prize_paid = models.BooleanField(default=False)
-    settled = models.BooleanField(default=False)
-
-    updated_at = models.DateTimeField(auto_now=True)
- """

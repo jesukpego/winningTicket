@@ -1,123 +1,104 @@
 {% extends 'base.html' %}
 
-{% block title %}Manage Games - Admin{% endblock %}
+{% block title %}Manage Companies - Admin{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h1 class="h3 fw-bold text-primary-dark"><i class="fas fa-cogs me-2 text-gold"></i>Game Management</h1>
-            <p class="text-muted mb-0">Create, edit, and manage your lottery games.</p>
+            <h1 class="h3 fw-bold text-primary-dark"><i class="fas fa-building me-2 text-gold"></i>Company Management
+            </h1>
+            <p class="text-muted mb-0">Manage lottery companies and verify their details.</p>
         </div>
-        <a href="{% url 'create_game' %}" class="btn btn-gold shadow-sm">
-            <i class="fas fa-plus me-2"></i>Create New Game
+        <a href="{% url 'create_company' %}" class="btn btn-gold shadow-sm">
+            <i class="fas fa-plus me-2"></i>Create New Company
         </a>
     </div>
 
-    <!-- Games Table -->
+    <!-- Companies Table -->
     <div class="card shadow-lg border-0 overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-primary-dark text-white">
                         <tr>
-                            <th class="ps-4 py-3">Game Name</th>
-                            <th class="py-3">Next Draw</th>
-                            <th class="py-3">Ticket Price</th>
-                            <th class="py-3">Prize</th>
+                            <th class="ps-4 py-3">Company Name</th>
+                            <th class="py-3">Registration No.</th>
+                            <th class="py-3">Contact</th>
                             <th class="py-3">Status</th>
                             <th class="text-end pe-4 py-3">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% if games %}
-                        {% for game in games %}
+                        {% if companies %}
+                        {% for company in companies %}
                         <tr>
                             <td class="ps-4 py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="rounded-circle bg-light-blue p-2 me-3 text-primary-dark">
-                                        <i class="fas fa-ticket-alt"></i>
+                                        <i class="fas fa-building"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-primary-dark">{{ game.name }}</h6>
-                                        {% if game.company %}
-                                        <small class="text-muted"><i class="fas fa-building me-1 text-gold"></i>{{
-                                            game.company.name }}</small>
+                                        <h6 class="mb-0 fw-bold text-primary-dark">{{ company.name }}</h6>
+                                        {% if company.verified %}
+                                        <small class="text-success fw-bold" style="font-size: 0.75rem;"><i
+                                                class="fas fa-check-circle me-1"></i>Verified</small>
+                                        {% else %}
+                                        <small class="text-warning fw-bold" style="font-size: 0.75rem;"><i
+                                                class="fas fa-exclamation-triangle me-1"></i>Unverified</small>
                                         {% endif %}
                                     </div>
                                 </div>
                             </td>
+                            <td><span class="font-monospace text-muted">{{ company.registration_number }}</span></td>
                             <td>
-                                {% if game.next_draw %}
-                                <span class="text-muted">{{ game.next_draw|date:"M d, Y H:i" }}</span>
-                                {% else %}
-                                <span class="badge bg-light text-muted border">No Draw Set</span>
-                                {% endif %}
+                                <div class="small fw-semibold text-primary-dark">{{ company.contact_email }}</div>
+                                <div class="small text-muted">{{ company.contact_phone }}</div>
                             </td>
-                            <td class="fw-bold text-primary-dark">${{ game.ticket_price|floatformat:2 }}</td>
-                            <td class="fw-bold text-gold">${{ game.prize_amount|floatformat:2 }}</td>
                             <td>
-                                {% if game.status == 'active' %}
                                 <span
-                                    class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
-                                    <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Active
+                                    class="badge {% if company.is_active %}bg-success-subtle text-success border border-success-subtle{% else %}bg-secondary-subtle text-secondary border border-secondary-subtle{% endif %} px-3 py-2 rounded-pill">
+                                    {% if company.is_active %}Active{% else %}Inactive{% endif %}
                                 </span>
-                                {% elif game.status == 'pending' %}
-                                <span
-                                    class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill">
-                                    Pending
-                                </span>
-                                {% elif game.status == 'closed' %}
-                                <span
-                                    class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2 rounded-pill">
-                                    Closed
-                                </span>
-                                {% else %}
-                                <span
-                                    class="badge bg-dark-subtle text-dark border border-dark-subtle px-3 py-2 rounded-pill">
-                                    {{ game.get_status_display }}
-                                </span>
-                                {% endif %}
                             </td>
                             <td class="text-end pe-4">
                                 <div class="btn-group">
-                                    <a href="{% url 'edit_game' game.id %}" class="btn btn-sm btn-outline-primary"
+                                    <a href="{% url 'edit_company' company.id %}" class="btn btn-sm btn-outline-primary"
                                         title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal{{ game.id }}" title="Delete">
+                                        data-bs-target="#deleteCompanyModal{{ company.id }}" title="Delete">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </div>
 
                                 <!-- Delete Modal -->
-                                <div class="modal fade" id="deleteModal{{ game.id }}" tabindex="-1"
-                                    aria-hidden="true text-start">
+                                <div class="modal fade" id="deleteCompanyModal{{ company.id }}" tabindex="-1"
+                                    aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header border-0 pb-0">
-                                                <h5 class="modal-title fw-bold text-danger">Delete Game?</h5>
+                                                <h5 class="modal-title fw-bold text-danger">Delete Company?</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body text-start text-wrap">
                                                 <div class="text-center mb-3">
                                                     <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                                                    <p>Are you sure you want to delete <strong>{{ game.name }}</strong>?
-                                                    </p>
-                                                    <p class="small text-muted">This action cannot be undone and will
-                                                        verify cascading deletions.</p>
+                                                    <p>Are you sure you want to delete <strong>{{ company.name
+                                                            }}</strong>?</p>
+                                                    <p class="small text-muted">This action cannot be undone.</p>
                                                 </div>
                                             </div>
                                             <div class="modal-footer border-0 pt-0 justify-content-center">
                                                 <button type="button" class="btn btn-light px-4"
                                                     data-bs-dismiss="modal">Cancel</button>
-                                                <form action="{% url 'delete_game' game.id %}" method="post"
+                                                <form action="{% url 'delete_company' company.id %}" method="post"
                                                     class="d-inline">
                                                     {% csrf_token %}
                                                     <button type="submit" class="btn btn-danger px-4">Delete
-                                                        Permanently</button>
+                                                        Company</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -128,13 +109,13 @@
                         {% endfor %}
                         {% else %}
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
+                            <td colspan="5" class="text-center py-5 text-muted">
                                 <div class="py-5">
                                     <i class="fas fa-folder-open fa-3x mb-3 text-secondary opacity-25"></i>
-                                    <h5 class="fw-bold text-secondary">No games found</h5>
-                                    <p class="mb-3">Get started by creating your first lottery game.</p>
-                                    <a href="{% url 'create_game' %}" class="btn btn-sm btn-gold">
-                                        <i class="fas fa-plus me-2"></i>Create Game
+                                    <h5 class="fw-bold text-secondary">No companies found</h5>
+                                    <p class="mb-3">Add your first company to get started!</p>
+                                    <a href="{% url 'create_company' %}" class="btn btn-sm btn-gold">
+                                        <i class="fas fa-plus me-2"></i>Create New Company
                                     </a>
                                 </div>
                             </td>

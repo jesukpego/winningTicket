@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block title %}Jouer - {{ game.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+
+        <!-- ================= SIDEBAR ================= -->
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-lg border-0 mb-4 overflow-hidden">
+
+                <div class="card-header bg-gradient-blue text-white p-4">
+                    <h4 class="mb-0 fw-bold">
+                        <i class="fas fa-ticket-alt me-2 text-gold"></i>{{ game.name }}
+                    </h4>
+                </div>
+
+                <div class="card-body p-4 bg-white">
+
+                    <div class="mb-4 text-center p-3 rounded bg-light-blue">
+                        <small class="text-uppercase fw-bold text-primary-dark">Cagnotte</small>
+                        <h2 class="text-gold fw-bold mb-0">
+                            {{ game.prize_amount|floatformat:2 }} $
+                        </h2>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3 border-bottom pb-3">
+                        <span class="text-muted">Prix du Billet</span>
+                        <span class="fw-bold text-primary-dark">
+                            {{ game.ticket_price|floatformat:2 }} $
+                        </span>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Organisé par</span>
+                        <span class="fw-bold text-primary-dark">{{ game.company.name }}</span>
+                    </div>
+
+                    <div class="alert alert-info border-0 bg-light-blue text-primary-dark">
+                        <div class="d-flex justify-content-between">
+                            <span>Votre Solde</span>
+                            <span class="fw-bold text-success">
+                                {{ wallet.balance|floatformat:2 }} $
+                            </span>
+                        </div>
+                    </div>
+
+                    {% if wallet.balance < game.ticket_price %}
+                    <div class="alert alert-danger mt-3 mb-0">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        Solde insuffisant
+                    </div>
+                    {% endif %}
+
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold text-primary-dark mb-3">Comment jouer</h5>
+                    <ul class="list-unstyled text-muted mb-0">
+                        <li class="mb-2"><i class="fas fa-check-circle text-gold me-2"></i>Sélectionnez vos numéros</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-gold me-2"></i>Cliquez sur Acheter</li>
+                        <li class="mb-2"><i class="fas fa-check-circle text-gold me-2"></i>Attendez le tirage</li>
+                        <li><i class="fas fa-check-circle text-gold me-2"></i>Vérifiez vos gains</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= ZONE DE JEU ================= -->
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-4 p-md-5">
+
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <div class="text-center mb-5">
+                        <h3 class="fw-bold text-primary-dark">Sélectionnez vos numéros</h3>
+                        <p class="text-muted">
+                            Choisissez vos numéros (1 à {{ game.number_range }})
+                        </p>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="number-grid mb-4">
+                            {% for n in number_grid %}
+                            <div class="number-item">
+                                <input type="checkbox"
+                                       name="numbers"
+                                       value="{{ n }}"
+                                       id="num-{{ n }}"
+                                       class="btn-check number-checkbox">
+
+                                <label class="btn number-label rounded-circle shadow-sm"
+                                       for="num-{{ n }}">
+                                    {{ n }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="card bg-light border-0 mb-4">
+                            <div class="card-body">
+                                <h5 class="fw-bold text-primary-dark">
+                                    Numéros sélectionnés (<span id="countDisplay">0</span>)
+                                </h5>
+                                <div id="selectedDisplay">
+                                    <span class="text-muted fst-italic">Aucun numéro sélectionné</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit"
+                                    class="btn btn-gold btn-lg py-3"
+                                    id="buyButton"
+                                    {% if wallet.balance < game.ticket_price %}disabled{% endif %}>
+                                <i class="fas fa-shopping-cart me-2"></i>
+                                Acheter le billet
+                                ({{ game.ticket_price|floatformat:2 }} $)
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= STYLES ================= -->
+<style>
+.bg-gradient-blue {
+    background: linear-gradient(135deg, #0A2463, #071A4D);
+}
+.text-gold { color: #FFD700; }
+.bg-light-blue { background-color: #F0F4FF; }
+.text-primary-dark { color: #0A2463; }
+
+.number-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.number-item { width: 50px; }
+
+.number-label {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #E5E7EB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all .2s;
+}
+.btn-check:checked + .number-label {
+    background: linear-gradient(135deg, #FFD700, #B8860B);
+    color: #0A2463;
+    transform: scale(1.1);
+}
+</style>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const checkboxes = document.querySelectorAll('.number-checkbox');
+    const countDisplay = document.getElementById('countDisplay');
+    const selectedDisplay = document.getElementById('selectedDisplay');
+
+    function updateDisplay() {
+        const selected = Array.from(checkboxes)
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+
+        countDisplay.textContent = selected.length;
+
+        if (selected.length > 0) {
+            selectedDisplay.innerHTML = selected
+                .map(n => `<span class="badge bg-primary me-1">${n}</span>`)
+                .join('');
+        } else {
+            selectedDisplay.innerHTML =
+                '<span class="text-muted fst-italic">Aucun numéro sélectionné</span>';
+        }
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateDisplay));
+});
+</script>
+{% endblock %}

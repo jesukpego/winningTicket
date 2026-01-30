@@ -1,231 +1,160 @@
 {% extends 'base.html' %}
 
-{% block title %}Games - WINNING TICKET{% endblock %}
+{% block title %}Jeux - WINNING TICKET{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-4 mb-3">CHOOSE YOUR GAME</h1>
-        <p class="lead text-muted">Select from our exciting range of lottery games</p>
+        <h1 class="display-4 fw-bold text-primary-dark mb-3">CHOISISSEZ VOTRE JEU</h1>
+        <p class="lead text-muted">Sélectionnez parmi notre gamme de jeux de loterie passionnants</p>
     </div>
-    
+
+    <!-- Filtre par entreprise -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-6">
+            <form method="get" class="d-flex">
+                <select name="company" class="form-select me-2 shadow-sm border-0 py-3" onchange="this.form.submit()">
+                    <option value="">Toutes les Entreprises</option>
+                    {% for company in companies %}
+                    <option value="{{ company.id }}" {% if selected_company == company.id|stringformat:"i" %}selected{% endif %}>
+                        {{ company.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    {% if games %}
     <div class="row g-4">
-        <!-- Mega Jackpot -->
+        {% for game in games %}
         <div class="col-lg-6">
-            <div class="card ticket-card h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start">
+            <div class="card ticket-card h-100 border-0 shadow-sm overflow-hidden">
+                <div class="card-body p-4 position-relative">
+                    <!-- Badge spécial (ex: WIN IPHONE 17) -->
+                    {% if game.is_featured %}
+                    <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3">
+                        <i class="fas fa-crown me-1"></i> POPULAIRE
+                    </span>
+                    {% endif %}
+
+                    <div class="d-flex align-items-start position-relative z-1">
                         <div class="flex-shrink-0">
-                            <i class="fas fa-crown fa-3x text-warning me-3"></i>
+                            <div class="icon-box bg-gold-gradient text-primary-dark rounded-circle d-flex align-items-center justify-content-center me-4 shadow-sm"
+                                style="width: 70px; height: 70px;">
+                                <i class="fas fa-ticket-alt fa-2x"></i>
+                            </div>
                         </div>
                         <div class="flex-grow-1">
-                            <h3 class="card-title">Mega Jackpot</h3>
-                            <p class="card-text">The biggest lottery with life-changing jackpots. Draws every Wednesday and Saturday.</p>
-                            <div class="row mt-4">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h3 class="card-title fw-bold text-primary-dark mb-2">{{ game.name }}</h3>
+                                {% if game.company %}
+                                <span class="badge bg-light text-primary-dark border border-light-subtle">
+                                    <i class="fas fa-building me-1 text-gold"></i>{{ game.company.name }}
+                                </span>
+                                {% endif %}
+                            </div>
+
+                            <p class="card-text text-muted mb-4">{{ game.description|truncatechars:40 }}</p>
+
+                            <div class="row g-3">
                                 <div class="col-6">
-                                    <h5 class="text-warning">$12.45M</h5>
-                                    <small class="text-muted">Current Jackpot</small>
+                                    <div class="p-3 bg-light-blue rounded">
+                                        <small class="text-uppercase fw-bold text-primary-dark d-block mb-1"
+                                            style="font-size: 0.75rem;">Cagnotte</small>
+                                        <h5 class="text-gold fw-bold mb-0">${{ game.prize_amount|floatformat:2 }}</h5>
+                                    </div>
                                 </div>
                                 <div class="col-6">
-                                    <h5>$2.00</h5>
-                                    <small class="text-muted">Per Ticket</small>
+                                    <div class="p-3 bg-light rounded">
+                                        <small class="text-uppercase fw-bold text-muted d-block mb-1"
+                                            style="font-size: 0.75rem;">Prix du ticket</small>
+                                        <h5 class="text-primary-dark fw-bold mb-0">${{ game.ticket_price|floatformat:2 }}</h5>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <span class="badge bg-primary">6 + 1 Numbers</span>
-                                <span class="badge bg-info ms-2">1 in 302M Odds</span>
+
+                            <div class="mt-4 d-flex align-items-center">
+                                <span class="badge bg-gold-subtle text-primary-dark me-2">
+                                    <i class="fas fa-sort-numeric-up me-1"></i>1 à {{ game.number_range }}
+                                </span>
+                                {% if game.next_draw %}
+                                <span class="small text-muted ms-auto">
+                                    <i class="far fa-clock me-1"></i> Tirage : {{ game.next_draw|date:"d M H:i" }}
+                                </span>
+                                {% else %}
+                                <span class="small text-success ms-auto fw-bold">
+                                    <i class="fas fa-circle fa-xs me-1"></i> Actif
+                                </span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer bg-transparent border-top">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted">Next Draw: <strong>Tonight 8:00 PM</strong></small>
-                        </div>
-                        <a href="{% url 'game_detail' 1 %}" class="btn btn-gold">
-                            Play Now <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
+                <div class="card-footer bg-white border-0 p-4 pt-0">
+                    <a href="{% url 'play_game' game.slug %}"
+                        class="btn btn-primary-dark w-100 py-3 fw-bold shadow-sm custom-hover-btn">
+                        JOUER MAINTENANT <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
-        
-        <!-- Daily Lotto -->
-        <div class="col-lg-6">
-            <div class="card ticket-card h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-bolt fa-3x text-danger me-3"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h3 class="card-title">Daily Lotto</h3>
-                            <p class="card-text">Draw every day with great odds and exciting prizes. Perfect for daily players.</p>
-                            <div class="row mt-4">
-                                <div class="col-6">
-                                    <h5 class="text-warning">$500,000</h5>
-                                    <small class="text-muted">Current Jackpot</small>
-                                </div>
-                                <div class="col-6">
-                                    <h5>$1.00</h5>
-                                    <small class="text-muted">Per Ticket</small>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <span class="badge bg-primary">5 Numbers</span>
-                                <span class="badge bg-info ms-2">1 in 7M Odds</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent border-top">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted">Next Draw: <strong>Tonight 9:00 PM</strong></small>
-                        </div>
-                        <a href="{% url 'game_detail' 2 %}" class="btn btn-gold">
-                            Play Now <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Quick Win -->
-        <div class="col-lg-6">
-            <div class="card ticket-card h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-gem fa-3x text-info me-3"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h3 class="card-title">Quick Win</h3>
-                            <p class="card-text">Instant win scratch cards. Know your results immediately after purchase.</p>
-                            <div class="row mt-4">
-                                <div class="col-6">
-                                    <h5 class="text-warning">$100,000</h5>
-                                    <small class="text-muted">Max Prize</small>
-                                </div>
-                                <div class="col-6">
-                                    <h5>$5.00</h5>
-                                    <small class="text-muted">Per Card</small>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <span class="badge bg-primary">Instant Win</span>
-                                <span class="badge bg-info ms-2">1 in 4 Odds</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent border-top">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted">Results: <strong>Instant</strong></small>
-                        </div>
-                        <a href="{% url 'game_detail' 3 %}" class="btn btn-gold">
-                            Play Now <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Weekly Lottery -->
-        <div class="col-lg-6">
-            <div class="card ticket-card h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex align-items-start">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-star fa-3x text-success me-3"></i>
-                        </div>
-                        <div class="flex-grow-1">
-                            <h3 class="card-title">Weekly Lottery</h3>
-                            <p class="card-text">Weekly draws with great prizes. Perfect balance of odds and jackpot size.</p>
-                            <div class="row mt-4">
-                                <div class="col-6">
-                                    <h5 class="text-warning">$2.00M</h5>
-                                    <small class="text-muted">Current Jackpot</small>
-                                </div>
-                                <div class="col-6">
-                                    <h5>$1.50</h5>
-                                    <small class="text-muted">Per Ticket</small>
-                                </div>
-                            </div>
-                            <div class="mt-4">
-                                <span class="badge bg-primary">6 Numbers</span>
-                                <span class="badge bg-info ms-2">1 in 45M Odds</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent border-top">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted">Next Draw: <strong>Saturday 7:00 PM</strong></small>
-                        </div>
-                        <a href="#" class="btn btn-gold">
-                            Play Now <i class="fas fa-arrow-right ms-1"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
-    
-    <!-- Game Comparison -->
-    <div class="mt-5 pt-5">
-        <h3 class="text-center mb-4">GAME COMPARISON</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Game</th>
-                        <th>Ticket Price</th>
-                        <th>Jackpot</th>
-                        <th>Draw Schedule</th>
-                        <th>Odds of Winning</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Mega Jackpot</strong></td>
-                        <td>$2.00</td>
-                        <td>$12.45M</td>
-                        <td>Wed & Sat 8:00 PM</td>
-                        <td>1 in 302,575,350</td>
-                        <td><a href="{% url 'game_detail' 1 %}" class="btn btn-sm btn-gold">Play</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Daily Lotto</strong></td>
-                        <td>$1.00</td>
-                        <td>$500,000</td>
-                        <td>Daily 9:00 PM</td>
-                        <td>1 in 7,059,052</td>
-                        <td><a href="{% url 'game_detail' 2 %}" class="btn btn-sm btn-gold">Play</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Quick Win</strong></td>
-                        <td>$5.00</td>
-                        <td>$100,000</td>
-                        <td>Instant</td>
-                        <td>1 in 4</td>
-                        <td><a href="{% url 'game_detail' 3 %}" class="btn btn-sm btn-gold">Play</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Weekly Lottery</strong></td>
-                        <td>$1.50</td>
-                        <td>$2.00M</td>
-                        <td>Saturday 7:00 PM</td>
-                        <td>1 in 45,057,474</td>
-                        <td><a href="#" class="btn btn-sm btn-gold">Play</a></td>
-                    </tr>
-                </tbody>
-            </table>
+    {% else %}
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="fas fa-search fa-4x text-muted opacity-25"></i>
         </div>
+        <h3 class="fw-bold text-primary-dark">Aucun jeu trouvé</h3>
+        <p class="text-muted">Essayez de modifier vos filtres ou revenez plus tard.</p>
+        <a href="{% url 'games' %}" class="btn btn-gold mt-3 px-4 py-2">Voir tous les jeux</a>
     </div>
+    {% endif %}
 </div>
+
+<style>
+    .text-primary-dark {
+        color: #0A2463;
+    }
+
+    .text-gold {
+        color: #FFD700 !important;
+    }
+
+    .bg-light-blue {
+        background-color: #F0F4FF;
+    }
+
+    .bg-gold-subtle {
+        background-color: rgba(255, 215, 0, 0.15);
+    }
+
+    .bg-gold-gradient {
+        background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+    }
+
+    .btn-primary-dark {
+        background-color: #0A2463;
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .custom-hover-btn:hover {
+        background-color: #1E40AF;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(10, 36, 99, 0.2);
+    }
+
+    .ticket-card {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 16px;
+    }
+
+    .ticket-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08) !important;
+    }
+</style>
 {% endblock %}
