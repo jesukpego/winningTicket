@@ -18,6 +18,9 @@ urlpatterns = [
     path("logout/", views.logout_view, name="logout"),
     path("register/", views.register_view, name="register"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("admin-summary/", views.admin_dashboard, name="admin_dashboard"),
+    path("perform-draw/<int:game_id>/", views.perform_draw, name="perform_draw"),
+    path("revenue-report/", views.revenue_report, name="revenue_report"),
     path("health/", views.health_check, name="health"),
     
     # Admin - Companies

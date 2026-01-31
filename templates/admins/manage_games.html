@@ -22,10 +22,10 @@
                     <thead class="bg-primary-dark text-white">
                         <tr>
                             <th class="ps-4 py-3">Game Name</th>
-                            <th class="py-3">Next Draw</th>
-                            <th class="py-3">Ticket Price</th>
-                            <th class="py-3">Prize</th>
-                            <th class="py-3">Status</th>
+                            <th class="py-3">Progression</th>
+                            <th class="py-3">Prix Billet</th>
+                            <th class="py-3">Cagnotte</th>
+                            <th class="py-3">Statut</th>
                             <th class="text-end pe-4 py-3">Actions</th>
                         </tr>
                     </thead>
@@ -41,21 +41,53 @@
                                     <div>
                                         <h6 class="mb-0 fw-bold text-primary-dark">{{ game.name }}</h6>
                                         {% if game.company %}
-                                        <small class="text-muted"><i class="fas fa-building me-1 text-gold"></i>{{
-                                            game.company.name }}</small>
+                                        <small class="text-muted d-block"><i
+                                                class="fas fa-building me-1 text-gold"></i>{{ game.company.name
+                                            }}</small>
+                                        {% endif %}
+                                        {% if game.next_draw %}
+                                        <small class="text-primary-dark fw-bold d-block mt-1"><i
+                                                class="far fa-calendar-alt me-1"></i> {{ game.next_draw|date:"d M, H:i"
+                                            }}</small>
                                         {% endif %}
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                {% if game.next_draw %}
-                                <span class="text-muted">{{ game.next_draw|date:"M d, Y H:i" }}</span>
-                                {% else %}
-                                <span class="badge bg-light text-muted border">No Draw Set</span>
-                                {% endif %}
+                                <div class="d-flex align-items-center" style="min-width: 150px;">
+                                    <div class="progress flex-grow-1 me-2" style="height: 8px; border-radius: 10px;">
+                                        <div class="progress-bar bg-gold" role="progressbar"
+                                            style="width: {{ game.progression_percentage }}%;"
+                                            aria-valuenow="{{ game.progression_percentage }}" aria-valuemin="0"
+                                            aria-valuemax="100"></div>
+                                    </div>
+                                    <span class="small fw-bold text-primary-dark">{{ game.progression_percentage
+                                        }}%</span>
+                                </div>
+                                <small class="text-muted">{{ game.total_tickets_sold }} / {{ game.number_range }}
+                                    vendus</small>
                             </td>
                             <td class="fw-bold text-primary-dark">${{ game.ticket_price|floatformat:2 }}</td>
                             <td class="fw-bold text-gold">${{ game.prize_amount|floatformat:2 }}</td>
+                            <td>
+                                {% if game.status == 'closed' %}
+                                {% for winner in game.winners_list %}
+                                {% if winner.user.first_name %}
+                                <div class="small fw-bold text-primary-dark">{{ winner.user.first_name }} {{
+                                    winner.user.last_name }}</div>
+                                {% else %}
+                                <div class="small fw-bold text-primary-dark">{{ winner.user.username }}</div>
+                                {% endif %}
+                                <div class="small text-muted" style="font-size: 0.75rem;">{{ winner.user.email }}</div>
+                                {% empty %}
+                                <span class="text-muted small">Aucun gagnant</span>
+                                {% endfor %}
+                                {% elif game.status == 'active' %}
+                                <span class="badge bg-light text-muted fw-normal">En attente...</span>
+                                {% else %}
+                                <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% if game.status == 'active' %}
                                 <span
@@ -128,7 +160,7 @@
                         {% endfor %}
                         {% else %}
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">
+                            <td colspan="7" class="text-center py-5 text-muted">
                                 <div class="py-5">
                                     <i class="fas fa-folder-open fa-3x mb-3 text-secondary opacity-25"></i>
                                     <h5 class="fw-bold text-secondary">No games found</h5>
@@ -162,6 +194,10 @@
 
     .bg-light-blue {
         background-color: #F0F4FF;
+    }
+
+    .bg-gold {
+        background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
     }
 
     .table thead th {

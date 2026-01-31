@@ -494,8 +494,18 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item text-danger fw-bold" href="{% url 'manage_games' %}">
-                                    <i class="fas fa-user-shield me-2"></i> Admin Panel
+                                <a class="dropdown-item text-danger fw-bold" href="{% url 'admin_dashboard' %}">
+                                    <i class="fas fa-chart-line me-2"></i> Admin Dashboard
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger fw-bold" href="{% url 'revenue_report' %}">
+                                    <i class="fas fa-file-invoice-dollar me-2"></i> Revenue Report
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'manage_games' %}">
+                                    <i class="fas fa-gamepad me-2"></i> Manage Games
                                 </a>
                             </li>
                             {% endif %}

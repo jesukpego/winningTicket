@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+
+{% block title %}Rapport des Revenus - WINNING TICKET{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="h3 fw-bold text-primary-dark mb-1">Rapport de Revenus & Commissions</h1>
+            <p class="text-muted mb-0">Suivi des recettes de la plateforme (20%) et des bénéfices organisateurs.</p>
+        </div>
+        <div>
+            <button onclick="window.print()" class="btn btn-outline-secondary me-2">
+                <i class="fas fa-print me-2"></i>Imprimer
+            </button>
+            <a href="{% url 'admin_dashboard' %}" class="btn btn-primary shadow-sm">
+                <i class="fas fa-arrow-left me-2"></i>Retour Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm bg-primary-dark text-white">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="stat-icon bg-white-transparent rounded-circle p-2">
+                            <i class="fas fa-chart-line fa-lg text-white"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-white-50 text-uppercase small fw-bold">Ventes Totales (Brut)</h6>
+                    <h3 class="fw-bold mb-0">${{ total_sales|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm bg-gold text-primary-dark">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="stat-icon bg-white-transparent rounded-circle p-2">
+                            <i class="fas fa-percentage fa-lg text-primary-dark"></i>
+                        </div>
+                        <span class="badge bg-primary-dark text-white">20% Fee</span>
+                    </div>
+                    <h6 class="text-primary-dark-50 text-uppercase small fw-bold">Revenu Plateforme</h6>
+                    <h3 class="fw-bold mb-0">${{ platform_revenue|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="stat-icon bg-success-subtle rounded-circle p-2">
+                            <i class="fas fa-building fa-lg text-success"></i>
+                        </div>
+                    </div>
+                    <h6 class="text-muted text-uppercase small fw-bold">Part des Compagnies</h6>
+                    <h3 class="text-primary-dark fw-bold mb-0">${{ organizer_profit|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Breakdown Table -->
+    <div class="card border-0 shadow-sm overflow-hidden mb-5">
+        <div class="card-header bg-white p-4 border-0">
+            <h5 class="fw-bold text-primary-dark mb-0">Ventilation par Jeu</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="ps-4">Jeu / Compagnie</th>
+                            <th>Ventes Totales</th>
+                            <th>Commission Plateforme (20%)</th>
+                            <th>Bénéfice Compagnie (80%)</th>
+                            <th class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in game_revenues %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="rounded-circle bg-light p-2 me-3">
+                                        <i class="fas fa-dice text-primary-dark"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold text-primary-dark">{{ item.game.name }}</h6>
+                                        <small class="text-muted">{{ item.game.company.name }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fw-bold">${{ item.total_sales|floatformat:2 }}</td>
+                            <td class="text-danger fw-bold">-${{ item.platform_fee_amount|floatformat:2 }}</td>
+                            <td class="text-success fw-bold">${{ item.organizer_profit|floatformat:2 }}</td>
+                            <td class="text-end pe-4">
+                                <button class="btn btn-sm btn-outline-primary">Détails <i
+                                        class="fas fa-chevron-right ms-1"></i></button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="fas fa-folder-open fa-2x mb-3 opacity-25"></i>
+                                <p>Aucune donnée financière disponible pour les jeux.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .bg-primary-dark {
+        background-color: #0A2463;
+    }
+
+    .bg-gold {
+        background: linear-gradient(135deg, #FFD700 0%, #FDB931 100%);
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .bg-white-transparent {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .bg-success-subtle {
+        background-color: #e6f7f0;
+    }
+
+    .text-primary-dark {
+        color: #0A2463;
+    }
+
+    .text-primary-dark-50 {
+        color: rgba(10, 36, 99, 0.6);
+    }
+
+    @media print {
+
+        .navbar,
+        .btn,
+        .footer {
+            display: none !important;
+        }
+
+        .container {
+            width: 100% !important;
+            max-width: none !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #eee !important;
+        }
+    }
+</style>
+{% endblock %}

@@ -364,7 +364,7 @@ class Game(models.Model):
     platform_fee_percent = models.DecimalField(
         max_digits=5, 
         decimal_places=2,
-        default=10.00,
+        default=20.00,
         verbose_name="Platform Commission (%)",
         help_text="Percentage taken by platform from ticket sales"
     )
@@ -376,7 +376,13 @@ class Game(models.Model):
         verbose_name="Number Range (1 to X)"
     )
     
-    
+    # Timing
+    next_draw = models.DateTimeField(
+        null=True, 
+        blank=True,
+        verbose_name="Next Draw Date",
+        help_text="The date and time when the draw will take place"
+    )
     
     # Status
     status = models.CharField(
@@ -448,6 +454,22 @@ class Game(models.Model):
     def total_sales(self):
         """Calculate total sales amount"""
         return self.ticket_price * self.total_tickets_sold
+
+    @property
+    def progression_percentage(self):
+        """Calculate the percentage of tickets sold"""
+        if self.number_range == 0:
+            return 0
+        percentage = (self.total_tickets_sold / self.number_range) * 100
+        return min(round(percentage, 1), 100)
+
+    @property
+    def ready_for_draw(self):
+        """Check if draw date is reached and game is active"""
+        if self.status != 'active' or not self.next_draw:
+            return False
+        from django.utils import timezone
+        return timezone.now() >= self.next_draw
     
     @property
     def platform_fee_amount(self):
@@ -458,6 +480,13 @@ class Game(models.Model):
     def organizer_profit(self):
         """Calculate organizer's profit"""
         return self.total_sales - self.platform_fee_amount - self.prize_amount
+
+    @property
+    def winners_list(self):
+        """Returns the winners of this game"""
+        from django.apps import apps
+        Winner = apps.get_model('principal', 'Winner')
+        return Winner.objects.filter(draw__game=self).select_related('user')
     
     @property
     def is_open_for_sales(self):

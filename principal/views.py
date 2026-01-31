@@ -267,7 +267,7 @@ def login_view(request):
         else:
             messages.error(request, "Invalid username or password.")
             
-    return render(request, 'users/login.html', {'next': request.GET.get('next')})
+    return render(request, 'users/login.html')
 
 
 def logout_view(request):
@@ -364,6 +364,7 @@ class GameForm(forms.ModelForm):
             'number_range',
             'ticket_price', 
             'prize_amount',
+            'next_draw',
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom du jeu'}),
@@ -372,6 +373,7 @@ class GameForm(forms.ModelForm):
             'number_range': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Plage de numéros'}),
             'ticket_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Prix du billet'}),
             'prize_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Montant du prix'}),
+            'next_draw': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
         }
         labels = {
             'name': 'Nom du Jeu',
@@ -380,6 +382,7 @@ class GameForm(forms.ModelForm):
             'number_range': 'Plage de Numéros (1 à X)',
             'ticket_price': 'Prix du Billet',
             'prize_amount': 'Montant Total du Prix',
+            'next_draw': 'Date et Heure du Tirage',
         }
     
     def __init__(self, *args, **kwargs):
@@ -387,6 +390,153 @@ class GameForm(forms.ModelForm):
         # Populate company choices with all active companies
         self.fields['company'].queryset = Company.objects.filter(is_active=True).order_by('name')
         self.fields['company'].empty_label = "-- Sélectionner une entreprise --"
+
+@login_required
+@user_passes_test(is_staff)
+def admin_dashboard(request):
+    """Overall admin dashboard with stats and progression"""
+    from django.db.models import Sum, Count
+    
+    total_revenue = Payment.objects.filter(payment_type='ticket', status='completed').aggregate(total=Sum('amount'))['total'] or 0
+    total_tickets = Ticket.objects.count()
+    active_games_count = Game.objects.filter(status='active').count()
+    total_users = User.objects.count()
+    
+    recent_transactions = Payment.objects.select_related('user', 'game').order_by('-created_at')[:10]
+    active_games = Game.objects.filter(status='active').order_by('-total_tickets_sold')
+    ready_games = [g for g in active_games if g.ready_for_draw]
+    
+    context = {
+        'total_revenue': total_revenue,
+        'total_tickets': total_tickets,
+        'active_games_count': active_games_count,
+        'total_users': total_users,
+        'recent_transactions': recent_transactions,
+        'active_games': active_games,
+        'ready_games': ready_games,
+    }
+    return render(request, 'admins/dashboard.html', context)
+
+@login_required
+@user_passes_test(is_staff)
+def revenue_report(request):
+    """Detailed financial report for platform and games"""
+    from django.db.models import Sum
+    from principal.models import GameFinance
+    
+    # Platform totals
+    total_stats = GameFinance.objects.aggregate(
+        total_sales=Sum('total_sales'),
+        total_platform_revenue=Sum('platform_fee_amount'),
+        total_organizer_profit=Sum('organizer_profit')
+    )
+    
+    # Breakdown by game
+    game_revenues = GameFinance.objects.select_related('game', 'game__company').order_by('-total_sales')
+            
+    context = {
+        'total_sales': total_stats['total_sales'] or 0,
+        'platform_revenue': total_stats['total_platform_revenue'] or 0,
+        'organizer_profit': total_stats['total_organizer_profit'] or 0,
+        'game_revenues': game_revenues
+    }
+    return render(request, 'admins/revenue_report.html', context)
+
+@login_required
+@user_passes_test(is_staff)
+def perform_draw(request, game_id):
+    """Effectue le tirage au sort pour un jeu terminé"""
+    import random
+    from django.utils import timezone
+    from principal.models import Draw, Winner, Ticket
+    
+    game = get_object_or_404(Game, id=game_id, status='active')
+    
+    # 1. Récupérer tous les tickets vendus pour ce jeu
+    tickets = Ticket.objects.filter(game=game, status='pending')
+    
+    if not tickets.exists():
+        messages.error(request, "Aucun ticket n'a été vendu pour ce jeu. Tirage impossible.")
+        return redirect('admin_dashboard')
+    
+    # 2. Collecter tous les numéros choisis
+    all_chosen_numbers = []
+    for t in tickets:
+        if isinstance(t.numbers, list):
+            all_chosen_numbers.extend(t.numbers)
+    
+    if not all_chosen_numbers:
+        messages.error(request, "Erreur lors de la récupération des numéros.")
+        return redirect('admin_dashboard')
+        
+    # 3. Choisir le numéro gagnant au hasard parmi les numéros choisis
+    winning_number = random.choice(all_chosen_numbers)
+    
+    try:
+        with transaction.atomic():
+            # 4. Créer l'enregistrement Draw
+            draw = Draw.objects.create(
+                game=game,
+                draw_date=timezone.now(),
+                winning_numbers=[winning_number],
+                jackpot_amount=game.prize_amount,
+                processed=True,
+                processed_at=timezone.now(),
+                created_by=request.user
+            )
+            
+            # 5. Identifier les tickets gagnants
+            winning_tickets = []
+            for t in tickets:
+                if winning_number in t.numbers:
+                    t.status = 'won'
+                    t.win_amount = game.prize_amount # Pour l'instant on donne tout au gagnant
+                    t.checked = True
+                    t.checked_at = timezone.now()
+                    t.draw = draw
+                    t.save()
+                    
+                    # Créer Winner record
+                    Winner.objects.create(
+                        user=t.user,
+                        ticket=t,
+                        draw=draw,
+                        prize_amount=game.prize_amount
+                    )
+                    winning_tickets.append(t)
+                    
+                    # Créditer le wallet du gagnant
+                    from principal.models import Wallet
+                    winner_wallet, _ = Wallet.objects.get_or_create(user=t.user, wallet_type='main')
+                    winner_wallet.balance += game.prize_amount
+                    winner_wallet.save()
+                else:
+                    t.status = 'lost'
+                    t.checked = True
+                    t.checked_at = timezone.now()
+                    t.draw = draw
+                    t.save()
+            
+            # 6. Fermer le jeu
+            game.status = 'closed'
+            game.save()
+            
+            # Mettre à jour Draw stats
+            draw.total_winners = len(winning_tickets)
+            draw.total_prize_paid = game.prize_amount if winning_tickets else 0
+            draw.jackpot_won = len(winning_tickets) > 0
+            draw.save()
+            
+        messages.success(request, f"Tirage effectué avec succès ! Le numéro gagnant est le {winning_number}.")
+        if winning_tickets:
+            winner = winning_tickets[0].user
+            winner_name = f"{winner.first_name} {winner.last_name}" if winner.first_name else winner.username
+            messages.info(request, f"Gagnant identifié : {winner_name} ({winner.email})")
+            
+    except Exception as e:
+        messages.error(request, f"Une erreur est survenue lors du tirage : {str(e)}")
+        
+    return redirect('admin_dashboard')
 
 @login_required
 @user_passes_test(is_staff)
