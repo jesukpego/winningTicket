@@ -96,19 +96,28 @@ def play_game(request, slug):
         defaults={'balance': 0}
     )
     
+    # Récupérer les numéros déjà joués pour ce jeu
+    taken_numbers = set()
+    existing_tickets = Ticket.objects.filter(game=game)
+    for t in existing_tickets:
+        if isinstance(t.numbers, list):
+            taken_numbers.update(t.numbers)
+
     if request.method == 'POST':
         # Récupérer les numéros sélectionnés
         selected_numbers_raw = request.POST.getlist('numbers')
         selected_numbers = [int(n) for n in selected_numbers_raw if n.isdigit()]
         
         # Validation du nombre de numéros
-        # Pour l'instant nous n'avons pas de min_numbers/max_numbers dans le modèle (supprimés)
-        # Mais assumons qu'il faut 5 numéros par défaut pour la logique, ou permettons un nombre variable
-        # Le User a demandé de supprimer les contraintes min/max, donc on accepte ce qui vient
-        # mais il faut au moins un numéro.
         if not selected_numbers:
             messages.error(request, "Veuillez sélectionner au moins un numéro.")
             return redirect('play_game', slug=slug)
+
+        # Validation: Vérifier si les numéros sont déjà pris
+        for num in selected_numbers:
+            if num in taken_numbers:
+                messages.error(request, f"Le numéro {num} a déjà été acheté par un autre joueur.")
+                return redirect('play_game', slug=slug)
 
         # Validation du solde
         if user_wallet.balance < game.ticket_price:
@@ -129,7 +138,7 @@ def play_game(request, slug):
                 )
                 
                 # 2. Déduire du wallet
-                user_wallet.balance -= game.ticket_price
+                user_wallet.balance -= game.ticket_price*len(selected_numbers)
                 user_wallet.save()
                 
                 # 3. Créer le paiement (Transaction record)
@@ -137,38 +146,41 @@ def play_game(request, slug):
                     user=request.user,
                     game=game,
                     ticket=ticket,
-                    amount=game.ticket_price,
-                    payment_type='ticket_purchase',
+                    amount=game.ticket_price * len(selected_numbers),
+                    payment_type='ticket',
                     payment_method='wallet',
                     status='completed',
-                    transaction_id=f'PAY-{ticket.ticket_id}'
+                    transaction_id=f"TXN-{ticket.ticket_id}"
                 )
                 
-                # 4. Mettre à jour les stats du jeu
+                 # 4. Mettre à jour les stats du jeu
                 game.total_tickets_sold += 1
                 game.save()
                 
                 # 5. Mettre à jour GameFinance
                 if hasattr(game, 'finance'):
-                    game.finance.update_from_sales(game.ticket_price)
-                
+                    game.finance.update_from_sales(game.ticket_price * len(selected_numbers))
+            
             messages.success(request, f"Félicitations! Billet acheté avec succès. ID: {ticket.ticket_id}")
             return redirect('dashboard')
             
         except Exception as e:
             messages.error(request, f"Une erreur est survenue lors de l'achat: {str(e)}")
+            return redirect('play_game', slug=slug)
             
-    # Plage de numéros pour la grille de sélection
-    # number_range est par défaut 50 si non défini
-    range_limit = game.number_range if game.number_range else 50
-    number_grid = range(1, range_limit + 1)
+    # Générer la grille de numéros (1 à number_range)
+    number_grid = range(1, game.number_range + 1)
     
     context = {
         'game': game,
         'wallet': user_wallet,
-        'number_grid': number_grid
+        'number_grid': number_grid,
+        'taken_numbers': taken_numbers
     }
     return render(request, 'winning_ticket/play_game.html', context)
+
+
+
 
 
 def about(request):
@@ -255,7 +267,7 @@ def login_view(request):
         else:
             messages.error(request, "Invalid username or password.")
             
-    return render(request, 'users/login.html')
+    return render(request, 'users/login.html', {'next': request.GET.get('next')})
 
 
 def logout_view(request):

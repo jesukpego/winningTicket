@@ -89,10 +89,10 @@
                                     <td>{{ ticket.game.name }}</td>
                                     <td>
                                         {% for number in ticket.numbers %}
-                                        <span class="badge bg-primary-dark me-1">{{ number }}</span>
+                                        <span class="badge bg-primary-dark  me-1" style="color: black;">{{ number }}</span>
                                         {% endfor %}
                                         {% if ticket.powerball %}
-                                        <span class="badge bg-danger">{{ ticket.powerball }}</span>
+                                        <span class="badge bg-danger" style="color: black;">{{ ticket.powerball }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
