@@ -1,0 +1,65 @@
+<!-- Age Verification Modal -->
+<div class="modal fade" id="ageVerificationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <div class="modal-body p-5 text-center bg-dark text-white">
+                <div class="age-icon-v2 mb-4 mx-auto d-flex align-items-center justify-content-center">
+                    <i class="fas fa-user-shield fa-3x text-gold"></i>
+                </div>
+                <h3 class="fw-bold mb-3">VÉRIFICATION D'ÂGE</h3>
+                <p class="opacity-75 mb-4">
+                    Le jeu d'argent est strictement réservé aux personnes de <strong>18 ans et plus</strong>.
+                    Veuillez confirmer votre âge pour accéder à la plateforme.
+                </p>
+
+                <div class="d-grid gap-3">
+                    <button type="button" class="btn btn-gold btn-lg rounded-pill fw-bold py-3" id="confirmAgeBtn">
+                        J'ai 18 ans ou plus
+                    </button>
+                    <button type="button" class="btn btn-outline-light rounded-pill py-2" id="under18Btn">
+                        J'ai moins de 18 ans
+                    </button>
+                </div>
+
+                <p class="mt-4 small opacity-50">
+                    <i class="fas fa-info-circle me-1"></i> Jouez de manière responsable.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .age-icon-v2 {
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 215, 0, 0.1);
+        border: 2px solid var(--color-gold);
+        border-radius: 50%;
+    }
+
+    .modal-content.bg-dark {
+        background-color: #0f172a !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        if (!localStorage.getItem('ageVerified')) {
+            setTimeout(() => {
+                const modal = new bootstrap.Modal(document.getElementById('ageVerificationModal'));
+                modal.show();
+            }, 1500);
+        }
+
+        $('#confirmAgeBtn').on('click', function () {
+            localStorage.setItem('ageVerified', 'true');
+            bootstrap.Modal.getInstance(document.getElementById('ageVerificationModal')).hide();
+        });
+
+        $('#under18Btn').on('click', function () {
+            window.location.href = "https://www.google.com";
+        });
+    });
+</script>

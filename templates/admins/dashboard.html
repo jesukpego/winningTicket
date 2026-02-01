@@ -118,8 +118,10 @@
                                     <h6 class="fw-bold text-primary-dark mb-1">{{ game.name }}</h6>
                                     <small class="text-muted d-block">{{ game.company.name }}</small>
                                     {% if game.next_draw %}
-                                    <small class="text-primary-dark fw-bold"><i class="far fa-calendar-alt me-1"></i> {{
-                                        game.next_draw|date:"d M, H:i" }}</small>
+                                    <small class="text-primary-dark fw-bold">
+                                        <i class="far fa-calendar-alt me-1"></i> 
+                                        {{ game.next_draw|date:"d M, H:i" }}
+                                    </small>
                                     {% endif %}
                                 </div>
                                 <div class="text-end d-flex align-items-center">
@@ -130,10 +132,12 @@
                                     </a>
                                     {% endif %}
                                     <div class="me-3">
-                                        <span class="badge bg-gold-subtle text-primary-dark">{{
-                                            game.progression_percentage }}%</span>
-                                        <div class="small text-muted mt-1">{{ game.total_tickets_sold }} / {{
-                                            game.number_range }} tickets</div>
+                                        <span class="badge bg-gold-subtle text-primary-dark">
+                                            {{ game.progression_percentage }}%
+                                        </span>
+                                        <div class="small text-muted mt-1">
+                                            {{ game.total_tickets_sold }} / {{ game.number_range }} tickets
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -179,8 +183,7 @@
                                                 <i class="fas fa-shopping-basket text-primary-dark"></i>
                                             </div>
                                             <div>
-                                                <div class="small fw-bold text-primary-dark">{{ tx.user.username }}
-                                                </div>
+                                                <div class="small fw-bold text-primary-dark">{{ tx.user.username }}</div>
                                                 <div class="small text-muted">{{ tx.created_at|date:"d M H:i" }}</div>
                                             </div>
                                         </div>
@@ -211,66 +214,23 @@
     .bg-gradient-blue {
         background: linear-gradient(135deg, #0A2463 0%, #1E40AF 100%);
     }
-
     .bg-white-transparent {
         background-color: rgba(255, 255, 255, 0.2);
     }
-
-    .bg-gold-subtle {
-        background-color: #fff9e6;
-    }
-
-    .bg-success-subtle {
-        background-color: #e6f7f0;
-    }
-
-    .bg-info-subtle {
-        background-color: #e6f4f9;
-    }
-
-    .bg-gold-gradient {
-        background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
-    }
-
-    .stat-icon {
-        width: 45px;
-        height: 45px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .text-primary-dark {
-        color: #0A2463;
-    }
-
-    .text-gold {
-        color: #FFD700;
-    }
-
-    .card {
-        border-radius: 20px;
-    }
-
-    .pulse-button {
-        animation: pulse-warn 2s infinite;
-    }
+    .bg-gold-subtle { background-color: #fff9e6; }
+    .bg-success-subtle { background-color: #e6f7f0; }
+    .bg-info-subtle { background-color: #e6f4f9; }
+    .bg-gold-gradient { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); }
+    .stat-icon { width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; }
+    .text-primary-dark { color: #0A2463; }
+    .text-gold { color: #FFD700; }
+    .card { border-radius: 20px; }
+    .pulse-button { animation: pulse-warn 2s infinite; }
 
     @keyframes pulse-warn {
-        0% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
-        }
-
-        70% {
-            transform: scale(1.05);
-            box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
-        }
-
-        100% {
-            transform: scale(1);
-            box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
-        }
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7); }
+        70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
     }
 </style>
 {% endblock %}

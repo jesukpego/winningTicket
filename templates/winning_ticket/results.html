@@ -5,279 +5,166 @@
 {% block content %}
 <div class="container py-5">
     <div class="text-center mb-5">
-        <h1 class="display-5 mb-3">LOTTERY RESULTS</h1>
-        <p class="lead text-muted">Check the latest winning numbers and see if you're a winner</p>
+        <h1 class="display-5 mb-3">RÉSULTATS DES LOTERIES</h1>
+        <p class="lead text-muted">Consultez les derniers numéros gagnants et découvrez si vous avez gagné</p>
     </div>
-    
-    <!-- Date Selector -->
-    <div class="card mb-4">
-        <div class="card-body">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i> Select Date</h5>
-                </div>
-                <div class="col-md-6">
-                    <div class="input-group">
-                        <input type="date" class="form-control" value="2024-01-10">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-search"></i> Search
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Today's Results -->
-    <div class="card mb-5 border-primary">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0"><i class="fas fa-star me-2"></i> Today's Results - January 10, 2024</h4>
+
+    {% if recent_draws %}
+    {% for draw in recent_draws %}
+    <div class="card mb-5 {% if forloop.first %}border-primary{% endif %} shadow-sm">
+        <div class="card-header {% if forloop.first %}bg-primary{% else %}bg-dark-subtle{% endif %} text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">
+                <i class="fas fa-trophy me-2"></i>
+                {{ draw.game.name }} - {{ draw.draw_date|date:"F d, Y" }}
+            </h4>
+            <span class="badge bg-light text-dark fw-bold">Tirage #{{ draw.draw_number }}</span>
         </div>
         <div class="card-body">
-            <!-- Mega Jackpot -->
             <div class="result-card mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3>Mega Jackpot</h3>
-                    <span class="badge bg-primary">Draw #2456</span>
+                    <div class="text-muted">
+                        <i class="fas fa-building me-1"></i> 
+                        Organisé par: 
+                        {% if draw.game.company %}
+                            {{ draw.game.company.name }}
+                        {% else %}
+                            WINNING TICKET
+                        {% endif %}
+                    </div>
+                    <span class="badge bg-success">Terminé</span>
                 </div>
-                
-                <!-- Winning Numbers -->
+
+                <!-- Numéros gagnants -->
                 <div class="text-center my-4">
-                    <h5 class="mb-3">Winning Numbers</h5>
-                    <div class="d-flex justify-content-center flex-wrap">
-                        <span class="number-ball">5</span>
-                        <span class="number-ball">12</span>
-                        <span class="number-ball">23</span>
-                        <span class="number-ball">34</span>
-                        <span class="number-ball">45</span>
-                        <span class="number-ball">12</span>
-                        <span class="number-ball powerball">12</span>
-                    </div>
-                </div>
-                
-                <!-- Result Details -->
-                <div class="row text-center">
-                    <div class="col-md-3">
-                        <div class="p-3">
-                            <h2 class="text-warning">$12M</h2>
-                            <p class="text-muted mb-0">Jackpot</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="p-3">
-                            <h2 class="text-success">0</h2>
-                            <p class="text-muted mb-0">Jackpot Winners</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="p-3">
-                            <h2 class="text-info">3,456</h2>
-                            <p class="text-muted mb-0">Total Winners</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="p-3">
-                            <h2 class="text-primary">$2.5M</h2>
-                            <p class="text-muted mb-0">Total Prizes</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Prize Breakdown -->
-                <div class="mt-4">
-                    <h5><i class="fas fa-award me-2"></i> Prize Breakdown</h5>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Match</th>
-                                    <th>Winners</th>
-                                    <th>Prize Per Winner</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>6 + Powerball</td>
-                                    <td>0</td>
-                                    <td class="text-success">$12,000,000</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>2</td>
-                                    <td class="text-success">$250,000</td>
-                                </tr>
-                                <tr>
-                                    <td>5 + Powerball</td>
-                                    <td>15</td>
-                                    <td class="text-success">$10,000</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>120</td>
-                                    <td class="text-success">$500</td>
-                                </tr>
-                                <tr>
-                                    <td>4 + Powerball</td>
-                                    <td>450</td>
-                                    <td class="text-success">$100</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <hr>
-            
-            <!-- Daily Lotto -->
-            <div class="result-card">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h3>Daily Lotto</h3>
-                    <span class="badge bg-success">Draw #7890</span>
-                </div>
-                
-                <!-- Winning Numbers -->
-                <div class="text-center my-4">
-                    <h5 class="mb-3">Winning Numbers</h5>
-                    <div class="d-flex justify-content-center flex-wrap">
-                        <span class="number-ball">7</span>
-                        <span class="number-ball">14</span>
-                        <span class="number-ball">21</span>
-                        <span class="number-ball">28</span>
-                        <span class="number-ball">35</span>
-                    </div>
-                </div>
-                
-                <!-- Result Details -->
-                <div class="row text-center">
-                    <div class="col-md-4">
-                        <div class="p-3">
-                            <h2 class="text-warning">$450K</h2>
-                            <p class="text-muted mb-0">Jackpot</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-3">
-                            <h2 class="text-success">3</h2>
-                            <p class="text-muted mb-0">Jackpot Winners</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-3">
-                            <h2 class="text-primary">$1.2M</h2>
-                            <p class="text-muted mb-0">Total Prizes</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Check Your Ticket -->
-    <div class="card mb-5">
-        <div class="card-header bg-warning">
-            <h4 class="mb-0"><i class="fas fa-ticket-alt me-2"></i> Check Your Ticket</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <h5>Enter Your Numbers</h5>
-                    <div class="mb-3">
-                        <label class="form-label">Main Numbers (6 numbers)</label>
-                        <input type="text" class="form-control" placeholder="e.g., 5, 12, 23, 34, 45, 12">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Powerball</label>
-                        <input type="number" class="form-control" placeholder="e.g., 12" min="1" max="20">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Select Game</label>
-                        <select class="form-select">
-                            <option>Mega Jackpot</option>
-                            <option>Daily Lotto</option>
-                            <option>Quick Win</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Draw Date</label>
-                        <input type="date" class="form-control" value="2024-01-10">
-                    </div>
-                    <button class="btn btn-gold">
-                        <i class="fas fa-check-circle me-1"></i> Check Now
-                    </button>
-                </div>
-                <div class="col-md-6">
-                    <h5>Or Scan QR Code</h5>
-                    <div class="text-center my-4">
-                        <div class="border p-4 d-inline-block">
-                            <!-- QR Code Placeholder -->
-                            <div style="width: 200px; height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-qrcode fa-4x text-muted"></i>
+                    <h5 class="mb-3 text-uppercase fw-bold text-primary">Numéros Gagnants</h5>
+                    <div class="d-flex justify-content-center flex-wrap gap-3">
+                        {% if draw.winning_numbers %}
+                            {% for num in draw.winning_numbers %}
+                            <span class="number-ball big">{{ num }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <div class="alert alert-warning">
+                                Numéros non disponibles
                             </div>
-                        </div>
-                        <p class="text-muted mt-3">Scan your ticket QR code to check instantly</p>
+                        {% endif %}
+                        {% if draw.winning_powerball %}
+                        <span class="number-ball big powerball">{{ draw.winning_powerball }}</span>
+                        {% endif %}
                     </div>
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Don't have a ticket? <a href="{% url 'buy_ticket' %}" class="alert-link">Buy one now</a> for the next draw!
+                </div>
+
+                <!-- Détails des résultats -->
+                <div class="row text-center mt-5">
+                    <div class="col-md-3 border-end">
+                        <div class="p-2">
+                            <h3 class="text-warning fw-bold">${{ draw.jackpot_amount|floatformat:2|default:"0.00" }}</h3>
+                            <p class="text-muted small mb-0 text-uppercase">Cagnotte</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 border-end">
+                        <div class="p-2">
+                            <h3 class="{% if draw.jackpot_won %}text-success{% else %}text-muted{% endif %} fw-bold">
+                                {% if draw.jackpot_won %}OUI{% else %}NON{% endif %}
+                            </h3>
+                            <p class="text-muted small mb-0 text-uppercase">Gagnée</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 border-end">
+                        <div class="p-2">
+                            <h3 class="text-info fw-bold">{{ draw.total_winners|default:"0" }}</h3>
+                            <p class="text-muted small mb-0 text-uppercase">Total Gagnants</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-2">
+                            <h3 class="text-primary fw-bold">${{ draw.total_prize_paid|floatformat:2|default:"0.00" }}</h3>
+                            <p class="text-muted small mb-0 text-uppercase">Gains Distribués</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="card-footer bg-light text-center py-3">
+            <a href="{% url 'play_game' draw.game.slug %}" class="btn btn-primary">
+                <i class="fas fa-play me-2"></i>Jouer au Prochain Tirage
+            </a>
+        </div>
     </div>
-    
-    <!-- Previous Results -->
-    <h3 class="mb-4"><i class="fas fa-history me-2"></i> Previous Results</h3>
-    <div class="row">
-        {% for i in "123"|make_list %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">January {{ forloop.counter|add:7 }}, 2024</h5>
-                    <p class="text-muted">Mega Jackpot</p>
-                    
-                    <div class="text-center my-3">
-                        {% for j in "1234567"|make_list %}
-                        <span class="number-ball {% if j == '7' %}powerball{% endif %} small">
-                            {{ forloop.counter|add:forloop.parentloop.counter|add:3 }}
-                        </span>
-                        {% endfor %}
-                    </div>
-                    
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <small class="text-muted">Jackpot</small>
-                            <p class="mb-0"><strong>${{ forloop.counter|add:11 }}M</strong></p>
-                        </div>
-                        <div class="text-end">
-                            <small class="text-muted">Winners</small>
-                            <p class="mb-0"><strong>{{ forloop.counter }}</strong></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-transparent">
-                    <a href="#" class="btn btn-sm btn-outline-primary w-100">View Details</a>
+    {% endfor %}
+    {% else %}
+    <div class="card py-5 border-0 shadow-sm text-center">
+        <div class="card-body">
+            <i class="fas fa-history fa-4x text-muted mb-4"></i>
+            <h3>Aucun résultat trouvé</h3>
+            <p class="text-muted">Aucun résultat de loterie n'a encore été enregistré. Revenez bientôt !</p>
+            <a href="{% url 'games' %}" class="btn btn-primary mt-3">Voir les Jeux Actifs</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Section vérification de ticket -->
+    <div class="card mb-5 shadow-sm overflow-hidden border-0">
+        <div class="row g-0">
+            <div class="col-lg-8 p-5 bg-white">
+                <h3 class="fw-bold mb-4">Dernière vérification</h3>
+                <p class="text-muted lead mb-4">Connectez-vous à votre tableau de bord pour vérifier vos tickets automatiquement.</p>
+                <a href="{% url 'dashboard' %}" class="btn btn-gold btn-lg">Accéder au Dashboard</a>
+            </div>
+            <div class="col-lg-4 bg-primary d-flex align-items-center justify-content-center p-5">
+                <div class="text-center text-white">
+                    <i class="fas fa-ticket-alt fa-5x mb-4 opacity-50"></i>
+                    <h4 class="mb-0">Prêt à gagner ?</h4>
                 </div>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-    
-    <!-- Download Results -->
-    <div class="text-center mt-5">
-        <h4 class="mb-3">Need Historical Data?</h4>
-        <p class="text-muted mb-4">Download complete results for analysis</p>
-        <div class="d-flex justify-content-center gap-3">
-            <button class="btn btn-outline-primary">
-                <i class="fas fa-download me-1"></i> Download CSV
-            </button>
-            <button class="btn btn-outline-success">
-                <i class="fas fa-file-pdf me-1"></i> Download PDF
-            </button>
-            <button class="btn btn-outline-info">
-                <i class="fas fa-chart-bar me-1"></i> View Statistics
-            </button>
         </div>
     </div>
 </div>
+
+<style>
+    .number-ball {
+        width: 50px;
+        height: 50px;
+        background: white;
+        border: 2px solid #0a2463;
+        color: #0a2463;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .number-ball.big {
+        width: 70px;
+        height: 70px;
+        font-size: 1.8rem;
+    }
+
+    .number-ball.powerball {
+        background: #ffd700;
+        border-color: #ffd700;
+        color: #0a2463;
+    }
+
+    .number-ball:hover {
+        transform: scale(1.1) rotate(5deg);
+        background: #0a2463;
+        color: white;
+    }
+
+    .card {
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, #FFD700, #B8860B);
+        border: none;
+        color: #0A2463;
+        font-weight: bold;
+    }
+</style>
 {% endblock %}

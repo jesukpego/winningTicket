@@ -2,502 +2,247 @@
 {% load static %}
 
 {% block content %}
-<!-- Hero Section with Carousel -->
-<section class="hero-section">
-    <div class="container-fluid px-0">
-        <div class="row g-0">
-            <div class="col-lg-6 hero-content d-flex align-items-center">
-                <div class="px-4 px-lg-5 py-5">
-                    <span class="badge bg-warning text-dark mb-3">💰 Jackpot Alert!</span>
-                    <h1 class="display-4 fw-bold mb-3">
-                        <span class="gradient-text">Win Big</span> with Every Ticket
+<!-- Modern Hero Section -->
+<section class="hero-v2 section-padding position-relative overflow-hidden">
+    <div class="hero-bg-accent"></div>
+    <div class="container position-relative z-2">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-7 text-white mb-5 mb-lg-0">
+                <div class="animate-up">
+                    <span class="badge bg-gold text-dark px-3 py-2 rounded-pill mb-4 glow-gold">
+                        ✨ L'EXCÉLLENCE
+                    </span>
+                    <h1 class="display-2 fw-bold mb-4 line-height-1 shadow-text">
+                        Découvrez le Pouvoir <br>
+                        <span class="text-gold">De Votre Chance</span>
                     </h1>
-                    <p class="lead mb-4">Join millions of players in the world's most exciting lottery games. Your lucky numbers could be just a click away!</p>
-                    
-                    <!-- Live Jackpot Counter -->
-                    <div class="live-jackpot mb-4">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="fas fa-crown me-2 text-warning"></i>
-                            <small class="text-uppercase  text-white " >Current Mega Jackpot</small>
-                        </div>
-                        <div class="jackpot-display">
-                            <span class="h1 fw-bold text-primary">$12,450,000</span>
-                            <span class="live-badge ms-2">
-                                <i class="fas fa-circle"></i> LIVE
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <!-- Countdown Timer -->
-                    <div class="countdown-card mb-4">
-                        <p class="mb-2 text-white">Next draw in:</p>
-                        <div class="countdown-timer">
-                            <div class="time-unit">
-                                <span class="time-value" id="hours">23</span>
-                                <span class="time-label">Hours</span>
-                            </div>
-                            <div class="time-separator">:</div>
-                            <div class="time-unit">
-                                <span class="time-value" id="minutes">45</span>
-                                <span class="time-label">Minutes</span>
-                            </div>
-                            <div class="time-separator">:</div>
-                            <div class="time-unit">
-                                <span class="time-value" id="seconds">12</span>
-                                <span class="time-label">Seconds</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- CTA Buttons -->
-                    <div class="d-flex flex-wrap gap-3">
-                        <a href="{% url 'buy_ticket' %}" class="btn btn-primary btn-lg px-4 py-3">
-                            <i class="fas fa-ticket-alt me-2"></i>Buy Ticket Now
+                    <p class="lead mb-5 opacity-75 fs-4 max-w-600">
+                        Plongez dans l'univers de Winning Ticket. Sécurisé, transparent et conçu pour transformer des
+                        vies, un tirage à la fois.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-4 align-items-center">
+                        <a href="{% url 'games' %}"
+                            class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold transform-hover">
+                            JOUER MAINTENANT <i class="fas fa-chevron-right ms-2"></i>
                         </a>
-                        <a href="#" class="btn btn-outline-primary btn-lg px-4 py-3">
-                            <i class="fas fa-play-circle me-2"></i>How to Play
-                        </a>
+                        <div class="hero-stats d-flex gap-4">
+                            <div class="h-stat">
+                                <span class="h2 fw-bold mb-0 d-block text-gold">{{ total_winners_count|default:"0" }}</span>
+                                <small class="text-uppercase opacity-50 letter-spacing-1">Gagnants</small>
+                            </div>
+                            <div class="h-stat-border"></div>
+                            <div class="h-stat text-center">
+                                <span class="h2 fw-bold mb-0 d-block text-gold">${{ total_jackpot|floatformat:0 }}</span>
+                                <small class="text-uppercase opacity-50 letter-spacing-1">En Jeu</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div class="col-lg-6 hero-visual">
-                <div class="floating-elements">
-                    <div class="floating-ticket">
-                        <div class="ticket-visual">
-                            <div class="ticket-numbers">
-                                <span class="ball">05</span>
-                                <span class="ball">12</span>
-                                <span class="ball">23</span>
-                                <span class="ball">34</span>
-                                <span class="ball">45</span>
+
+            <div class="col-lg-5 position-relative">
+                <div class="hero-visual-v2 animate-float">
+                    <div class="glass-card main-ticket">
+                        <div class="card-glow"></div>
+                        <div class="ticket-header d-flex justify-content-between">
+                            <span class="fw-bold">WINNING TICKET</span>
+                            <i class="fas fa-wifi text-success ripple"></i>
+                        </div>
+                        <div class="ticket-body my-4 text-center">
+                            <div class="luck-number mb-2">NUMÉRO CHANCE</div>
+                            <div class="d-flex justify-content-center gap-2">
+                                <span class="ball-v2">07</span>
+                                <span class="ball-v2">14</span>
+                                <span class="ball-v2">21</span>
+                                <span class="ball-v2 gold">42</span>
                             </div>
-                            <div class="ticket-label">Your Lucky Ticket</div>
+                        </div>
+                        <div class="ticket-footer pt-3 border-top border-white-10 text-center">
+                            <small class="opacity-50">SCANNÉ & VÉRIFIÉ</small>
                         </div>
                     </div>
-                    <div class="floating-coin coin-1">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                    <div class="floating-coin coin-2">
-                        <i class="fas fa-diamond"></i>
-                    </div>
-                    <div class="floating-coin coin-3">
-                        <i class="fas fa-gem"></i>
-                    </div>
+
+                    <!-- Floating Orbs -->
+                    <div class="orb orb-1"></div>
+                    <div class="orb orb-2"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Featured Games -->
-<section class="py-5 bg-light">
+
+<!-- Games Grid Section -->
+<section class="section-padding bg-light">
     <div class="container">
-        <div class="section-header text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Featured Games</h2>
-            <p class="text-muted">Choose from our exciting range of lottery games</p>
+        <div class="row justify-content-center mb-60">
+            <div class="col-lg-8 text-center">
+                <h6 class="text-primary fw-bold text-uppercase mb-3">Nos Opportunités</h6>
+                <h2 class="display-5 fw-bold mb-4">Jeux En Vedette</h2>
+                <div class="section-divider mx-auto mb-4"></div>
+                <p class="text-muted fs-5">Choisissez votre défi et tentez de décrocher la cagnotte dès aujourd'hui.</p>
+            </div>
         </div>
-        
+
         <div class="row g-4">
-            <!-- Game 1 - Mega Jackpot -->
+            {% for game in featured_games %}
             <div class="col-lg-4 col-md-6">
-                <div class="game-card featured">
-                    <div class="game-card-header">
-                        <div class="game-badge">Most Popular</div>
-                        <div class="game-icon">
-                            <i class="fas fa-crown"></i>
+                <div class="game-card-v2">
+                    <div class="gc-image position-relative">
+                        <div class="gc-overlay"></div>
+                        <div class="gc-badge">{{ game.company.name }}</div>
+                        <div class="gc-icon-hover">
+                            <i class="fas fa-play"></i>
                         </div>
                     </div>
-                    <div class="game-card-body">
-                        <h3 class="game-title">Mega Jackpot</h3>
-                        <p class="game-description">The ultimate lottery experience with life-changing jackpots</p>
-                        
-                        <div class="jackpot-info">
-                            <div class="current-jackpot">
-                                <span class="amount">$12.45M</span>
-                                <span class="badge bg-success">Growing</span>
+                    <div class="gc-content">
+                        <h3 class="fw-bold mb-3 h4">{{ game.name }}</h3>
+                        <div class="d-flex justify-content-between align-items-end mb-4">
+                            <div>
+                                <small class="text-muted d-block text-uppercase">Prix total</small>
+                                <span class="h3 fw-bold text-primary mb-0">${{ game.prize_amount|floatformat:0 }}</span>
+                            </div>
+                            <div class="text-end">
+                                <small class="text-muted d-block text-uppercase">Ticket</small>
+                                <span class="fw-bold">${{ game.ticket_price|floatformat:2 }}</span>
                             </div>
                         </div>
-                        
-                        <div class="game-details">
-                            <div class="detail-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Draws: Wed & Sat</span>
+
+                        <div class="gc-details-row mb-4">
+                            <div class="gc-detail">
+                                <i class="fas fa-calendar-alt me-2 text-gold"></i>
+                                <span>{{ game.next_draw|date:"d M, H:i" }}</span>
                             </div>
-                            <div class="detail-item">
-                                <i class="fas fa-clock"></i>
-                                <span>8:00 PM EST</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>Odds: 1 in 302M</span>
+                            <div class="gc-detail">
+                                <i class="fas fa-check-circle me-2 text-success"></i>
+                                <span>Actif</span>
                             </div>
                         </div>
-                        
-                        <a href="{% url 'game_detail' 1 %}" class="btn btn-primary w-100">
-                            <i class="fas fa-play me-2"></i>Play Now
+
+                        <a href="{% url 'play_game' game.slug %}"
+                            class="btn btn-outline-primary w-100 rounded-pill py-2 transform-hover">
+                            SÉLECTIONNER MES NUMÉROS
                         </a>
                     </div>
                 </div>
             </div>
-            
-            <!-- Game 2 - Daily Lotto -->
-            <div class="col-lg-4 col-md-6">
-                <div class="game-card">
-                    <div class="game-card-header">
-                        <div class="game-badge">Daily Wins</div>
-                        <div class="game-icon">
-                            <i class="fas fa-bolt"></i>
-                        </div>
-                    </div>
-                    <div class="game-card-body">
-                        <h3 class="game-title">Daily Lotto</h3>
-                        <p class="game-description">Win big every day with smaller jackpots and better odds</p>
-                        
-                        <div class="jackpot-info">
-                            <div class="current-jackpot">
-                                <span class="amount">$500K</span>
-                                <span class="badge bg-info">Daily</span>
-                            </div>
-                        </div>
-                        
-                        <div class="game-details">
-                            <div class="detail-item">
-                                <i class="fas fa-calendar-alt"></i>
-                                <span>Draws: Every Day</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-clock"></i>
-                                <span>9:00 PM EST</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-chart-line"></i>
-                                <span>Odds: 1 in 7M</span>
-                            </div>
-                        </div>
-                        
-                        <a href="{% url 'game_detail' 2 %}" class="btn btn-primary w-100">
-                            <i class="fas fa-play me-2"></i>Play Now
-                        </a>
-                    </div>
-                </div>
+            {% empty %}
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-hourglass fa-3x text-muted mb-3"></i>
+                <p class="fs-5 text-muted">Aucun tirage actif pour le moment. Revenez bientôt !</p>
             </div>
-            
-            <!-- Game 3 - Scratch Cards -->
-            <div class="col-lg-4 col-md-6">
-                <div class="game-card">
-                    <div class="game-card-header">
-                        <div class="game-badge">Instant Win</div>
-                        <div class="game-icon">
-                            <i class="fas fa-gem"></i>
-                        </div>
-                    </div>
-                    <div class="game-card-body">
-                        <h3 class="game-title">Scratch & Win</h3>
-                        <p class="game-description">Instant gratification with instant prizes up to $100,000</p>
-                        
-                        <div class="jackpot-info">
-                            <div class="current-jackpot">
-                                <span class="amount">$100K</span>
-                                <span class="badge bg-warning">Instant</span>
-                            </div>
-                        </div>
-                        
-                        <div class="game-details">
-                            <div class="detail-item">
-                                <i class="fas fa-bolt"></i>
-                                <span>Instant Results</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-percentage"></i>
-                                <span>1 in 4 Wins</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-coins"></i>
-                                <span>Prizes: $2-$100K</span>
-                            </div>
-                        </div>
-                        
-                        <a href="{% url 'game_detail' 3 %}" class="btn btn-primary w-100">
-                            <i class="fas fa-play me-2"></i>Play Now
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="text-center mt-5">
-            <a href="{% url 'games' %}" class="btn btn-outline-primary btn-lg">
-                <i class="fas fa-list me-2"></i>View All Games
-            </a>
+            {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- How It Works -->
-<section class="py-5">
+<!-- How It Works Section -->
+<section class="section-padding position-relative overflow-hidden">
     <div class="container">
-        <div class="section-header text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">How to Win in 4 Easy Steps</h2>
-            <p class="text-muted">Simple, transparent, and designed for everyone to play</p>
+        <div class="row justify-content-center mb-60">
+            <div class="col-lg-8 text-center">
+                <h6 class="text-gold fw-bold text-uppercase mb-3">Simple & Rapide</h6>
+                <h2 class="display-5 fw-bold mb-4">Comment Jouer ?</h2>
+                <div class="section-divider mx-auto"></div>
+            </div>
         </div>
-        
-        <div class="steps-container">
-            <div class="step-line"></div>
-            
-            <div class="row">
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="step-card">
-                        <div class="step-number">01</div>
-                        <div class="step-icon">
-                            <i class="fas fa-gamepad"></i>
-                        </div>
-                        <h4 class="step-title">Choose Your Game</h4>
-                        <p class="step-description">Select from our exciting range of lottery games</p>
+
+        <div class="row g-4 position-relative">
+            <!-- Step 1 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card-v2 text-center p-4">
+                    <div class="step-icon-v2 mb-4 mx-auto">
+                        <i class="fas fa-th-list text-gold fa-2x"></i>
+                        <span class="step-number-badge">1</span>
                     </div>
+                    <h4 class="fw-bold mb-3">Choix du Jeu</h4>
+                    <p class="text-muted small">Parcourez notre catalogue et sélectionnez la loterie qui vous inspire
+                        aujourd'hui.</p>
                 </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="step-card">
-                        <div class="step-number">02</div>
-                        <div class="step-icon">
-                            <i class="fas fa-dice"></i>
-                        </div>
-                        <h4 class="step-title">Pick Numbers</h4>
-                        <p class="step-description">Choose your lucky numbers or use Quick Pick</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card-v2 text-center p-4">
+                    <div class="step-icon-v2 mb-4 mx-auto">
+                        <i class="fas fa-magic text-gold fa-2x"></i>
+                        <span class="step-number-badge">2</span>
                     </div>
+                    <h4 class="fw-bold mb-3">Vos Numéros</h4>
+                    <p class="text-muted small">Sélectionnez vos numéros fétiches ou laissez le destin décider avec le
+                        choix automatique.</p>
                 </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="step-card">
-                        <div class="step-number">03</div>
-                        <div class="step-icon">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <h4 class="step-title">Buy Ticket</h4>
-                        <p class="step-description">Secure checkout with multiple payment options</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card-v2 text-center p-4">
+                    <div class="step-icon-v2 mb-4 mx-auto">
+                        <i class="fas fa-credit-card text-gold fa-2x"></i>
+                        <span class="step-number-badge">3</span>
                     </div>
+                    <h4 class="fw-bold mb-3">Paiement</h4>
+                    <p class="text-muted small">Validez votre participation via notre système de paiement sécurisé et
+                        instantané.</p>
                 </div>
-                
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="step-card">
-                        <div class="step-number">04</div>
-                        <div class="step-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <h4 class="step-title">Check & Win!</h4>
-                        <p class="step-description">Watch the draw and claim your winnings</p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card-v2 text-center p-4">
+                    <div class="step-icon-v2 mb-4 mx-auto">
+                        <i class="fas fa-wallet text-gold fa-2x"></i>
+                        <span class="step-number-badge">4</span>
                     </div>
+                    <h4 class="fw-bold mb-3">Gains</h4>
+                    <p class="text-muted small">Vos gains sont automatiquement crédités sur votre portefeuille après
+                        chaque tirage.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Recent Winners -->
-<section class="py-5 bg-dark text-white">
-    <div class="container">
-        <div class="section-header text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">🎉 Recent Winners</h2>
-            <p class="text-light">Real people, real wins - you could be next!</p>
-        </div>
-        
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="winner-card">
-                    <div class="winner-header">
-                        <div class="winner-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="winner-info">
-                            <h5 class="winner-name">Anonymous Winner</h5>
-                            <span class="winner-location">From New York</span>
-                        </div>
-                    </div>
-                    <div class="winner-body">
-                        <div class="win-amount">
-                            <span class="amount">$1,250,000</span>
-                            <span class="game">Mega Jackpot</span>
-                        </div>
-                        <div class="win-date">
-                            <i class="fas fa-calendar me-2"></i>Jan 10, 2024
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="winner-card">
-                    <div class="winner-header">
-                        <div class="winner-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="winner-info">
-                            <h5 class="winner-name">Lucky Player</h5>
-                            <span class="winner-location">From California</span>
-                        </div>
-                    </div>
-                    <div class="winner-body">
-                        <div class="win-amount">
-                            <span class="amount">$500,000</span>
-                            <span class="game">Daily Lotto</span>
-                        </div>
-                        <div class="win-date">
-                            <i class="fas fa-calendar me-2"></i>Jan 9, 2024
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="winner-card">
-                    <div class="winner-header">
-                        <div class="winner-avatar">
-                            <i class="fas fa-user-circle"></i>
-                        </div>
-                        <div class="winner-info">
-                            <h5 class="winner-name">Winner 88</h5>
-                            <span class="winner-location">From Texas</span>
-                        </div>
-                    </div>
-                    <div class="winner-body">
-                        <div class="win-amount">
-                            <span class="amount">$250,000</span>
-                            <span class="game">Quick Win</span>
-                        </div>
-                        <div class="win-date">
-                            <i class="fas fa-calendar me-2"></i>Jan 8, 2024
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="text-center mt-5">
-            <a href="{% url 'winners' %}" class="btn btn-light">
-                <i class="fas fa-trophy me-2"></i>View All Winners
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Latest Results -->
-<section class="py-5">
-    <div class="container">
-        <div class="section-header text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Latest Results</h2>
-            <p class="text-muted">Check if you're our latest millionaire!</p>
-        </div>
-        
-        <div class="result-card">
-            <div class="result-header">
-                <div class="result-title">
-                    <h4>Mega Jackpot Draw</h4>
-                    <span class="result-date">January 10, 2024 • 8:00 PM EST</span>
-                </div>
-                <div class="result-status">
-                    <span class="badge bg-success">Completed</span>
-                </div>
-            </div>
-            
-            <div class="result-body">
-                <div class="winning-numbers">
-                    <span class="winning-ball">05</span>
-                    <span class="winning-ball">12</span>
-                    <span class="winning-ball">23</span>
-                    <span class="winning-ball">34</span>
-                    <span class="winning-ball">45</span>
-                    <span class="winning-ball powerball">12</span>
-                </div>
-                
-                <div class="result-stats">
-                    <div class="stat-item">
-                        <span class="stat-label">Jackpot</span>
-                        <span class="stat-value text-success">$12,000,000</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Winners</span>
-                        <span class="stat-value">0</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Tickets Sold</span>
-                        <span class="stat-value">1,245,987</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="result-footer">
-                <a href="{% url 'results' %}" class="btn btn-outline-primary">
-                    <i class="fas fa-history me-2"></i>View All Results
-                </a>
-                <a href="#" class="btn btn-primary">
-                    <i class="fas fa-check-circle me-2"></i>Check My Tickets
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Trust & Security -->
-<section class="py-5 bg-light">
-    <div class="container">
+<!-- Live Winners Carousel Style -->
+<section class="section-padding bg-dark position-relative overflow-hidden">
+    <div class="decor-line"></div>
+    <div class="container animate-right">
         <div class="row align-items-center">
-            <div class="col-lg-6 mb-5 mb-lg-0">
-                <div class="trust-content">
-                    <h2 class="display-6 fw-bold mb-4">Play with Confidence</h2>
-                    <p class="lead mb-4">Your security and fairness are our top priorities.</p>
-                    
-                    <div class="trust-features">
-                        <div class="trust-item">
-                            <div class="trust-icon">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
-                            <div class="trust-details">
-                                <h5>Bank-Level Security</h5>
-                                <p class="text-muted">256-bit SSL encryption and secure payment processing</p>
-                            </div>
-                        </div>
-                        
-                        <div class="trust-item">
-                            <div class="trust-icon">
-                                <i class="fas fa-balance-scale"></i>
-                            </div>
-                            <div class="trust-details">
-                                <h5>Fully Licensed & Regulated</h5>
-                                <p class="text-muted">Licensed in multiple jurisdictions with regular audits</p>
-                            </div>
-                        </div>
-                        
-                        <div class="trust-item">
-                            <div class="trust-icon">
-                                <i class="fas fa-lock"></i>
-                            </div>
-                            <div class="trust-details">
-                                <h5>Fair Play Guarantee</h5>
-                                <p class="text-muted">Random number generators certified for fairness</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col-lg-4 text-white mb-5 mb-lg-0">
+                <h2 class="display-6 fw-bold mb-4">Ils Ont <br><span class="text-gold">Déjà Gagné</span></h2>
+                <p class="opacity-75 mb-5">Chaque jour, de nouveaux millionnaires rejoignent notre communauté.
+                    Serez-vous le prochain ?</p>
+                <a href="{% url 'winners' %}" class="btn btn-gold px-4 py-2 rounded-pill">VOIR TOUS LES GAGNANTS</a>
             </div>
-            
-            <div class="col-lg-6">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">$50M+</div>
-                        <div class="stat-label">Paid to Winners</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">100K+</div>
-                        <div class="stat-label">Happy Players</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">99.9%</div>
-                        <div class="stat-label">Uptime</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Support</div>
+
+            <div class="col-lg-8">
+                <div class="winners-scroll-container">
+                    <div class="d-flex gap-4">
+                        {% for winner in recent_winners %}
+                        <div class="winner-card-v2 glass-card">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="w-avatar-v2 bg-gold">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 text-white">
+                                        {% if winner.user.first_name %}
+                                            {{ winner.user.first_name }}
+                                        {% else %}
+                                            {{ winner.user.username }}
+                                        {% endif %}
+                                    </h6>
+                                    <small class="text-gold">Gagnant certifié</small>
+                                </div>
+                            </div>
+                            <div class="h4 fw-bold text-success mb-2">${{ winner.prize_amount|floatformat:0 }}</div>
+                            <div class="opacity-50 small mb-0">{{ winner.draw.game.name }}</div>
+                            <div class="opacity-50 small">{{ winner.draw.draw_date|date:"d M, Y" }}</div>
+                        </div>
+                        {% empty %}
+                        <p class="text-white opacity-50">En attente des premiers gagnants de la journée...</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -505,864 +250,371 @@
     </div>
 </section>
 
-<!-- Age Verification Modal -->
-<div class="modal fade" id="ageVerificationModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body p-5 text-center">
-                <div class="age-icon mb-4">
-                    <i class="fas fa-user-check"></i>
-                </div>
-                <h4 class="mb-3">Welcome to WINNING TICKET</h4>
-                <p class="text-muted mb-4">You must be 18 years or older to play our lottery games. Please confirm your age to continue.</p>
-                
-                <div class="d-flex justify-content-center gap-3">
-                    <button type="button" class="btn btn-outline-secondary" id="under18Btn">
-                        I'm Under 18
-                    </button>
-                    <button type="button" class="btn btn-primary" id="confirmAgeBtn">
-                        I'm 18 or Older
-                    </button>
-                </div>
+<!-- Call To Action -->
+<section class="section-padding position-relative">
+    <div class="container">
+        <div class="cta-banner-v2 glass-card-dark p-5 rounded-4 border-gold shadow-lg text-center">
+            <h2 class="display-5 fw-bold text-white mb-4">Prêt à Tenter Votre Chance ?</h2>
+            <p class="text-white opacity-75 mb-5 fs-5">Inscrivez-vous en 30 secondes et recevez vos tickets
+                instantanément.</p>
+            <div class="d-flex flex-wrap justify-content-center gap-4">
+                <a href="{% url 'register' %}"
+                    class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold transform-hover">
+                    CRÉER MON COMPTE
+                </a>
+                <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill transform-hover">
+                    SE CONNECTER
+                </a>
             </div>
         </div>
     </div>
-</div>
+</section>
+
+{% include 'components/age_modal.html' %}
+
 {% endblock %}
 
 {% block extra_css %}
 <style>
+    /* New Index Styles - Premium & Dynamic */
     :root {
-        --primary-blue: #0a2463;
-        --primary-blue-light: #1a3a8f;
-        --secondary-gold: #ffd700;
-        --accent-green: #28a745;
-        --accent-purple: #6f42c1;
-        --danger-red: #dc3545;
-        --warning-orange: #fd7e14;
-        --light-bg: #f8f9fa;
-        --dark-bg: #212529;
+        --color-gold: #ffd700;
+        --color-gold-hover: #ffed4e;
+        --color-deep: #0a2463;
+        --color-deep-light: #1e3a8a;
+        --color-dark: #0f172a;
+        --glass-white: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
     }
-    
-    /* Hero Section */
-    .hero-section {
-        background: linear-gradient(135deg, #0a2463 0%, #1a3a8f 100%);
+
+    .hero-v2 {
+        background: radial-gradient(circle at top right, var(--color-deep-light), var(--color-dark));
+        padding: 100px 0;
+    }
+
+    .hero-bg-accent {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: url('https://www.transparenttextures.com/patterns/cubes.png');
+        opacity: 0.05;
+        pointer-events: none;
+    }
+
+    .text-gold {
+        color: var(--color-gold) !important;
+    }
+
+    .bg-gold {
+        background-color: var(--color-gold) !important;
+    }
+
+    .btn-gold {
+        background-color: var(--color-gold);
+        color: var(--color-deep);
+        border: none;
+    }
+
+    .btn-gold:hover {
+        background-color: var(--color-gold-hover);
+        color: var(--color-deep);
+        transform: translateY(-3px);
+    }
+
+    .border-gold {
+        border: 1px solid var(--color-gold) !important;
+    }
+
+    .glow-gold {
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+    }
+
+    .shadow-text {
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .line-height-1 {
+        line-height: 1.1;
+    }
+
+    .letter-spacing-1 {
+        letter-spacing: 2px;
+    }
+
+    .max-w-600 {
+        max-width: 600px;
+    }
+
+    .h-stat-border {
+        width: 1px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Glassmorphism Cards */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        padding: 25px;
         color: white;
-        min-height: 90vh;
-        padding-top: 80px;
+    }
+
+    .glass-card-dark {
+        background: rgba(15, 23, 42, 0.8);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 215, 0, 0.2);
+    }
+
+    /* Hero Visual Anim */
+    .main-ticket {
+        width: 320px;
+        transform: rotate(-5deg);
+        position: relative;
+        z-index: 5;
+    }
+
+    .ball-v2 {
+        width: 45px;
+        height: 45px;
+        background: white;
+        color: var(--color-deep);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .ball-v2.gold {
+        background: var(--color-gold);
+    }
+
+    .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        z-index: 1;
+    }
+
+    .orb-1 {
+        width: 200px;
+        height: 200px;
+        background: var(--color-gold);
+        opacity: 0.2;
+        top: -20px;
+        right: -20px;
+    }
+
+    .orb-2 {
+        width: 150px;
+        height: 150px;
+        background: var(--color-deep-light);
+        opacity: 0.3;
+        bottom: -20px;
+        left: -20px;
+    }
+
+    /* Game Card V2 */
+    .game-card-v2 {
+        background: white;
+        border-radius: 24px;
         overflow: hidden;
-    }
-    
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
-    
-    .hero-visual {
-        position: relative;
-        min-height: 600px;
-    }
-    
-    .gradient-text {
-        background: linear-gradient(45deg, #ffd700, #ffed4e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-    
-    /* Floating Elements */
-    .floating-elements {
-        position: relative;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid #eee;
         height: 100%;
     }
-    
-    .floating-ticket {
+
+    .game-card-v2:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: var(--color-gold);
+    }
+
+    .gc-image {
+        height: 120px;
+        background: linear-gradient(135deg, var(--color-deep), var(--color-deep-light));
+    }
+
+    .gc-badge {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: var(--color-gold);
+        color: var(--color-deep);
+        padding: 4px 12px;
+        border-radius: 50px;
+        font-size: 0.75rem;
+        font-weight: bold;
+    }
+
+    .gc-icon-hover {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        animation: float 6s ease-in-out infinite;
-    }
-    
-    .floating-coin {
-        position: absolute;
+        color: white;
         font-size: 2rem;
-        color: #ffd700;
-        animation: float-coin 4s ease-in-out infinite;
+        opacity: 0;
+        transition: 0.3s;
     }
-    
-    .coin-1 {
-        top: 20%;
-        left: 20%;
-        animation-delay: 0s;
+
+    .game-card-v2:hover .gc-icon-hover {
+        opacity: 1;
     }
-    
-    .coin-2 {
-        top: 70%;
-        left: 15%;
-        animation-delay: 1s;
-    }
-    
-    .coin-3 {
-        top: 40%;
-        right: 20%;
-        animation-delay: 2s;
-    }
-    
-    /* Ticket Visual */
-    .ticket-visual {
-        background: white;
-        border-radius: 20px;
+
+    .gc-content {
         padding: 30px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        transform: rotate(-5deg);
-        transition: transform 0.3s ease;
     }
-    
-    .ticket-visual:hover {
-        transform: rotate(0deg) scale(1.05);
-    }
-    
-    .ticket-numbers {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-    
-    .ball {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #0a2463, #1a3a8f);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 15px rgba(10, 36, 99, 0.3);
-    }
-    
-    .ticket-label {
-        color: #0a2463;
-        font-weight: bold;
-        text-align: center;
-        font-size: 1.2rem;
-    }
-    
-    /* Live Jackpot */
-    .live-jackpot {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .jackpot-display {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    
-    .live-badge {
-        background: #28a745;
-        color: white;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: bold;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-    }
-    
-    .live-badge i {
-        font-size: 0.6rem;
-        animation: pulse 2s infinite;
-    }
-    
-    /* Countdown Timer */
-    .countdown-timer {
-        display: flex;
-        gap: 15px;
-        justify-content: center;
-    }
-    
-    .time-unit {
-        text-align: center;
-    }
-    
-    .time-value {
-        display: block;
-        font-size: 2.5rem;
-        font-weight: bold;
-        background: linear-gradient(45deg, #ffd700, #ffed4e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-family: 'Courier New', monospace;
-    }
-    
-    .time-label {
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.7);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    
-    /* Game Cards */
-    .game-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        height: 100%;
-        border: 2px solid transparent;
-    }
-    
-    .game-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        border-color: #0a2463;
-    }
-    
-    .game-card.featured {
-        border-color: #ffd700;
-        position: relative;
-    }
-    
-    .game-card-header {
-        background: linear-gradient(135deg, #0a2463, #1a3a8f);
-        padding: 20px;
-        position: relative;
-    }
-    
-    .game-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #ffd700;
-        color: #000;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: bold;
-    }
-    
-    .game-icon {
-        font-size: 3rem;
-        color: white;
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    
-    .game-card-body {
-        padding: 25px;
-    }
-    
-    .game-title {
-        color: #0a2463;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    
-    .game-description {
-        color: #666;
-        margin-bottom: 20px;
-        font-size: 0.95rem;
-    }
-    
-    .jackpot-info {
-        background: #f8f9fa;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .current-jackpot {
+
+    .gc-details-row {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-    }
-    
-    .current-jackpot .amount {
-        font-size: 1.8rem;
-        font-weight: bold;
-        color: #0a2463;
-    }
-    
-    .game-details {
-        margin-bottom: 25px;
-    }
-    
-    .detail-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-        color: #666;
-    }
-    
-    .detail-item i {
-        color: #0a2463;
-        width: 20px;
-    }
-    
-    /* Steps */
-    .steps-container {
-        position: relative;
-    }
-    
-    .step-line {
-        position: absolute;
-        top: 80px;
-        left: 10%;
-        right: 10%;
-        height: 2px;
-        background: linear-gradient(90deg, #0a2463, #1a3a8f);
-        z-index: 1;
-    }
-    
-    .step-card {
-        background: white;
-        border-radius: 15px;
-        padding: 30px 20px;
-        text-align: center;
-        position: relative;
-        z-index: 2;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .step-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    .step-number {
-        position: absolute;
-        top: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #0a2463;
-        color: white;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.9rem;
-    }
-    
-    .step-icon {
-        font-size: 3rem;
-        color: #0a2463;
-        margin-bottom: 20px;
-    }
-    
-    .step-title {
-        color: #0a2463;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    
-    .step-description {
-        color: #666;
-        font-size: 0.9rem;
-    }
-    
-    /* Winner Cards */
-    .winner-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        border-radius: 15px;
-        padding: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-    }
-    
-    .winner-card:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-5px);
-    }
-    
-    .winner-header {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    
-    .winner-avatar {
-        font-size: 3rem;
-        color: #ffd700;
-    }
-    
-    .winner-info {
-        flex: 1;
-    }
-    
-    .winner-name {
-        color: white;
-        margin-bottom: 5px;
-    }
-    
-    .winner-location {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 0.9rem;
-    }
-    
-    .win-amount {
-        text-align: center;
-        margin-bottom: 15px;
-    }
-    
-    .win-amount .amount {
-        display: block;
-        font-size: 2rem;
-        font-weight: bold;
-        color: #ffd700;
-        margin-bottom: 5px;
-    }
-    
-    .win-amount .game {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 0.9rem;
-    }
-    
-    .win-date {
-        color: rgba(255, 255, 255, 0.7);
-        text-align: center;
-        font-size: 0.9rem;
-    }
-    
-    /* Results Card */
-    .result-card {
-        background: white;
-        border-radius: 20px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-    
-    .result-header {
-        background: linear-gradient(135deg, #0a2463, #1a3a8f);
-        color: white;
-        padding: 20px 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    
-    .result-title h4 {
-        margin: 0;
-        color: white;
-    }
-    
-    .result-date {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.9rem;
-    }
-    
-    .result-body {
-        padding: 40px 30px;
-    }
-    
-    .winning-numbers {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-        margin-bottom: 40px;
-    }
-    
-    .winning-ball {
-        width: 70px;
-        height: 70px;
-        background: linear-gradient(135deg, #0a2463, #1a3a8f);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: bold;
-        font-size: 1.5rem;
-        box-shadow: 0 5px 15px rgba(10, 36, 99, 0.3);
-    }
-    
-    .winning-ball.powerball {
-        background: linear-gradient(135deg, #dc3545, #e35d6a);
-    }
-    
-    .result-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 20px;
-    }
-    
-    .stat-item {
-        text-align: center;
-        padding: 20px;
         background: #f8f9fa;
-        border-radius: 10px;
+        padding: 12px 20px;
+        border-radius: 12px;
     }
-    
-    .stat-label {
-        display: block;
-        color: #666;
-        font-size: 0.9rem;
-        margin-bottom: 5px;
+
+    .gc-detail {
+        font-size: 0.85rem;
     }
-    
-    .stat-value {
-        display: block;
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #0a2463;
+
+    /* Winners Scroll */
+    .winners-scroll-container {
+        overflow-x: auto;
+        padding-bottom: 20px;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
-    
-    .result-footer {
-        padding: 20px 30px;
-        background: #f8f9fa;
-        display: flex;
-        justify-content: center;
-        gap: 20px;
+
+    .winners-scroll-container::-webkit-scrollbar {
+        display: none;
     }
-    
-    /* Trust Section */
-    .trust-item {
-        display: flex;
-        gap: 20px;
-        margin-bottom: 30px;
-        align-items: flex-start;
+
+    .winner-card-v2 {
+        min-width: 250px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    
-    .trust-icon {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #0a2463, #1a3a8f);
-        border-radius: 15px;
+
+    .w-avatar-v2 {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
         font-size: 1.5rem;
-        flex-shrink: 0;
+        color: var(--color-deep);
     }
-    
-    .trust-details h5 {
-        color: #0a2463;
-        margin-bottom: 5px;
-    }
-    
-    /* Stats Grid */
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
-    
-    .stat-card {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        text-align: center;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-    
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    }
-    
-    .stat-card .stat-number {
-        font-size: 2.5rem;
-        font-weight: bold;
-        color: #0a2463;
-        margin-bottom: 10px;
-    }
-    
-    .stat-card .stat-label {
-        color: #666;
-        font-size: 0.9rem;
-    }
-    
-    /* Modal */
-    .age-icon {
-        font-size: 4rem;
-        color: #0a2463;
-    }
-    
+
     /* Animations */
     @keyframes float {
-        0%, 100% {
-            transform: translate(-50%, -50%) translateY(0px);
+
+        0%,
+        100% {
+            transform: translateY(0) rotate(-5deg);
         }
+
         50% {
-            transform: translate(-50%, -50%) translateY(-20px);
+            transform: translateY(-20px) rotate(-2deg);
         }
     }
-    
-    @keyframes float-coin {
-        0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-        }
-        50% {
-            transform: translateY(-20px) rotate(10deg);
-        }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
     }
-    
-    @keyframes pulse {
-        0%, 100% {
-            opacity: 1;
-        }
-        50% {
-            opacity: 0.5;
-        }
+
+    .section-divider {
+        width: 100px;
+        height: 5px;
+        background: var(--color-gold);
+        border-radius: 10px;
     }
-    
-    /* Responsive */
-    @media (max-width: 992px) {
-        .hero-visual {
-            min-height: 400px;
-        }
-        
-        .step-line {
-            display: none;
-        }
-        
-        .result-footer {
-            flex-direction: column;
-        }
-        
-        .result-footer .btn {
-            width: 100%;
-        }
+
+    .mb-60 {
+        margin-bottom: 60px;
     }
-    
-    @media (max-width: 768px) {
-        .hero-section {
-            min-height: auto;
-            padding: 100px 0 50px;
-        }
-        
-        .hero-visual {
-            min-height: 300px;
-        }
-        
-        .ticket-visual {
-            transform: rotate(0deg) scale(0.8);
-        }
-        
-        .winning-numbers {
-            gap: 10px;
-        }
-        
-        .winning-ball {
-            width: 50px;
-            height: 50px;
-            font-size: 1.2rem;
-        }
-        
-        .time-value {
-            font-size: 2rem;
-        }
+
+    .section-padding {
+        padding: 100px 0;
     }
-    
-    @media (max-width: 576px) {
-        .jackpot-display {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        
-        .countdown-timer {
-            gap: 10px;
-        }
-        
-        .time-value {
-            font-size: 1.5rem;
-        }
-        
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
+
+    /* Transitions */
+    .transform-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .transform-hover:hover {
+        transform: scale(1.03);
+    }
+
+    .border-y-gold {
+        border-top: 1px solid rgba(255, 215, 0, 0.3);
+        border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    /* Steps V2 */
+    .step-card-v2 {
+        background: white;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        height: 100%;
+        border: 1px solid #eee;
+    }
+
+    .step-card-v2:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
+        border-color: var(--color-gold);
+    }
+
+    .step-icon-v2 {
+        width: 80px;
+        height: 80px;
+        background: #fdfdfd;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .step-number-badge {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        width: 30px;
+        height: 30px;
+        background: var(--color-deep);
+        color: var(--color-gold);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 0.9rem;
+        border: 2px solid white;
     }
 </style>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    $(document).ready(function() {
-        // Countdown Timer
-        function updateCountdown() {
-            const now = new Date();
-            const tomorrow = new Date(now);
-            tomorrow.setDate(tomorrow.getDate() + 1);
-            tomorrow.setHours(20, 0, 0, 0);
-            
-            const diff = tomorrow - now;
-            
-            if (diff > 0) {
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-                
-                $('#hours').text(hours.toString().padStart(2, '0'));
-                $('#minutes').text(minutes.toString().padStart(2, '0'));
-                $('#seconds').text(seconds.toString().padStart(2, '0'));
-                
-                // Animate number changes
-                animateNumber($('#hours'), hours);
-                animateNumber($('#minutes'), minutes);
-                animateNumber($('#seconds'), seconds);
-            }
-        }
-        
-        function animateNumber(element, newValue) {
-            const oldValue = parseInt(element.text());
-            if (oldValue !== newValue) {
-                element.css('transform', 'scale(1.2)');
-                setTimeout(() => {
-                    element.css('transform', 'scale(1)');
-                }, 150);
-            }
-        }
-        
-        // Initialize countdown
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-        
-        // Floating elements animation
-        function animateFloatingElements() {
-            $('.floating-ticket').css('animation', 'float 6s ease-in-out infinite');
-            $('.coin-1').css('animation', 'float-coin 4s ease-in-out infinite');
-            $('.coin-2').css('animation', 'float-coin 4s ease-in-out infinite 1s');
-            $('.coin-3').css('animation', 'float-coin 4s ease-in-out infinite 2s');
-        }
-        
-        // Age Verification
-        if (!localStorage.getItem('ageVerified')) {
-            setTimeout(() => {
-                const modal = new bootstrap.Modal(document.getElementById('ageVerificationModal'));
-                modal.show();
-            }, 1000);
-        }
-        
-        $('#confirmAgeBtn').click(function() {
-            localStorage.setItem('ageVerified', 'true');
-            $('#ageVerificationModal').modal('hide');
-            
-            // Show welcome notification
-            showNotification('Welcome to WINNING TICKET! Good luck!', 'success');
-        });
-        
-        $('#under18Btn').click(function() {
-            window.location.href = "https://www.ncpw.org/";
-        });
-        
-        // Game card hover effects
-        $('.game-card').hover(
-            function() {
-                $(this).find('.game-icon').css('transform', 'scale(1.1) rotate(5deg)');
-            },
-            function() {
-                $(this).find('.game-icon').css('transform', 'scale(1) rotate(0deg)');
-            }
-        );
-        
-        // Ticket visual hover effect
-        $('.ticket-visual').hover(
-            function() {
-                $(this).find('.ball').each(function(index) {
-                    $(this).css('animation', `bounce 0.5s ease ${index * 0.1}s`);
-                });
-            },
-            function() {
-                $(this).find('.ball').css('animation', '');
-            }
-        );
-        
-        // Animate balls on page load
+    $(document).ready(function () {
+        // Initial simple reveal animations
+        $('.animate-up').css({ 'opacity': 0, 'transform': 'translateY(30px)' });
+        $('.animate-right').css({ 'opacity': 0, 'transform': 'translateX(30px)' });
+
         setTimeout(() => {
-            $('.ball').each(function(index) {
-                $(this).css('animation', `bounce 0.5s ease ${index * 0.1}s`);
-            });
-        }, 1000);
-        
-        // Add bounce animation
-        $('<style>').text(`
-            @keyframes bounce {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-20px); }
-            }
-        `).appendTo('head');
-        
-        // Show notification function
-        function showNotification(message, type = 'info') {
-            const notification = $(`
-                <div class="notification notification-${type}">
-                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'info-circle'}"></i>
-                    ${message}
-                </div>
-            `);
-            
-            $('body').append(notification);
-            
-            // Slide in
-            notification.css({
-                'transform': 'translateX(100%)',
-                'transition': 'transform 0.3s ease'
-            });
-            
-            setTimeout(() => {
-                notification.css('transform', 'translateX(0)');
-            }, 10);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                notification.css('transform', 'translateX(100%)');
-                setTimeout(() => notification.remove(), 300);
-            }, 5000);
-        }
-        
-        // Initialize animations
-        animateFloatingElements();
-        
-        // Add notification styles
-        $('<style>').text(`
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                z-index: 9999;
-                max-width: 300px;
-            }
-            
-            .notification-success {
-                border-left: 4px solid #28a745;
-                background: linear-gradient(135deg, #ffffff, #d4edda);
-            }
-            
-            .notification-success i {
-                color: #28a745;
-            }
-        `).appendTo('head');
+            $('.animate-up').animate({ 'opacity': 1, 'transform': 'translateY(0)' }, 800);
+            $('.animate-right').animate({ 'opacity': 1, 'transform': 'translateX(0)' }, 800);
+        }, 200);
     });
 </script>
 {% endblock %}

@@ -124,6 +124,17 @@ class UserProfile(models.Model):
         return self.total_won - self.total_spent
     
     @property
+    def balance(self):
+        """Get the user's main wallet balance."""
+        from principal.models import Wallet
+        wallet, _ = Wallet.objects.get_or_create(
+            user=self.user, 
+            wallet_type='main',
+            defaults={'balance': 0}
+        )
+        return wallet.balance
+
+    @property
     def win_ratio(self):
         """Calculate win ratio (games won / games played)"""
         if self.games_played == 0:

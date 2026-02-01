@@ -510,7 +510,7 @@
                             </li>
                             {% endif %}
                             <li>
-                                <a class="dropdown-item" href="{% url 'dashboard' %}">
+                                <a class="dropdown-item" href="{% url 'my_tickets' %}">
                                     <i class="fas fa-ticket-alt me-2"></i> My Tickets
                                     <span class="badge bg-primary rounded-pill float-end">
                                         {{ user.tickets.count|default:"0" }}

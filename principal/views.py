@@ -1,4 +1,3 @@
-from urllib import request
 import random
 import string
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,7 +10,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django import forms
 from django.utils import timezone
-from .models import Game, Company, Wallet, Ticket, Payment
+from .models import Game, Company, Wallet, Ticket, Payment, Winner, Draw
 
 # ======================================================
 # HEALTHCHECK (RAILWAY / RENDER)
@@ -28,15 +27,22 @@ def health_check(request):
 
 def home(request):
     """
-    ⚠️ MODIFIÉ
-    AVANT : rendait un template HTML (index.html)
-    PROBLÈME : Railway échoue si le template/static/DB casse
-
-    MAINTENANT :
-    Retourne un simple OK pour garantir le healthcheck
+    Page d'accueil avec les jeux en vedette et les statistiques.
     """
-    #return HttpResponse("OK")
-    return render(request, 'winning_ticket/index.html')
+    featured_games = Game.objects.filter(status='active').order_by('-created_at')[:3]
+    recent_winners = Winner.objects.select_related('user', 'draw', 'draw__game').order_by('-draw__draw_date')[:5]
+    
+    from django.db.models import Sum
+    total_jackpot = Game.objects.filter(status='active').aggregate(Sum('prize_amount'))['prize_amount__sum'] or 0
+    total_winners_count = Winner.objects.count()
+    
+    context = {
+        'featured_games': featured_games,
+        'recent_winners': recent_winners,
+        'total_jackpot': total_jackpot,
+        'total_winners_count': total_winners_count,
+    }
+    return render(request, 'winning_ticket/index.html', context)
 
 
 # ======================================================
@@ -126,12 +132,16 @@ def play_game(request, slug):
             
         try:
             with transaction.atomic():
+                # Ensure we have a draw date (fallback to now if game.next_draw is null)
+                draw_date = game.next_draw or timezone.now()
+                
                 # 1. Créer le billet
                 ticket = Ticket.objects.create(
                     user=request.user,
                     game=game,
                     numbers=selected_numbers,
                     ticket_id=generate_ticket_id(),
+                    draw_date=draw_date,
                     status='pending',
                     prize_tier='None',  # Default
                     match_count=0
@@ -162,7 +172,7 @@ def play_game(request, slug):
                     game.finance.update_from_sales(game.ticket_price * len(selected_numbers))
             
             messages.success(request, f"Félicitations! Billet acheté avec succès. ID: {ticket.ticket_id}")
-            return redirect('dashboard')
+            return redirect('my_tickets')
             
         except Exception as e:
             messages.error(request, f"Une erreur est survenue lors de l'achat: {str(e)}")
@@ -205,19 +215,64 @@ def buy_ticket(request):
     return render(request, 'winning_ticket/buy_ticket.html')
 
 
+@login_required
 def my_tickets(request):
-    return render(request, 'winning_ticket/my_tickets.html')
+    """
+    User's ticket gallery and history.
+    """
+    user = request.user
+    
+    # Get user's wallet for stats
+    wallet, created = Wallet.objects.get_or_create(
+        user=user, 
+        wallet_type='main',
+        defaults={'balance': 0}
+    )
+    
+    # Get all tickets
+    tickets = Ticket.objects.filter(user=user).select_related('game').order_by('-created_at')
+    recent_tickets = tickets[:20]  # Just use the same name as in dashboard for template compatibility if needed
+    
+    # Stats
+    total_tickets = tickets.count()
+    active_tickets = tickets.filter(status='pending').count()
+    total_won = tickets.filter(status='won').aggregate(models.Sum('win_amount'))['win_amount__sum'] or 0
+    unclaimed_prizes = tickets.filter(status='won', checked=False).count()
+    
+    context = {
+        'wallet': wallet,
+        'tickets': tickets,
+        'recent_tickets': recent_tickets,
+        'total_tickets': total_tickets,
+        'active_tickets': active_tickets,
+        'total_won': total_won,
+        'unclaimed_prizes': unclaimed_prizes,
+    }
+    return render(request, 'winning_ticket/my_tickets.html', context)
 
 
 def results(request):
-    return render(request, 'winning_ticket/results.html')
+    """
+    Affiche les derniers tirages effectués.
+    """
+    recent_draws = Draw.objects.select_related('game').order_by('-draw_date')[:20]
+    
+    context = {
+        'recent_draws': recent_draws,
+    }
+    return render(request, 'winning_ticket/results.html', context)
 
 
 def winners(request):
     """
-    Galerie des gagnants
+    Galerie des derniers gagnants.
     """
-    return render(request, 'winning_ticket/winners.html')
+    top_winners = Winner.objects.select_related('user', 'draw', 'draw__game').order_by('-prize_amount')[:30]
+    
+    context = {
+        'top_winners': top_winners,
+    }
+    return render(request, 'winning_ticket/winners.html', context)
 
 
 # ======================================================

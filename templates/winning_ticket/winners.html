@@ -6,141 +6,171 @@
 <div class="container py-5">
     <!-- Page Header -->
     <div class="text-center mb-5">
-        <h1 class="display-4 mb-3">🎉 OUR WINNERS 🎉</h1>
-        <p class="lead text-muted">Real people, real wins! See who's changing their lives with Winning Ticket</p>
+        <h1 class="display-4 fw-bold mb-3">🎉 NOS GAGNANTS 🎉</h1>
+        <p class="lead text-muted">Aujourd'hui est peut-être votre jour de chance ! Découvrez qui a déjà gagné.</p>
     </div>
 
-    <!-- Featured Winner -->
-    <div class="card border-warning shadow-lg mb-5">
+    {% if top_winners %}
+    <!-- Featured Winner (The latest biggest winner) -->
+    {% with biggest_winner=top_winners.0 %}
+    <div class="card border-warning shadow-lg mb-5 overflow-hidden">
         <div class="card-header bg-warning text-dark py-3">
-            <h3 class="mb-0 text-center">
-                <i class="fas fa-crown me-2"></i> JACKPOT WINNER OF THE MONTH
+            <h3 class="mb-0 text-center fw-bold">
+                <i class="fas fa-crown me-2"></i> DERNIER GRAND GAGNANT
             </h3>
         </div>
-        <div class="card-body p-4">
+        <div class="card-body p-4 p-lg-5">
             <div class="row align-items-center">
-                <div class="col-md-4 text-center">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
                     <div class="position-relative">
-                        <div class="winner-badge">
-                            <i class="fas fa-trophy fa-4x text-warning"></i>
+                        <div class="winner-badge-main">
+                            <i class="fas fa-user-circle fa-7x text-primary opacity-25"></i>
+                            <div class="trophy-overlay">
+                                <i class="fas fa-trophy text-warning"></i>
+                            </div>
                         </div>
                         <div class="mt-4">
-                            <h3 class="text-primary">Anonymous</h3>
-                            <p class="text-muted">
-                                <i class="fas fa-map-marker-alt me-1"></i>
-                                California
+                            <h2 class="text-primary fw-bold">
+                                {% if biggest_winner.user.first_name %}
+                                    {{ biggest_winner.user.first_name }}
+                                {% else %}
+                                    {{ biggest_winner.user.username }}
+                                {% endif %}
+                            </h2>
+                            <p class="text-muted text-uppercase letter-spacing-1">
+                                <i class="fas fa-certificate me-1 text-success"></i>
+                                Gagnant Vérifié
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-8">
-                    <div class="winner-details">
-                        <div class="display-2 text-success mb-3">$12,500,000</div>
-                        <h4 class="mb-3">Mega Jackpot Winner • January 8, 2024</h4>
-                        
+                    <div class="winner-details ps-md-4">
+                        <div class="display-2 text-success fw-bold mb-3">
+                            ${{ biggest_winner.prize_amount|floatformat:2|default:"0.00" }}
+                        </div>
+                        <h4 class="mb-4 text-primary">
+                            {{ biggest_winner.draw.game.name }} • 
+                            {{ biggest_winner.draw.draw_date|date:"F d, Y" }}
+                        </h4>
+
                         <div class="mb-4">
-                            <h5>Winning Numbers:</h5>
+                            <h5 class="text-muted text-uppercase small fw-bold mb-3">Numéros gagnants:</h5>
                             <div class="d-flex flex-wrap gap-2">
-                                <span class="number-ball">3</span>
-                                <span class="number-ball">7</span>
-                                <span class="number-ball">15</span>
-                                <span class="number-ball">22</span>
-                                <span class="number-ball">29</span>
-                                <span class="number-ball">35</span>
-                                <span class="number-ball powerball">7</span>
+                                {% if biggest_winner.draw.winning_numbers %}
+                                    {% for num in biggest_winner.draw.winning_numbers %}
+                                    <span class="number-ball">{{ num }}</span>
+                                    {% endfor %}
+                                {% endif %}
+                                {% if biggest_winner.draw.winning_powerball %}
+                                <span class="number-ball powerball">{{ biggest_winner.draw.winning_powerball }}</span>
+                                {% endif %}
                             </div>
                         </div>
-                        
-                        <blockquote class="blockquote bg-light p-4 rounded">
-                            <p class="mb-0">
-                                <i class="fas fa-quote-left text-warning me-2"></i>
-                                "I've been playing for 5 years, never missed a draw. When I checked my numbers, 
-                                I thought it was a mistake! This money means my family's future is secure. 
-                                Thank you Winning Ticket for this life-changing opportunity!"
-                                <i class="fas fa-quote-right text-warning ms-2"></i>
+
+                        <div class="alert bg-light border-0 py-3 px-4 rounded-4">
+                            <p class="mb-0 fs-5 italic">
+                                <i class="fas fa-quote-left text-warning opacity-50 me-2"></i>
+                                "C'est un rêve qui devient réalité ! Merci Winning Ticket."
                             </p>
-                        </blockquote>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {% endwith %}
 
     <!-- Recent Winners Grid -->
-    <h2 class="text-center mb-4">RECENT WINNERS</h2>
+    <h2 class="text-center fw-bold mb-5 section-title">PLUS DE GAGNANTS</h2>
     <div class="row g-4 mb-5">
-        {% for i in "123456"|make_list %}
+        {% for winner in top_winners %}
+        {% if not forloop.first %}
         <div class="col-md-6 col-lg-4">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body text-center">
-                    <div class="winner-avatar mb-3">
-                        <div class="position-relative">
-                            <i class="fas fa-user-circle fa-5x text-primary"></i>
-                            <div class="badge bg-success position-absolute top-0 end-0">
-                                WINNER
-                            </div>
+            <div class="card h-100 shadow-sm winner-card-hover border-0">
+                <div class="card-body text-center p-4">
+                    <div class="winner-avatar mb-4">
+                        <div class="position-relative d-inline-block">
+                            <i class="fas fa-user-circle fa-5x text-primary opacity-25"></i>
+                            <span class="badge bg-success position-absolute bottom-0 end-0 rounded-pill px-3">WIN</span>
                         </div>
                     </div>
-                    
-                    <h5 class="mb-2">Winner #00{{ i }}</h5>
-                    
-                    <div class="display-6 text-success fw-bold mb-3">
-                        ${{ forloop.counter|add:49 }},000
+
+                    <h5 class="mb-1 fw-bold">
+                        {% if winner.user.first_name %}
+                            {{ winner.user.first_name }} {{ winner.user.last_name|slice:":1" }}.
+                        {% else %}
+                            {{ winner.user.username }}
+                        {% endif %}
+                    </h5>
+
+                    <div class="h3 text-success fw-bold mb-3">
+                        ${{ winner.prize_amount|floatformat:0|default:"0" }}
                     </div>
-                    
-                    <div class="mb-3">
-                        <span class="badge bg-primary me-1">Mega Jackpot</span>
-                        <span class="badge bg-info">Jan {{ forloop.counter|add:10 }}, 2024</span>
+
+                    <div class="mb-4">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill small mb-1">
+                            {{ winner.draw.game.name|default:"Jeu inconnu" }}
+                        </span>
+                        <div class="text-muted small mt-2">
+                            <i class="fas fa-calendar-alt me-1"></i> 
+                            {{ winner.draw.draw_date|date:"d M, Y"|default:"Date inconnue" }}
+                        </div>
                     </div>
-                    
-                    <div class="small-numbers mb-3">
-                        {% for j in "123456"|make_list %}
-                        <span class="badge bg-secondary">{{ forloop.counter|add:forloop.parentloop.counter }}</span>
-                        {% endfor %}
-                        <span class="badge bg-danger">{{ forloop.counter|add:5 }}</span>
+
+                    <div class="winning-combo-small mb-0">
+                        {% if winner.draw.winning_numbers %}
+                            {% for num in winner.draw.winning_numbers|slice:":5" %}
+                            <span class="badge bg-light text-dark border fw-normal">{{ num }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span class="badge bg-light text-dark border fw-normal">-</span>
+                        {% endif %}
                     </div>
-                    
-                    <p class="text-muted small mb-0">
-                        <i class="fas fa-gift me-1"></i>
-                        {{ forloop.counter|add:2 }} tickets purchased • First time winner
-                    </p>
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
+    {% else %}
+    <div class="text-center py-5 my-5">
+        <div class="mb-4">
+            <i class="fas fa-trophy fa-5x text-muted opacity-25"></i>
+        </div>
+        <h2 class="text-muted">Aucun gagnant pour le moment</h2>
+        <p class="lead text-muted mb-4">Soyez le premier à figurer dans notre galerie des gagnants !</p>
+        <a href="{% url 'games' %}" class="btn btn-primary btn-lg px-5 rounded-pill">Jouer Maintenant</a>
+    </div>
+    {% endif %}
 
     <!-- Winner Statistics -->
-    <div class="card mb-5">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">
-                <i class="fas fa-chart-line me-2"></i> WINNER STATISTICS
-            </h4>
+    <div class="card mb-5 border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="card-header bg-dark text-white py-4 text-center">
+            <h3 class="mb-0 fw-bold">
+                <i class="fas fa-chart-line me-2 text-warning"></i> CHIFFRES CLÉS
+            </h3>
         </div>
-        <div class="card-body">
+        <div class="card-body bg-light p-5">
             <div class="row text-center">
-                <div class="col-md-3 mb-3">
-                    <div class="stat-box p-3">
-                        <div class="display-4 text-primary">1,245</div>
-                        <p class="text-muted mb-0">Winners This Month</p>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="stat-box">
+                        <div class="display-4 fw-bold text-primary">
+                            {{ top_winners.count|default:0|default:"0" }}
+                        </div>
+                        <p class="text-muted mb-0 fw-bold text-uppercase small">Grands Gagnants</p>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stat-box p-3">
-                        <div class="display-4 text-success">$45.2M</div>
-                        <p class="text-muted mb-0">Total Prizes Paid</p>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <div class="stat-box">
+                        <div class="display-4 fw-bold text-success">98%</div>
+                        <p class="text-muted mb-0 fw-bold text-uppercase small">Paiements Rapides</p>
                     </div>
                 </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stat-box p-3">
-                        <div class="display-4 text-warning">$12.5M</div>
-                        <p class="text-muted mb-0">Biggest Win</p>
-                    </div>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <div class="stat-box p-3">
-                        <div class="display-4 text-info">California</div>
-                        <p class="text-muted mb-0">Most Wins By State</p>
+                <div class="col-md-4">
+                    <div class="stat-box">
+                        <div class="display-4 fw-bold text-warning">24/7</div>
+                        <p class="text-muted mb-0 fw-bold text-uppercase small">Support Gagnants</p>
                     </div>
                 </div>
             </div>
@@ -148,153 +178,166 @@
     </div>
 
     <!-- How Winners Claim Prizes -->
-    <div class="row mb-5">
+    <div class="row g-4 mb-5">
         <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-award me-2 text-warning"></i> Prize Claim Process
+            <div class="card h-100 border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white border-bottom py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="fas fa-shield-alt me-2 text-primary"></i> Comment réclamer son prix
                     </h5>
                 </div>
-                <div class="card-body">
-                    <div class="timeline">
-                        <div class="timeline-item mb-4">
-                            <div class="timeline-marker bg-success"></div>
-                            <div class="timeline-content">
-                                <h6>1. Verify Your Ticket</h6>
-                                <p class="text-muted small">Check your numbers on our website or mobile app</p>
+                <div class="card-body p-4">
+                    <div class="process-list">
+                        <div class="process-item d-flex gap-3 mb-4">
+                            <div class="process-icon bg-success-subtle text-success">1</div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Vérification Automatique</h6>
+                                <p class="text-muted small mb-0">Vos gains sont crédités instantanément sur votre compte
+                                    Winning Ticket.</p>
                             </div>
                         </div>
-                        <div class="timeline-item mb-4">
-                            <div class="timeline-marker bg-primary"></div>
-                            <div class="timeline-content">
-                                <h6>2. Submit Claim Form</h6>
-                                <p class="text-muted small">Fill out the online claim form with your details</p>
+                        <div class="process-item d-flex gap-3 mb-4">
+                            <div class="process-icon bg-primary-subtle text-primary">2</div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Demande de Retrait</h6>
+                                <p class="text-muted small mb-0">Choisissez votre mode de paiement préféré (Virement,
+                                    Mobile, etc.).</p>
                             </div>
                         </div>
-                        <div class="timeline-item mb-4">
-                            <div class="timeline-marker bg-warning"></div>
-                            <div class="timeline-content">
-                                <h6>3. Verification</h6>
-                                <p class="text-muted small">Our team verifies your win (1-2 business days)</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-marker bg-info"></div>
-                            <div class="timeline-content">
-                                <h6>4. Receive Payment</h6>
-                                <p class="text-muted small">Get paid via bank transfer, check, or digital wallet</p>
+                        <div class="process-item d-flex gap-3">
+                            <div class="process-icon bg-warning-subtle text-warning">3</div>
+                            <div>
+                                <h6 class="fw-bold mb-1">Transfert Sécurisé</h6>
+                                <p class="text-muted small mb-0">Recevez vos fonds sous 24 à 48 heures après
+                                    vérification.</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <div class="col-lg-6">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="mb-0">
-                        <i class="fas fa-lightbulb me-2 text-info"></i> Tips for Winners
-                    </h5>
-                </div>
-                <div class="card-body">
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Sign your ticket immediately</strong> to prevent unauthorized claims
-                    </div>
-                    <div class="alert alert-info">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Keep your ticket safe</strong> until you claim your prize
-                    </div>
-                    <div class="alert alert-warning">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Consult a financial advisor</strong> before making big decisions
-                    </div>
-                    <div class="alert alert-primary">
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Claim within 180 days</strong> - don't let your prize expire!
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Call to Action -->
-    <div class="text-center bg-light p-5 rounded">
-        <h2 class="mb-3">Could You Be Next?</h2>
-        <p class="lead mb-4">Join our community of winners today. Your winning ticket is waiting!</p>
-        <a href="{% url 'buy_ticket' %}" class="btn btn-gold btn-lg px-5">
-            <i class="fas fa-ticket-alt me-2"></i> BUY YOUR TICKET NOW
-        </a>
-        <p class="text-muted mt-3 small">
-            <i class="fas fa-exclamation-circle me-1"></i>
-            Next draw: Tonight at 8:00 PM • Jackpot: $12,450,000
-        </p>
+        <div class="col-lg-6">
+            <div class="card h-100 border-0 shadow-sm rounded-4 bg-primary text-white">
+                <div class="card-body p-5">
+                    <h3 class="fw-bold mb-4">Prêt à changer de vie ?</h3>
+                    <p class="opacity-75 lead mb-5">Le prochain nom sur cette liste pourrait être le vôtre. Tentez votre
+                        chance dès maintenant !</p>
+                    <div class="d-grid">
+                        <a href="{% url 'games' %}" class="btn btn-gold btn-lg py-3 rounded-pill fw-bold">
+                            ACHETER UN TICKET
+                        </a>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <small class="opacity-50"><i class="fas fa-lock me-1"></i> Plateforme sécurisée &
+                            certifiée</small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <style>
-    .winner-badge {
-        width: 120px;
-        height: 120px;
+    .winner-badge-main {
+        width: 160px;
+        height: 160px;
         margin: 0 auto;
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #fff9e6, #ffe066);
-        border-radius: 50%;
-        border: 5px solid #ffc107;
-    }
-    
-    .small-numbers .badge {
-        font-size: 0.8rem;
-        padding: 0.25rem 0.5rem;
-        margin: 0.1rem;
-    }
-    
-    .stat-box {
-        border-radius: 10px;
         background: #f8f9fa;
-        transition: transform 0.3s;
-    }
-    
-    .stat-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-    
-    .timeline {
-        position: relative;
-        padding-left: 30px;
-    }
-    
-    .timeline::before {
-        content: '';
-        position: absolute;
-        left: 10px;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: #dee2e6;
-    }
-    
-    .timeline-item {
-        position: relative;
-    }
-    
-    .timeline-marker {
-        position: absolute;
-        left: -30px;
-        top: 5px;
-        width: 20px;
-        height: 20px;
         border-radius: 50%;
-        border: 3px solid white;
+        position: relative;
+        border: 4px solid #ffd700;
     }
-    
-    .timeline-content {
-        padding-left: 15px;
+
+    .trophy-overlay {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: white;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 2px solid #ffd700;
+    }
+
+    .number-ball {
+        width: 45px;
+        height: 45px;
+        background: white;
+        border: 2px solid #0d6efd;
+        color: #0d6efd;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .number-ball.powerball {
+        background: #ffd700;
+        border-color: #ffd700;
+        color: #000;
+    }
+
+    .winner-card-hover {
+        transition: all 0.3s ease;
+    }
+
+    .winner-card-hover:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .process-icon {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .btn-gold {
+        background: #ffd700;
+        color: #000;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gold:hover {
+        background: #ffc107;
+        color: #000;
+        transform: translateY(-2px);
+    }
+
+    .section-title::after {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: #ffd700;
+        margin: 15px auto;
+        border-radius: 2px;
+    }
+
+    .italic {
+        font-style: italic;
+    }
+
+    .letter-spacing-1 {
+        letter-spacing: 1px;
     }
 </style>
 {% endblock %}
