@@ -1,0 +1,2731 @@
+# Traduction anglaise pour Winning Ticket
+# Copyright (C) 2026
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Winning Ticket 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-16 01:28+0000\n"
+"PO-Revision-Date: 2026-02-15 14:00+0000\n"
+"Last-Translator: Gemini\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: config/settings.py:132
+msgid "French"
+msgstr "French"
+
+#: config/settings.py:133
+msgid "English"
+msgstr "English"
+
+#: principal/views.py:103
+#, fuzzy
+#| msgid "Veuillez sélectionner au moins un numéro !"
+msgid "Veuillez sélectionner au moins un numéro."
+msgstr "Please select at least one number!"
+
+#: principal/views.py:109
+#, python-format
+msgid "Le numéro %(num)s a déjà été acheté par un autre joueur."
+msgstr ""
+
+#: principal/views.py:115
+msgid "Solde insuffisant. Veuillez recharger votre portefeuille."
+msgstr ""
+
+#: principal/views.py:153
+#, python-format
+msgid "Félicitations! Billet acheté avec succès. ID: %(id)s"
+msgstr ""
+
+#: principal/views.py:157
+#, python-format
+msgid "Une erreur est survenue lors de l'achat: %(err)s"
+msgstr ""
+
+#: principal/views.py:243
+#, python-format
+msgid "Bon retour, %(user)s!"
+msgstr ""
+
+#: principal/views.py:249
+#, fuzzy
+#| msgid "Nom d'utilisateur ou Email"
+msgid "Nom d'utilisateur ou mot de passe incorrect."
+msgstr "Username or Email"
+
+#: principal/views.py:255
+msgid "Vous avez été déconnecté avec succès."
+msgstr ""
+
+#: principal/views.py:265
+msgid "Les mots de passe ne correspondent pas !"
+msgstr ""
+
+#: principal/views.py:267
+#, fuzzy
+#| msgid " Votre nom d'utilisateur"
+msgid "Ce nom d'utilisateur est déjà pris !"
+msgstr " Your username"
+
+#: principal/views.py:278
+msgid "Compte créé avec succès ! Vous avez reçu 1000 unités de bienvenue."
+msgstr ""
+
+#: principal/views.py:281
+#, python-format
+msgid "Une erreur est survenue : %(e)s"
+msgstr ""
+
+#: principal/views.py:309
+msgid "Nom du Jeu"
+msgstr ""
+
+#: principal/views.py:310
+#, fuzzy
+#| msgid "Duration"
+msgid "Description"
+msgstr "Duration"
+
+#: principal/views.py:311
+msgid "Entreprise Organisatrice"
+msgstr ""
+
+#: principal/views.py:312
+msgid "Plage de Numéros (1 à X)"
+msgstr ""
+
+#: principal/views.py:313
+msgid "Prix du Billet"
+msgstr ""
+
+#: principal/views.py:314
+msgid "Montant Total du Prix"
+msgstr ""
+
+#: principal/views.py:315
+#, fuzzy
+#| msgid "Date out of range"
+msgid "Date et Heure du Tirage"
+msgstr "Date out of range"
+
+#: principal/views.py:325
+msgid "Aucun ticket vendu. Tirage impossible."
+msgstr ""
+
+#: principal/views.py:365
+#, python-format
+msgid "Tirage terminé ! Numéro gagnant : %(num)s"
+msgstr ""
+
+#: principal/views.py:367
+#, python-format
+msgid "Erreur lors du tirage : %(e)s"
+msgstr ""
+
+#: templates/admins/dashboard.html:4
+#, fuzzy
+#| msgid "Connexion - Winning Ticket"
+msgid "Administration - Winning Ticket"
+msgstr "Login - Winning Ticket"
+
+#: templates/admins/dashboard.html:28
+#, fuzzy
+#| msgid "Rapport Complet"
+msgid "Rapports"
+msgstr "Full Report"
+
+#: templates/admins/dashboard.html:32
+msgid "Nouveau Jeu"
+msgstr ""
+
+#: templates/admins/dashboard.html:50
+msgid "Revenu Total"
+msgstr ""
+
+#: templates/admins/dashboard.html:65
+#, fuzzy
+#| msgid "Tickets"
+msgid "Tickets Vendus"
+msgstr "Tickets"
+
+#: templates/admins/dashboard.html:79
+#, fuzzy
+#| msgid "Tickets Actifs"
+msgid "Jeux Actifs"
+msgstr "Active Tickets"
+
+#: templates/admins/dashboard.html:94
+#, fuzzy
+#| msgid "Nom d'utilisateur"
+msgid "Utilisateurs"
+msgstr "Username"
+
+#: templates/admins/dashboard.html:103
+msgid "Progression des Jeux"
+msgstr ""
+
+#: templates/admins/dashboard.html:119
+msgid "Prochain Tirage"
+msgstr ""
+
+#: templates/admins/dashboard.html:131
+#, fuzzy
+#| msgid "Mes Tickets"
+msgid "Vente des tickets"
+msgstr "My Tickets"
+
+#: templates/admins/dashboard.html:165
+#, fuzzy
+#| msgid "Acheter un Ticket"
+msgid "Achat de ticket"
+msgstr "Buy a Ticket"
+
+#: templates/admins/dashboard.html:176
+#, fuzzy
+#| msgid "Toutes les Entreprises"
+msgid "Toutes les transactions"
+msgstr "All Companies"
+
+#: templates/admins/dashboard.html:186
+msgid "Jeux prêts pour le tirage"
+msgstr ""
+
+#: templates/admins/dashboard.html:190
+#, fuzzy
+#| msgid "Tous les tirages"
+msgid "Exécuter les tirages"
+msgstr "All draws"
+
+#: templates/base/footer.html:17
+msgid ""
+"Winning Ticket est votre plateforme de confiance pour les loteries en ligne. "
+"Nous combinons sécurité, plaisir et simplicité pour vous offrir la meilleure "
+"expérience possible."
+msgstr ""
+"Winning Ticket is your trusted platform for online lotteries. We combine "
+"security, fun and simplicity to offer you the best possible experience."
+
+#: templates/base/footer.html:34
+msgid "Liens Rapides"
+msgstr "Quick Links"
+
+#: templates/base/footer.html:37 templates/base/header.html:38
+#: templates/base/header.html:380 templates/winning_ticket/play_game.html:24
+msgid "Accueil"
+msgstr "Home"
+
+#: templates/base/footer.html:39 templates/base/header.html:51
+#: templates/base/header.html:393 templates/winning_ticket/play_game.html:26
+msgid "Jeux"
+msgstr "Games"
+
+#: templates/base/footer.html:41 templates/base/header.html:64
+#: templates/base/header.html:406 templates/users/dashboard.html:242
+msgid "Résultats"
+msgstr "Results"
+
+#: templates/base/footer.html:43 templates/base/header.html:77
+#: templates/base/header.html:419 templates/winning_ticket/index.html:71
+#: templates/winning_ticket/index.html:298
+#: templates/winning_ticket/winners.html:41
+msgid "Gagnants"
+msgstr "Winners"
+
+#: templates/base/footer.html:45
+msgid "À Propos"
+msgstr "About us"
+
+#: templates/base/footer.html:51
+msgid "Newsletter"
+msgstr "Newsletter"
+
+#: templates/base/footer.html:52
+msgid "Recevez les offres et résultats."
+msgstr "Receive offers and results."
+
+#: templates/base/footer.html:54
+msgid "Votre email"
+msgstr "Your email"
+
+#: templates/base/footer.html:56
+msgid "S'abonner"
+msgstr "Subscribe"
+
+#: templates/base/footer.html:63
+msgid "Support & Aide"
+msgstr "Support & Help"
+
+#: templates/base/footer.html:65
+msgid "FAQ"
+msgstr "FAQ"
+
+#: templates/base/footer.html:66
+msgid "Contactez-nous"
+msgstr "Contact us"
+
+#: templates/base/footer.html:67
+msgid "Conditions générales"
+msgstr "Terms and Conditions"
+
+#: templates/base/footer.html:68
+msgid "Politique de confidentialité"
+msgstr "Privacy Policy"
+
+#: templates/base/footer.html:80
+msgid "Tous droits réservés."
+msgstr "All rights reserved."
+
+#: templates/base/footer.html:89
+msgid "INTERDIT MINEURS"
+msgstr "NO MINORS"
+
+#: templates/base/footer.html:114
+msgid ""
+"Jouer comporte des risques : endettement, isolement, dépendance. Pour être "
+"aidé, appelez le 09 74 75 13 13 (appel non surtaxé)."
+msgstr ""
+"Gambling involves risks: debt, isolation, addiction. For help, call 09 74 75 "
+"13 13 (non-premium call)."
+
+#: templates/base/header.html:119
+msgid "Solde"
+msgstr "Balance"
+
+#: templates/base/header.html:185 templates/base/header.html:358
+msgid "Solde disponible"
+msgstr "Available balance"
+
+#: templates/base/header.html:196 templates/winning_ticket/play_game.html:163
+msgid "Recharger"
+msgstr "Deposit"
+
+#: templates/base/header.html:211 templates/base/header.html:432
+msgid "Tableau de bord"
+msgstr "Dashboard"
+
+#: templates/base/header.html:221 templates/base/header.html:440
+msgid "Mes Tickets"
+msgstr "My Tickets"
+
+#: templates/base/header.html:227
+msgid "Administration"
+msgstr "Administration"
+
+#: templates/base/header.html:237
+msgid "Espace Admin"
+msgstr "Admin Area"
+
+#: templates/base/header.html:247
+msgid "Gérer les Jeux"
+msgstr "Manage Games"
+
+#: templates/base/header.html:262 templates/base/header.html:450
+msgid "Déconnexion"
+msgstr "Logout"
+
+#: templates/base/header.html:275 templates/base/header.html:459
+msgid "Connexion"
+msgstr "Login"
+
+#: templates/base/header.html:280 templates/base/header.html:463
+msgid "S'inscrire"
+msgstr "Register"
+
+#: templates/base/header.html:368
+msgid "Navigation"
+msgstr "Navigation"
+
+#: templates/base/header.html:425
+msgid "Mon Compte"
+msgstr "My Account"
+
+#: templates/users/dashboard.html:4
+#, fuzzy
+#| msgid "Résultats des Tirages - Winning Ticket"
+msgid "Tableau de Bord - Winning Ticket"
+msgstr "Draw Results - Winning Ticket"
+
+#: templates/users/dashboard.html:31
+#, fuzzy
+#| msgid "Bienvenue"
+msgid "Bienvenue,"
+msgstr "Welcome"
+
+#: templates/users/dashboard.html:40
+msgid "Solde Actuel"
+msgstr ""
+
+#: templates/users/dashboard.html:61
+msgid "Total Tickets"
+msgstr "Total Tickets"
+
+#: templates/users/dashboard.html:65
+msgid "Depuis l'inscription"
+msgstr ""
+
+#: templates/users/dashboard.html:76
+msgid "Total Gains"
+msgstr "Total Winnings"
+
+#: templates/users/dashboard.html:80
+msgid "Bravo !"
+msgstr ""
+
+#: templates/users/dashboard.html:91
+msgid "Tickets Actifs"
+msgstr "Active Tickets"
+
+#: templates/users/dashboard.html:95
+#, fuzzy
+#| msgid "En attente"
+msgid "En attente de tirage"
+msgstr "Pending"
+
+#: templates/users/dashboard.html:106
+#, fuzzy
+#| msgid "Prix Non Réclamés"
+msgid "Gains non-réclamés"
+msgstr "Unclaimed Prizes"
+
+#: templates/users/dashboard.html:109
+#, fuzzy
+#| msgid "Jouer maintenant"
+msgid "Réclamer maintenant"
+msgstr "Play now"
+
+#: templates/users/dashboard.html:118
+#, fuzzy
+#| msgid "Vos Tickets Actifs"
+msgid "Vos Tickets Récents"
+msgstr "Your Active Tickets"
+
+#: templates/users/dashboard.html:119 templates/users/dashboard.html:226
+msgid "Voir tout l'historique"
+msgstr ""
+
+#: templates/users/dashboard.html:159
+#, fuzzy
+#| msgid "Gagnant"
+msgid "Gagné"
+msgstr "Winner"
+
+#: templates/users/dashboard.html:164
+#, fuzzy
+#| msgid "Numéro gagnant"
+msgid "Non gagnant"
+msgstr "Winning number"
+
+#: templates/users/dashboard.html:169
+msgid "En attente"
+msgstr "Pending"
+
+#: templates/users/dashboard.html:180
+#, fuzzy
+#| msgid "Aucun ticket trouvé"
+msgid "Aucun ticket"
+msgstr "No tickets found"
+
+#: templates/users/dashboard.html:181
+#, fuzzy
+#| msgid "Vous n'avez pas encore participé à nos jeux."
+msgid "Vous n'avez pas encore acheté de ticket."
+msgstr "You haven't participated in any games yet."
+
+#: templates/users/dashboard.html:184
+#, fuzzy
+#| msgid "Acheter un Ticket"
+msgid "Acheter mon premier ticket"
+msgstr "Buy a Ticket"
+
+#: templates/users/dashboard.html:195
+#, fuzzy
+#| msgid "Dernière connexion"
+msgid "Dernière Activité"
+msgstr "Last login"
+
+#: templates/users/dashboard.html:203
+msgid "Dépôt Réussi"
+msgstr ""
+
+#: templates/users/dashboard.html:204
+msgid "Hier, 14:30"
+msgstr ""
+
+#: templates/users/dashboard.html:216
+#, fuzzy
+#| msgid "Acheter un Ticket"
+msgid "Achat Ticket"
+msgstr "Buy a Ticket"
+
+#: templates/users/dashboard.html:217
+msgid "Yesterday, 14:45"
+msgstr ""
+
+#: templates/users/dashboard.html:232
+msgid "Actions Rapides"
+msgstr "Quick Actions"
+
+#: templates/users/dashboard.html:237 templates/winning_ticket/play_game.html:4
+msgid "Jouer"
+msgstr ""
+
+#: templates/users/dashboard.html:248
+msgid "Retrait"
+msgstr ""
+
+#: templates/users/dashboard.html:253
+msgid "Profil"
+msgstr ""
+
+#: templates/users/login.html:4
+msgid "Connexion - Winning Ticket"
+msgstr "Login - Winning Ticket"
+
+#: templates/users/login.html:24
+msgid "Heureux de vous revoir"
+msgstr ""
+
+#: templates/users/login.html:25
+#, fuzzy
+#| msgid "Connectez-vous à votre compte Winning Ticket"
+msgid "Connectez-vous pour continuer l'aventure."
+msgstr "Log in to your Winning Ticket account"
+
+#: templates/users/login.html:40
+#, fuzzy
+#| msgid "Nom d'utilisateur ou Email"
+msgid "Utilisateur ou Email"
+msgstr "Username or Email"
+
+#: templates/users/login.html:47
+#, fuzzy
+#| msgid " Votre nom d'utilisateur"
+msgid " Votre identifiant"
+msgstr " Your username"
+
+#: templates/users/login.html:55 templates/users/register.html:80
+msgid "Mot de passe"
+msgstr "Password"
+
+#: templates/users/login.html:59
+msgid "Oublié ?"
+msgstr ""
+
+#: templates/users/login.html:67
+msgid " Votre mot de passe"
+msgstr " Your password"
+
+#: templates/users/login.html:81
+#, fuzzy
+#| msgid "Se connecter"
+msgid "Rester connecté"
+msgstr "Login"
+
+#: templates/users/login.html:90
+msgid "SE CONNECTER"
+msgstr ""
+
+#: templates/users/login.html:102
+#, fuzzy
+#| msgid "ou continuez avec"
+msgid "ou continuer avec"
+msgstr "or continue with"
+
+#: templates/users/login.html:124
+#, fuzzy
+#| msgid "Pas encore de compte ?"
+msgid "Pas encore membre ?"
+msgstr "No account yet?"
+
+#: templates/users/login.html:127
+#, fuzzy
+#| msgid "Créer un compte gratuitement"
+msgid "S'inscrire gratuitement"
+msgstr "Create a free account"
+
+#: templates/users/login.html:136
+msgid "Infrastructure Sécurisée"
+msgstr ""
+
+#: templates/users/login.html:139
+#, fuzzy
+#| msgid "Vos données sont protégées par un cryptage SSL 256-bit."
+msgid ""
+"Vos sessions sont protégées par cryptage AES-256 et isolation biométrique "
+"optionnelle."
+msgstr "Your data is protected by 256-bit SSL encryption."
+
+#: templates/users/register.html:4
+msgid "Créer un Compte - Winning Ticket"
+msgstr "Create an Account - Winning Ticket"
+
+#: templates/users/register.html:25
+msgid "Rejoignez l'élite"
+msgstr ""
+
+#: templates/users/register.html:27
+msgid "Créez votre compte en quelques secondes."
+msgstr ""
+
+#: templates/users/register.html:39
+msgid "Prénom"
+msgstr "First Name"
+
+#: templates/users/register.html:46
+msgid "Nom"
+msgstr "Last Name"
+
+#: templates/users/register.html:56
+msgid "Nom d'utilisateur"
+msgstr "Username"
+
+#: templates/users/register.html:68
+#, fuzzy
+#| msgid "Adresse email"
+msgid "Adresse e-mail"
+msgstr "Email address"
+
+#: templates/users/register.html:98
+msgid "Sécurité : Inconnue"
+msgstr ""
+
+#: templates/users/register.html:105
+msgid "Confirmer"
+msgstr "Confirm"
+
+#: templates/users/register.html:125
+msgid "J'accepte les"
+msgstr "I accept the"
+
+#: templates/users/register.html:125
+#, fuzzy
+#| msgid "Syndication"
+msgid "Conditions"
+msgstr "Syndication"
+
+#: templates/users/register.html:125
+msgid "et la"
+msgstr "and the"
+
+#: templates/users/register.html:126
+msgid "Politique"
+msgstr ""
+
+#: templates/users/register.html:134
+msgid "Recevoir les alertes de nouveaux jackpots"
+msgstr ""
+
+#: templates/users/register.html:144
+msgid "CRÉER MON COMPTE"
+msgstr ""
+
+#: templates/users/register.html:154
+msgid "Offre de lancement"
+msgstr ""
+
+#: templates/users/register.html:156
+msgid "Inscrivez-vous aujourd'hui et recevez"
+msgstr ""
+
+#: templates/users/register.html:157
+msgid "de bonus !"
+msgstr ""
+
+#: templates/users/register.html:164
+#, fuzzy
+#| msgid "Vous avez déjà un compte ?"
+msgid "Déjà un compte ?"
+msgstr "Already have an account?"
+
+#: templates/users/register.html:167
+#, fuzzy
+#| msgid "Se connecter"
+msgid "Se connecter ici"
+msgstr "Login"
+
+#: templates/winning_ticket/games.html:4
+msgid "Jeux - WINNING TICKET"
+msgstr "Games - WINNING TICKET"
+
+#: templates/winning_ticket/games.html:21
+msgid "Loteries Officielles"
+msgstr ""
+
+#: templates/winning_ticket/games.html:24
+msgid "Tentez votre"
+msgstr ""
+
+#: templates/winning_ticket/games.html:25
+#, fuzzy
+#| msgid "Change"
+msgid "Chance"
+msgstr "Change"
+
+#: templates/winning_ticket/games.html:28
+msgid ""
+"Découvrez notre sélection de jeux premium. Des jackpots massifs, des tirages "
+"certifiés et des gains instantanés vous attendent."
+msgstr ""
+
+#: templates/winning_ticket/games.html:36
+#, fuzzy
+#| msgid "Filtrer par jeu..."
+msgid "Filtrer par"
+msgstr "Filter by game..."
+
+#: templates/winning_ticket/games.html:39
+#, fuzzy
+#| msgid "Toutes les Entreprises"
+msgid "Toutes les catégories"
+msgstr "All Companies"
+
+#: templates/winning_ticket/games.html:47
+msgid "Toutes les Entreprises"
+msgstr "All Companies"
+
+#: templates/winning_ticket/games.html:91
+#, fuzzy
+#| msgid "oct"
+msgid "Hot"
+msgstr "oct"
+
+#: templates/winning_ticket/games.html:105
+#: templates/winning_ticket/index.html:99
+msgid "Live"
+msgstr "Live"
+
+#: templates/winning_ticket/games.html:131
+msgid "Cagnotte actuelle"
+msgstr "Current Jackpot"
+
+#: templates/winning_ticket/games.html:141
+#, fuzzy
+#| msgid "Tickets"
+msgid "Ticket"
+msgstr "Tickets"
+
+#: templates/winning_ticket/games.html:146
+#: templates/winning_ticket/games.html:147
+msgid "Tirage"
+msgstr "Draw"
+
+#: templates/winning_ticket/games.html:162
+msgid "JOUER MAINTENANT"
+msgstr "PLAY NOW"
+
+#: templates/winning_ticket/games.html:180
+msgid "Aucun jeu disponible"
+msgstr "No games available"
+
+#: templates/winning_ticket/games.html:182
+msgid ""
+"Revenez bientôt pour découvrir nos nouvelles loteries exclusives et tentez "
+"de gagner gros !"
+msgstr ""
+
+#: templates/winning_ticket/games.html:186
+msgid "Retour à l'accueil"
+msgstr "Back to Home"
+
+#: templates/winning_ticket/index.html:33
+msgid "Plateforme sécurisée & certifiée"
+msgstr "Secure & certified platform"
+
+#: templates/winning_ticket/index.html:38
+msgid "Gagnez jusqu'à"
+msgstr "Win up to"
+
+#: templates/winning_ticket/index.html:46
+msgid ""
+"Une expérience de jeu moderne, transparente et conçue pour maximiser vos "
+"chances."
+msgstr ""
+"A modern, transparent gaming experience designed to maximize your chances."
+
+#: templates/winning_ticket/index.html:54
+#: templates/winning_ticket/index.html:173
+#: templates/winning_ticket/results.html:280
+msgid "Jouer maintenant"
+msgstr "Play now"
+
+#: templates/winning_ticket/index.html:63
+msgid "Comment ça marche"
+msgstr "How it works"
+
+#: templates/winning_ticket/index.html:75
+msgid "Distribués"
+msgstr "Distributed"
+
+#: templates/winning_ticket/index.html:79
+msgid "Satisfaits"
+msgstr "Satisfied"
+
+#: templates/winning_ticket/index.html:104
+msgid "Dernier gain"
+msgstr "Last win"
+
+#: templates/winning_ticket/index.html:118
+msgid "Opportunités du moment"
+msgstr "Current opportunities"
+
+#: templates/winning_ticket/index.html:120
+msgid "Jackpots du moment"
+msgstr "Current Jackpots"
+
+#: templates/winning_ticket/index.html:123
+msgid "Choisissez votre chance et tentez de décrocher le prochain gros lot."
+msgstr "Choose your luck and try to win the next big prize."
+
+#: templates/winning_ticket/index.html:163
+msgid "Jackpot estimé"
+msgstr "Estimated Jackpot"
+
+#: templates/winning_ticket/index.html:181
+msgid "Tirage dans"
+msgstr "Draw in"
+
+#: templates/winning_ticket/index.html:193
+msgid "Nouveaux jeux en préparation..."
+msgstr "New games coming soon..."
+
+#: templates/winning_ticket/index.html:207
+msgid "Processus simplifié"
+msgstr "Simplified process"
+
+#: templates/winning_ticket/index.html:209
+msgid "Simple comme"
+msgstr "Simple as"
+
+#: templates/winning_ticket/index.html:212
+msgid ""
+"Trois étapes simples pour tenter votre chance et potentiellement changer "
+"votre vie."
+msgstr "Three simple steps to try your luck and potentially change your life."
+
+#: templates/winning_ticket/index.html:241
+msgid "Choisissez"
+msgstr "Choose"
+
+#: templates/winning_ticket/index.html:243
+msgid ""
+"Sélectionnez votre jeu préféré parmi nos loteries exclusives et sécurisées."
+msgstr "Select your favorite game from our exclusive and secure lotteries."
+
+#: templates/winning_ticket/index.html:260
+msgid "Validez"
+msgstr "Validate"
+
+#: templates/winning_ticket/index.html:262
+msgid ""
+"Confirmez votre ticket en quelques secondes grâce à notre interface "
+"intuitive."
+msgstr "Confirm your ticket in seconds with our intuitive interface."
+
+#: templates/winning_ticket/index.html:279
+msgid "Encaissez"
+msgstr "Cash out"
+
+#: templates/winning_ticket/index.html:281
+msgid "Recevez vos gains instantanément sur votre compte en toute sécurité."
+msgstr "Receive your winnings instantly into your account securely."
+
+#: templates/winning_ticket/index.html:296
+msgid "Success Stories"
+msgstr "Success Stories"
+
+#: templates/winning_ticket/index.html:298
+msgid "Hall des"
+msgstr "Hall of"
+
+#: templates/winning_ticket/index.html:301
+msgid "Ils ont osé, ils ont joué, ils ont gagné. Serez-vous le prochain ?"
+msgstr "They dared, they played, they won. Will you be next?"
+
+#: templates/winning_ticket/index.html:307
+msgid "Voir tous"
+msgstr "See all"
+
+#: templates/winning_ticket/index.html:382
+#, python-format
+msgid "100%% Sécurisé"
+msgstr "100%% Secure"
+
+#: templates/winning_ticket/index.html:384
+msgid ""
+"Transactions cryptées SSL et données protégées. Votre sécurité est notre "
+"priorité absolue."
+msgstr ""
+"SSL encrypted transactions and protected data. Your security is our absolute "
+"priority."
+
+#: templates/winning_ticket/index.html:398
+msgid "Équité Garantie"
+msgstr "Fairness Guaranteed"
+
+#: templates/winning_ticket/index.html:400
+msgid ""
+"Tirages aléatoires certifiés et vérifiables. Chaque joueur a les mêmes "
+"chances de gagner."
+msgstr ""
+"Certified and verifiable random draws. Every player has the same chance to "
+"win."
+
+#: templates/winning_ticket/index.html:414
+msgid "Support 24/7"
+msgstr "24/7 Support"
+
+#: templates/winning_ticket/index.html:416
+msgid ""
+"Une équipe dédiée disponible pour répondre à toutes vos questions, à tout "
+"moment."
+msgstr "A dedicated team available to answer all your questions at any time."
+
+#: templates/winning_ticket/index.html:433
+msgid "Votre prochain gain"
+msgstr "Your next win"
+
+#: templates/winning_ticket/index.html:434
+msgid "commence ici."
+msgstr "starts here."
+
+#: templates/winning_ticket/index.html:438
+msgid ""
+"Rejoignez des milliers de gagnants et vivez l'excitation du jeu dans un "
+"environnement sûr et transparent."
+msgstr ""
+"Join thousands of winners and experience the excitement of gambling in a "
+"safe and transparent environment."
+
+#: templates/winning_ticket/index.html:445
+msgid "Créer un compte"
+msgstr "Create an account"
+
+#: templates/winning_ticket/index.html:453
+msgid "Explorer les jeux"
+msgstr "Explore games"
+
+#: templates/winning_ticket/index.html:461
+msgid "Inscription gratuite, aucune carte de crédit requise"
+msgstr "Free registration, no credit card required"
+
+#: templates/winning_ticket/play_game.html:63
+#, fuzzy
+#| msgid "Tirage dans"
+msgid "Tirage en cours"
+msgstr "Draw in"
+
+#: templates/winning_ticket/play_game.html:81
+#, fuzzy
+#| msgid "Solde Disponible"
+msgid "Disponible"
+msgstr "Available Balance"
+
+#: templates/winning_ticket/play_game.html:86
+msgid "Sélectionné"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:126
+msgid "Numéros"
+msgstr "Numbers"
+
+#: templates/winning_ticket/play_game.html:169
+msgid "Détails de l'achat"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:174
+#, fuzzy
+#| msgid "Préparez vos tickets !"
+msgid "Prix par ticket"
+msgstr "Get your tickets ready!"
+
+#: templates/winning_ticket/play_game.html:178
+msgid "Frais de service (RNG)"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:179
+msgid "Gratuit"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:199
+msgid "CONFIRMER L'ACHAT"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:214
+msgid "Cryptage SSL 256 bits"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:225
+msgid "Algorithme RNG Certifié"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:247
+msgid "Vous êtes sur le point d'acheter un ticket pour"
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:248
+msgid "Cette action est irréversible."
+msgstr ""
+
+#: templates/winning_ticket/play_game.html:260
+#, fuzzy
+#| msgid "Valider mon ticket"
+msgid "Valider le paiement"
+msgstr "Validate my ticket"
+
+#: templates/winning_ticket/play_game.html:264
+msgid "Annuler"
+msgstr "Cancel"
+
+#: templates/winning_ticket/results.html:5
+msgid "Résultats des Tirages - Winning Ticket"
+msgstr "Draw Results - Winning Ticket"
+
+#: templates/winning_ticket/results.html:24
+msgid "Résultats des"
+msgstr "Results of"
+
+#: templates/winning_ticket/results.html:41
+#, fuzzy
+#| msgid "Tous nos"
+msgid "Tous"
+msgstr "All our"
+
+#: templates/winning_ticket/results.html:46
+msgid "Récents"
+msgstr "Recent"
+
+#: templates/winning_ticket/results.html:51
+msgid "Gros Lots"
+msgstr "Jackpots"
+
+#: templates/winning_ticket/results.html:60
+msgid "Filtrer par jeu..."
+msgstr "Filter by game..."
+
+#: templates/winning_ticket/results.html:143
+msgid "Numéro Gagnant"
+msgstr "Winning Number"
+
+#: templates/winning_ticket/results.html:174
+#, fuzzy
+#| msgid "Jackpot estimé"
+msgid "Jackpot remporté"
+msgstr "Estimated Jackpot"
+
+#: templates/winning_ticket/results.html:185
+#, fuzzy
+#| msgid "Montant Reporté"
+msgid "Reporté"
+msgstr "Amount Carried Over"
+
+#: templates/winning_ticket/results.html:219
+msgid "Tirage imminent"
+msgstr "Imminent draw"
+
+#: templates/winning_ticket/results.html:221
+#, fuzzy
+#| msgid "Résultats des"
+msgid "Résultats prévus pour le"
+msgstr "Results of"
+
+#: templates/winning_ticket/results.html:250
+msgid "Blockchain Verified"
+msgstr ""
+
+#: templates/winning_ticket/results.html:262
+#, fuzzy
+#| msgid "Charger plus de résultats"
+msgid "Afficher plus de résultats"
+msgstr "Load more results"
+
+#: templates/winning_ticket/results.html:274
+#, fuzzy
+#| msgid "Des résultats"
+msgid "Aucun résultat"
+msgstr "Results"
+
+#: templates/winning_ticket/results.html:276
+#, fuzzy
+#| msgid "Les résultats seront disponibles le"
+msgid "Les résultats s'afficheront ici après les premiers tirages."
+msgstr "Results will be available on"
+
+#: templates/winning_ticket/winners.html:4
+msgid "Hall of Fame - Les Grands Gagnants"
+msgstr ""
+
+#: templates/winning_ticket/winners.html:21
+#, fuzzy
+#| msgid "Hall des"
+msgid "Hall of Fame"
+msgstr "Hall of"
+
+#: templates/winning_ticket/winners.html:24
+msgid "Nos Meilleurs"
+msgstr ""
+
+#: templates/winning_ticket/winners.html:36
+#, fuzzy
+#| msgid "Gains totaux"
+msgid "Gain Total"
+msgstr "Total wins"
+
+#: templates/winning_ticket/winners.html:51
+msgid "Lieu"
+msgstr ""
+
+#: templates/winning_ticket/winners.html:127
+#, fuzzy
+#| msgid "Dashboard"
+msgid "Leaderboard"
+msgstr "Dashboard"
+
+#: templates/winning_ticket/winners.html:128
+msgid "Les gagnants les plus récents sur notre plateforme."
+msgstr ""
+
+#: templates/winning_ticket/winners.html:134
+msgid "Tout voir"
+msgstr "See all"
+
+#: templates/winning_ticket/winners.html:194
+msgid "Devenez le premier !"
+msgstr ""
+
+#: templates/winning_ticket/winners.html:201
+msgid "Commencer à jouer"
+msgstr ""
+
+#: venv/Lib/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr "Messages"
+
+#: venv/Lib/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr "Site Maps"
+
+#: venv/Lib/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr "Static Files"
+
+#: venv/Lib/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr "Syndication"
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/Lib/site-packages/django/core/paginator.py:33
+msgid "…"
+msgstr "…"
+
+#: venv/Lib/site-packages/django/core/paginator.py:35
+msgid "That page number is not an integer"
+msgstr "That page number is not an integer"
+
+#: venv/Lib/site-packages/django/core/paginator.py:36
+msgid "That page number is less than 1"
+msgstr "That page number is less than 1"
+
+#: venv/Lib/site-packages/django/core/paginator.py:37
+msgid "That page contains no results"
+msgstr "That page contains no results"
+
+#: venv/Lib/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr "Enter a valid value."
+
+#: venv/Lib/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr "Enter a valid domain name."
+
+#: venv/Lib/site-packages/django/core/validators.py:153
+#: venv/Lib/site-packages/django/forms/fields.py:774
+msgid "Enter a valid URL."
+msgstr "Enter a valid URL."
+
+#: venv/Lib/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr "Enter a valid integer."
+
+#: venv/Lib/site-packages/django/core/validators.py:211
+msgid "Enter a valid email address."
+msgstr "Enter a valid email address."
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/Lib/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+
+#: venv/Lib/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+
+#: venv/Lib/site-packages/django/core/validators.py:309
+#: venv/Lib/site-packages/django/core/validators.py:318
+#: venv/Lib/site-packages/django/core/validators.py:332
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr "Enter a valid %(protocol)s address."
+
+#: venv/Lib/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr "IPv4"
+
+#: venv/Lib/site-packages/django/core/validators.py:320
+#: venv/Lib/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr "IPv6"
+
+#: venv/Lib/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr "IPv4 or IPv6"
+
+#: venv/Lib/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr "Enter only digits separated by commas."
+
+#: venv/Lib/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+
+#: venv/Lib/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr "Ensure this value is less than or equal to %(limit_value)s."
+
+#: venv/Lib/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr "Ensure this value is greater than or equal to %(limit_value)s."
+
+#: venv/Lib/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr "Ensure this value is a multiple of step size %(limit_value)s."
+
+#: venv/Lib/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+
+#: venv/Lib/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgstr[1] ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+
+#: venv/Lib/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgstr[1] ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+
+#: venv/Lib/site-packages/django/core/validators.py:514
+#: venv/Lib/site-packages/django/forms/fields.py:365
+#: venv/Lib/site-packages/django/forms/fields.py:404
+msgid "Enter a number."
+msgstr "Enter a number."
+
+#: venv/Lib/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] "Ensure that there are no more than %(max)s digit in total."
+msgstr[1] "Ensure that there are no more than %(max)s digits in total."
+
+#: venv/Lib/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] "Ensure that there are no more than %(max)s decimal place."
+msgstr[1] "Ensure that there are no more than %(max)s decimal places."
+
+#: venv/Lib/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgstr[1] ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+
+#: venv/Lib/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+
+#: venv/Lib/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr "Null characters are not allowed."
+
+#: venv/Lib/site-packages/django/db/models/base.py:1631
+#: venv/Lib/site-packages/django/forms/models.py:932
+msgid "and"
+msgstr "and"
+
+#: venv/Lib/site-packages/django/db/models/base.py:1633
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr "%(model_name)s with this %(field_labels)s already exists."
+
+#: venv/Lib/site-packages/django/db/models/constraints.py:20
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr "Constraint “%(name)s” is violated."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr "Value %(value)r is not a valid choice."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr "This field cannot be null."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr "This field cannot be blank."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr "%(model_name)s with this %(field_label)s already exists."
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr "Field of type: %(field_type)s"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1161
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr "“%(value)s” value must be either True or False."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr "“%(value)s” value must be either True, False, or None."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1164
+msgid "Boolean (Either True or False)"
+msgstr "Boolean (Either True or False)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1214
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr "String (up to %(max_length)s)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1216
+msgid "String (unlimited)"
+msgstr "String (unlimited)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1325
+msgid "Comma-separated integers"
+msgstr "Comma-separated integers"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1426
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1430
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1565
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1434
+msgid "Date (without time)"
+msgstr "Date (without time)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1561
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1569
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1574
+msgid "Date (with time)"
+msgstr "Date (with time)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1701
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr "“%(value)s” value must be a decimal number."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1703
+msgid "Decimal number"
+msgstr "Decimal number"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1868
+msgid "Duration"
+msgstr "Duration"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1920
+msgid "Email address"
+msgstr "Email address"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr "File path"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr "“%(value)s” value must be a float."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr "Floating point number"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr "“%(value)s” value must be an integer."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr "Integer"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr "Big (8 byte) integer"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr "Small integer"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2188
+msgid "IPv4 address"
+msgstr "IPv4 address"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2219
+msgid "IP address"
+msgstr "IP address"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2310
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr "“%(value)s” value must be either None, True or False."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr "Boolean (Either True, False or None)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr "Positive big integer"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr "Positive integer"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr "Positive small integer"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr "Slug (up to %(max_length)s)"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr "Text"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr "Time"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr "URL"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr "Raw binary data"
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr "“%(value)s” is not a valid UUID."
+
+#: venv/Lib/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr "Universally unique identifier"
+
+#: venv/Lib/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr "File"
+
+#: venv/Lib/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr "Image"
+
+#: venv/Lib/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr "A JSON object"
+
+#: venv/Lib/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr "Value must be valid JSON."
+
+#: venv/Lib/site-packages/django/db/models/fields/related.py:978
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr "%(model)s instance with %(field)s %(value)r is not a valid choice."
+
+#: venv/Lib/site-packages/django/db/models/fields/related.py:981
+msgid "Foreign Key (type determined by related field)"
+msgstr "Foreign Key (type determined by related field)"
+
+#: venv/Lib/site-packages/django/db/models/fields/related.py:1275
+msgid "One-to-one relationship"
+msgstr "One-to-one relationship"
+
+#: venv/Lib/site-packages/django/db/models/fields/related.py:1332
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr "%(from)s-%(to)s relationship"
+
+#: venv/Lib/site-packages/django/db/models/fields/related.py:1334
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr "%(from)s-%(to)s relationships"
+
+#: venv/Lib/site-packages/django/db/models/fields/related.py:1382
+msgid "Many-to-many relationship"
+msgstr "Many-to-many relationship"
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to
+#. the label
+#: venv/Lib/site-packages/django/forms/boundfield.py:188
+msgid ":?.!"
+msgstr ":?.!"
+
+#: venv/Lib/site-packages/django/forms/fields.py:92
+msgid "This field is required."
+msgstr "This field is required."
+
+#: venv/Lib/site-packages/django/forms/fields.py:314
+msgid "Enter a whole number."
+msgstr "Enter a whole number."
+
+#: venv/Lib/site-packages/django/forms/fields.py:485
+#: venv/Lib/site-packages/django/forms/fields.py:1251
+msgid "Enter a valid date."
+msgstr "Enter a valid date."
+
+#: venv/Lib/site-packages/django/forms/fields.py:508
+#: venv/Lib/site-packages/django/forms/fields.py:1252
+msgid "Enter a valid time."
+msgstr "Enter a valid time."
+
+#: venv/Lib/site-packages/django/forms/fields.py:535
+msgid "Enter a valid date/time."
+msgstr "Enter a valid date/time."
+
+#: venv/Lib/site-packages/django/forms/fields.py:569
+msgid "Enter a valid duration."
+msgstr "Enter a valid duration."
+
+#: venv/Lib/site-packages/django/forms/fields.py:570
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr "The number of days must be between {min_days} and {max_days}."
+
+#: venv/Lib/site-packages/django/forms/fields.py:639
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr "No file was submitted. Check the encoding type on the form."
+
+#: venv/Lib/site-packages/django/forms/fields.py:640
+msgid "No file was submitted."
+msgstr "No file was submitted."
+
+#: venv/Lib/site-packages/django/forms/fields.py:641
+msgid "The submitted file is empty."
+msgstr "The submitted file is empty."
+
+#: venv/Lib/site-packages/django/forms/fields.py:643
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+"Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgstr[1] ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+
+#: venv/Lib/site-packages/django/forms/fields.py:648
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr "Please either submit a file or check the clear checkbox, not both."
+
+#: venv/Lib/site-packages/django/forms/fields.py:716
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+
+#: venv/Lib/site-packages/django/forms/fields.py:872
+#: venv/Lib/site-packages/django/forms/fields.py:959
+#: venv/Lib/site-packages/django/forms/models.py:1621
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr "Select a valid choice. %(value)s is not one of the available choices."
+
+#: venv/Lib/site-packages/django/forms/fields.py:961
+#: venv/Lib/site-packages/django/forms/fields.py:1080
+#: venv/Lib/site-packages/django/forms/models.py:1619
+msgid "Enter a list of values."
+msgstr "Enter a list of values."
+
+#: venv/Lib/site-packages/django/forms/fields.py:1081
+msgid "Enter a complete value."
+msgstr "Enter a complete value."
+
+#: venv/Lib/site-packages/django/forms/fields.py:1323
+msgid "Enter a valid UUID."
+msgstr "Enter a valid UUID."
+
+#: venv/Lib/site-packages/django/forms/fields.py:1353
+msgid "Enter a valid JSON."
+msgstr "Enter a valid JSON."
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/Lib/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ":"
+
+#: venv/Lib/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr "(Hidden field %(name)s) %(error)s"
+
+#: venv/Lib/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+
+#: venv/Lib/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] "Please submit at most %(num)d form."
+msgstr[1] "Please submit at most %(num)d forms."
+
+#: venv/Lib/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] "Please submit at least %(num)d form."
+msgstr[1] "Please submit at least %(num)d forms."
+
+#: venv/Lib/site-packages/django/forms/formsets.py:484
+#: venv/Lib/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr "Order"
+
+#: venv/Lib/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr "Delete"
+
+#: venv/Lib/site-packages/django/forms/models.py:925
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr "Please correct the duplicate data for %(field)s."
+
+#: venv/Lib/site-packages/django/forms/models.py:930
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr "Please correct the duplicate data for %(field)s, which must be unique."
+
+#: venv/Lib/site-packages/django/forms/models.py:937
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+
+#: venv/Lib/site-packages/django/forms/models.py:946
+msgid "Please correct the duplicate values below."
+msgstr "Please correct the duplicate values below."
+
+#: venv/Lib/site-packages/django/forms/models.py:1383
+msgid "The inline value did not match the parent instance."
+msgstr "The inline value did not match the parent instance."
+
+#: venv/Lib/site-packages/django/forms/models.py:1474
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+"Select a valid choice. That choice is not one of the available choices."
+
+#: venv/Lib/site-packages/django/forms/models.py:1623
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr "“%(pk)s” is not a valid value."
+
+#: venv/Lib/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+
+#: venv/Lib/site-packages/django/forms/widgets.py:528
+msgid "Clear"
+msgstr "Clear"
+
+#: venv/Lib/site-packages/django/forms/widgets.py:529
+msgid "Currently"
+msgstr "Currently"
+
+#: venv/Lib/site-packages/django/forms/widgets.py:530
+msgid "Change"
+msgstr "Change"
+
+#: venv/Lib/site-packages/django/forms/widgets.py:869
+msgid "Unknown"
+msgstr "Unknown"
+
+#: venv/Lib/site-packages/django/forms/widgets.py:870
+msgid "Yes"
+msgstr "Yes"
+
+#: venv/Lib/site-packages/django/forms/widgets.py:871
+msgid "No"
+msgstr "No"
+
+#: venv/Lib/site-packages/django/tasks/base.py:34
+msgctxt "Task"
+msgid "Ready"
+msgstr "Ready"
+
+#: venv/Lib/site-packages/django/tasks/base.py:36
+msgctxt "Task"
+msgid "Running"
+msgstr "Running"
+
+#: venv/Lib/site-packages/django/tasks/base.py:38
+msgctxt "Task"
+msgid "Failed"
+msgstr "Failed"
+
+#: venv/Lib/site-packages/django/tasks/base.py:40
+msgctxt "Task"
+msgid "Successful"
+msgstr "Successful"
+
+#. Translators: Please do not add spaces around commas.
+#: venv/Lib/site-packages/django/template/defaultfilters.py:878
+msgid "yes,no,maybe"
+msgstr "yes,no,maybe"
+
+#: venv/Lib/site-packages/django/template/defaultfilters.py:908
+#: venv/Lib/site-packages/django/template/defaultfilters.py:925
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] "%(size)d byte"
+msgstr[1] "%(size)d bytes"
+
+#: venv/Lib/site-packages/django/template/defaultfilters.py:927
+#, python-format
+msgid "%s KB"
+msgstr "%s KB"
+
+#: venv/Lib/site-packages/django/template/defaultfilters.py:929
+#, python-format
+msgid "%s MB"
+msgstr "%s MB"
+
+#: venv/Lib/site-packages/django/template/defaultfilters.py:931
+#, python-format
+msgid "%s GB"
+msgstr "%s GB"
+
+#: venv/Lib/site-packages/django/template/defaultfilters.py:933
+#, python-format
+msgid "%s TB"
+msgstr "%s TB"
+
+#: venv/Lib/site-packages/django/template/defaultfilters.py:935
+#, python-format
+msgid "%s PB"
+msgstr "%s PB"
+
+#: venv/Lib/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr "p.m."
+
+#: venv/Lib/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr "a.m."
+
+#: venv/Lib/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr "PM"
+
+#: venv/Lib/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr "AM"
+
+#: venv/Lib/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr "midnight"
+
+#: venv/Lib/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr "noon"
+
+#: venv/Lib/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr "Monday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr "Tuesday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr "Wednesday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr "Thursday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr "Friday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr "Saturday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr "Sunday"
+
+#: venv/Lib/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr "Mon"
+
+#: venv/Lib/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr "Tue"
+
+#: venv/Lib/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr "Wed"
+
+#: venv/Lib/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr "Thu"
+
+#: venv/Lib/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr "Fri"
+
+#: venv/Lib/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr "Sat"
+
+#: venv/Lib/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr "Sun"
+
+#: venv/Lib/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr "January"
+
+#: venv/Lib/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr "February"
+
+#: venv/Lib/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr "March"
+
+#: venv/Lib/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr "April"
+
+#: venv/Lib/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr "May"
+
+#: venv/Lib/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr "June"
+
+#: venv/Lib/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr "July"
+
+#: venv/Lib/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr "August"
+
+#: venv/Lib/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr "September"
+
+#: venv/Lib/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr "October"
+
+#: venv/Lib/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr "November"
+
+#: venv/Lib/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr "December"
+
+#: venv/Lib/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr "jan"
+
+#: venv/Lib/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr "feb"
+
+#: venv/Lib/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr "mar"
+
+#: venv/Lib/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr "apr"
+
+#: venv/Lib/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr "may"
+
+#: venv/Lib/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr "jun"
+
+#: venv/Lib/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr "jul"
+
+#: venv/Lib/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr "aug"
+
+#: venv/Lib/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr "sep"
+
+#: venv/Lib/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr "oct"
+
+#: venv/Lib/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr "nov"
+
+#: venv/Lib/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr "dec"
+
+#: venv/Lib/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr "Jan."
+
+#: venv/Lib/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr "Feb."
+
+#: venv/Lib/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr "March"
+
+#: venv/Lib/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr "April"
+
+#: venv/Lib/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr "May"
+
+#: venv/Lib/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr "June"
+
+#: venv/Lib/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr "July"
+
+#: venv/Lib/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr "Aug."
+
+#: venv/Lib/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr "Sept."
+
+#: venv/Lib/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr "Oct."
+
+#: venv/Lib/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr "Nov."
+
+#: venv/Lib/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr "Dec."
+
+#: venv/Lib/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr "January"
+
+#: venv/Lib/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr "February"
+
+#: venv/Lib/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr "March"
+
+#: venv/Lib/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr "April"
+
+#: venv/Lib/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr "May"
+
+#: venv/Lib/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr "June"
+
+#: venv/Lib/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr "July"
+
+#: venv/Lib/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr "August"
+
+#: venv/Lib/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr "September"
+
+#: venv/Lib/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr "October"
+
+#: venv/Lib/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr "November"
+
+#: venv/Lib/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr "December"
+
+#: venv/Lib/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr "This is not a valid IPv6 address."
+
+#: venv/Lib/site-packages/django/utils/text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr "%(truncated_text)s…"
+
+#: venv/Lib/site-packages/django/utils/text.py:287
+msgid "or"
+msgstr "or"
+
+#. Translators: This string is used as a separator between list elements
+#: venv/Lib/site-packages/django/utils/text.py:306
+#: venv/Lib/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ", "
+
+#: venv/Lib/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d year"
+msgstr[1] "%(num)d years"
+
+#: venv/Lib/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d month"
+msgstr[1] "%(num)d months"
+
+#: venv/Lib/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d week"
+msgstr[1] "%(num)d weeks"
+
+#: venv/Lib/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d day"
+msgstr[1] "%(num)d days"
+
+#: venv/Lib/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d hour"
+msgstr[1] "%(num)d hours"
+
+#: venv/Lib/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d minute"
+msgstr[1] "%(num)d minutes"
+
+#: venv/Lib/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr "Forbidden"
+
+#: venv/Lib/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr "CSRF verification failed. Request aborted."
+
+#: venv/Lib/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+
+#: venv/Lib/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+
+#: venv/Lib/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+
+#: venv/Lib/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+
+#: venv/Lib/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+
+#: venv/Lib/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr "More information is available with DEBUG=True."
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr "No year specified"
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:64
+#: venv/Lib/site-packages/django/views/generic/dates.py:115
+#: venv/Lib/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr "Date out of range"
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr "No month specified"
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr "No day specified"
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr "No week specified"
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:353
+#: venv/Lib/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr "No %(verbose_name_plural)s available"
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+
+#: venv/Lib/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr "Invalid date string “%(datestr)s” given format “%(format)s”"
+
+#: venv/Lib/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr "No %(verbose_name)s found matching the query"
+
+#: venv/Lib/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr "Page is not “last”, nor can it be converted to an int."
+
+#: venv/Lib/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr "Invalid page (%(page_number)s): %(message)s"
+
+#: venv/Lib/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr "Empty list and “%(class_name)s.allow_empty” is False."
+
+#: venv/Lib/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr "Directory indexes are not allowed here."
+
+#: venv/Lib/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr "“%(path)s” does not exist"
+
+#: venv/Lib/site-packages/django/views/static.py:68
+#: venv/Lib/site-packages/django/views/templates/directory_index.html:8
+#: venv/Lib/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr "Index of %(directory)s"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr "The install worked successfully! Congratulations!"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr "Django Documentation"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr "Topics, references, &amp; how-to’s"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr "Tutorial: A Polling App"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr "Get started with Django"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr "Django Community"
+
+#: venv/Lib/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr "Connect, get help, or contribute"
+
+#~ msgid "Tableau de Bord"
+#~ msgstr "Admin Dashboard"
+
+#~ msgid "Finances"
+#~ msgstr "Finances"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "                    Vous avez %(count)s ticket actif dans les tirages à "
+#~ "venir. Bonne chance !\n"
+#~ "                    "
+#~ msgid_plural ""
+#~ "\n"
+#~ "                    Vous avez %(count)s tickets actifs dans les tirages à "
+#~ "venir. Bonne chance !\n"
+#~ "                    "
+#~ msgstr[0] ""
+#~ "\n"
+#~ "                    You have %(count)s active ticket in upcoming draws. "
+#~ "Good luck!\n"
+#~ "                    "
+#~ msgstr[1] ""
+#~ "\n"
+#~ "                    You have %(count)s active tickets in upcoming draws. "
+#~ "Good luck!\n"
+#~ "                    "
+
+#~ msgid "AVAILABLE BALANCE"
+#~ msgstr "AVAILABLE BALANCE"
+
+#~ msgid "Tous les temps"
+#~ msgstr "All time"
+
+#~ msgid "À réclamer"
+#~ msgstr "To claim"
+
+#~ msgid "Tout réclamé"
+#~ msgstr "All claimed"
+
+#~ msgid "Voir tout"
+#~ msgstr "View all"
+
+#~ msgid "En Attente"
+#~ msgstr "Pending"
+
+#~ msgid "Perdant"
+#~ msgstr "Loser"
+
+#~ msgid "Coût"
+#~ msgstr "Cost"
+
+#~ msgid "Résumé du Compte"
+#~ msgstr "Account Summary"
+
+#~ msgid "Membre depuis"
+#~ msgstr "Member since"
+
+#~ msgid "Statut du compte"
+#~ msgstr "Account status"
+
+#~ msgid "Vérifié"
+#~ msgstr "Verified"
+
+#~ msgid "Aujourd'hui"
+#~ msgstr "Today"
+
+#~ msgid "Paramètres du Compte"
+#~ msgstr "Account Settings"
+
+#~ msgid "Participer à un nouveau jeu"
+#~ msgstr "Join a new game"
+
+#~ msgid "Vérifier les Résultats"
+#~ msgstr "Check Results"
+
+#~ msgid "Voir les derniers tirages"
+#~ msgstr "See latest draws"
+
+#~ msgid "Retirer des Fonds"
+#~ msgstr "Withdraw Funds"
+
+#~ msgid "Transférer vos gains"
+#~ msgstr "Transfer your winnings"
+
+#~ msgid "Activité Récente"
+#~ msgstr "Recent Activity"
+
+#~ msgid "Ticket acheté"
+#~ msgstr "Ticket purchased"
+
+#~ msgid "Aucune activité récente"
+#~ msgstr "No recent activity"
+
+#~ msgid "Bienvenue !"
+#~ msgstr "Welcome!"
+
+#~ msgid "Se souvenir de moi"
+#~ msgstr "Remember me"
+
+#~ msgid "Mot de passe oublié ?"
+#~ msgstr "Forgot password?"
+
+#~ msgid "Connexion Sécurisée"
+#~ msgstr "Secure Login"
+
+#~ msgid "Nous ne partageons jamais vos informations personnelles."
+#~ msgstr "We never share your personal information."
+
+#~ msgid "Rejoignez-nous !"
+#~ msgstr "Join us!"
+
+#~ msgid "Créez votre compte et commencez à gagner dès aujourd'hui"
+#~ msgstr "Create your account and start winning today"
+
+#~ msgid "Ce nom sera visible publiquement"
+#~ msgstr "This name will be publicly visible"
+
+#~ msgid "Confirmer le mot de passe"
+#~ msgstr "Confirm password"
+
+#~ msgid "Je souhaite recevoir des offres spéciales et des nouvelles par email"
+#~ msgstr "I wish to receive special offers and news by email"
+
+#~ msgid "Créer mon compte"
+#~ msgstr "Create my account"
+
+#~ msgid "Bonus de Bienvenue"
+#~ msgstr "Welcome Bonus"
+
+#~ msgid "Pourquoi nous choisir ?"
+#~ msgstr "Why choose us?"
+
+#~ msgid "Paiement Instant"
+#~ msgstr "Instant Payout"
+
+#~ msgid "Loteries"
+#~ msgstr "Lotteries"
+
+#~ msgid "Populaire"
+#~ msgstr "Popular"
+
+#~ msgid "Actif"
+#~ msgstr "Active"
+
+#~ msgid "Continuer"
+#~ msgstr "Continue"
+
+#~ msgid "Notification"
+#~ msgstr "Notification"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Aucun numéro choisi..."
+#~ msgstr "No numbers chosen..."
+
+#~ msgid "Attention"
+#~ msgstr "Warning"
+
+#~ msgid "Solde insuffisant"
+#~ msgstr "Insufficient balance"
+
+#~ msgid "Vous avez besoin de"
+#~ msgstr "You need"
+
+#~ msgid "mais vous n'avez que"
+#~ msgstr "but you only have"
+
+#~ msgid "D'accord"
+#~ msgstr "Okay"
+
+#~ msgid "Confirmer l'achat"
+#~ msgstr "Confirm purchase"
+
+#~ msgid "Confirmer l'achat de"
+#~ msgstr "Confirm purchase of"
+
+#~ msgid "numéro(s) pour"
+#~ msgstr "number(s) for"
+
+#~ msgid "Tirages"
+#~ msgstr "Draws"
+
+#~ msgid ""
+#~ "Consultez l'historique officiel de tous nos tirages passés et vérifiez "
+#~ "vos gains en un instant."
+#~ msgstr ""
+#~ "Check the official history of all our past draws and verify your winnings "
+#~ "instantly."
+
+#~ msgid "Terminé"
+#~ msgstr "Completed"
+
+#~ msgid "Tirage certifié par algorithme RNG."
+#~ msgstr "Draw certified by RNG algorithm."
+
+#~ msgid "Joueurs victorieux"
+#~ msgstr "Winning players"
+
+#~ msgid "Jackpot décroché !"
+#~ msgstr "Jackpot won!"
+
+#~ msgid "Aucun gagnant ce tour-ci"
+#~ msgstr "No winners this round"
+
+#~ msgid "Cagnotte reportée"
+#~ msgstr "Jackpot carried over"
+
+#~ msgid "Total Distribué"
+#~ msgstr "Total Distributed"
+
+#~ msgid "versés aux joueurs"
+#~ msgstr "paid to players"
+
+#~ msgid "En jeu"
+#~ msgstr "In play"
+
+#~ msgid "Aucun résultat pour le moment"
+#~ msgstr "No results yet"
+
+#~ msgid ""
+#~ "Les résultats s'afficheront ici une fois les premiers tirages effectués. "
+#~ "Pourquoi ne pas tenter votre chance en attendant ?"
+#~ msgstr ""
+#~ "Results will appear here once the first draws are completed. Why not try "
+#~ "your luck in the meantime?"
+
+#~ msgid "Voir les jeux disponibles"
+#~ msgstr "See available games"
+
+#, python-format
+#~ msgid "100%% Vérifiés"
+#~ msgstr "100%% Verified"
+
+#~ msgid "La transparence est notre priorité absolue."
+#~ msgstr "Transparency is our absolute priority."
+
+#~ msgid "Tirage Aléatoire Certifié"
+#~ msgstr "Certified Random Draw"
+
+#~ msgid ""
+#~ "Nous utilisons un générateur de nombres aléatoires (RNG) audité pour "
+#~ "garantir l'équité totale."
+#~ msgstr ""
+#~ "We use an audited Random Number Generator (RNG) to ensure total fairness."
+
+#~ msgid "Paiement Instantané"
+#~ msgstr "Instant Payout"
+
+#~ msgid ""
+#~ "Dès la publication des résultats, les gains sont automatiquement crédités "
+#~ "sur votre compte."
+#~ msgstr ""
+#~ "As soon as results are published, winnings are automatically credited to "
+#~ "your account."
+
+#~ msgid "Audit Permanent"
+#~ msgstr "Permanent Audit"
+
+#~ msgid ""
+#~ "Chaque tirage est enregistré dans une blockchain privée pour assurer une "
+#~ "traçabilité inviolable."
+#~ msgstr ""
+#~ "Each draw is recorded in a private blockchain to ensure inviolable "
+#~ "traceability."
+
+#~ msgid "Nos Gagnants - Winning Ticket"
+#~ msgstr "Our Winners - Winning Ticket"
+
+#~ msgid "Ils ont osé. Ils ont gagné."
+#~ msgstr "They dared. They won."
+
+#~ msgid "Le Hall des"
+#~ msgstr "The Hall of"
+
+#~ msgid ""
+#~ "Découvrez les histoires de ceux qui ont tenté leur chance et ont vu leur "
+#~ "destin basculer."
+#~ msgstr ""
+#~ "Discover the stories of those who took their chance and saw their destiny "
+#~ "change."
+
+#~ msgid "GAGNANTS"
+#~ msgstr "WINNERS"
+
+#~ msgid "GAINS"
+#~ msgstr "WINNINGS"
+
+#~ msgid "RECORD"
+#~ msgstr "RECORD"
+
+#~ msgid "PAIEMENT"
+#~ msgstr "PAYMENT"
+
+#~ msgid "RAPIDE"
+#~ msgstr "FAST"
+
+#~ msgid "Dernier Grand Gagnant"
+#~ msgstr "Last Big Winner"
+
+#~ msgid "gagnants"
+#~ msgstr "winners"
+
+#~ msgid "Jeu"
+#~ msgstr "Game"
+
+#~ msgid "Charger plus de gagnants"
+#~ msgstr "Load more winners"
+
+#~ msgid "Aucun gagnant pour le moment"
+#~ msgstr "No winners for now"
+
+#~ msgid "JOuer maintenant"
+#~ msgstr "Play now"

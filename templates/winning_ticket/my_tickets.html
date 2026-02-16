@@ -1,270 +1,321 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load custom_filters %}
 
-{% block title %}Dashboard - WINNING TICKET{% endblock %}
+{% block title %}Mes Tickets - Winning Ticket{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <!-- Welcome Banner -->
-    <div class="card bg-gold-gradient text-primary-dark mb-4 border-0 shadow">
-        <div class="card-body p-4">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h2 class="mb-2 fw-bold">Welcome back, {{ user.username }}! <i
-                            class="fas fa-hand-sparkles text-white"></i></h2>
-                    <p class="mb-0 fs-5">You have <strong>{{ active_tickets }} active tickets</strong> in upcoming
-                        draws. Good luck!</p>
+<!-- Header -->
+<section class="relative bg-white overflow-hidden py-12">
+    <!-- Glow Effects -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
+        <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-100/50 rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-yellow-100/40 rounded-full blur-[100px]">
+        </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4 text-slate-900">Mes Tickets</h1>
+        <p class="text-slate-600">Gérez et suivez tous vos tickets de loterie</p>
+    </div>
+</section>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Stats Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-blue-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 uppercase tracking-wide">Total Tickets</p>
+                    <p class="text-3xl font-bold text-blue-600">{{ total_tickets }}</p>
                 </div>
-                <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                    <div class="bg-white bg-opacity-25 rounded p-3 d-inline-block shadow-sm backdrop-blur">
-                        <div class="display-6 fw-bold mb-0">${{ wallet.balance|floatformat:2 }}</div>
-                        <p class="mb-0 small fw-bold text-uppercase opacity-75">Available Balance</p>
-                    </div>
+                <i class="fas fa-ticket-alt text-blue-500 text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-green-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 uppercase tracking-wide">Gains Totaux</p>
+                    <p class="text-3xl font-bold text-green-600">${{ total_won|floatformat:0 }}</p>
                 </div>
+                <i class="fas fa-trophy text-green-500 text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-yellow-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 uppercase tracking-wide">Tickets Actifs</p>
+                    <p class="text-3xl font-bold text-yellow-600">{{ active_tickets }}</p>
+                </div>
+                <i class="fas fa-hourglass-half text-yellow-500 text-2xl"></i>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6 border-l-4 border-orange-500">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-slate-600 uppercase tracking-wide">Prix Non Réclamés</p>
+                    <p class="text-3xl font-bold text-orange-600">{{ unclaimed_prizes }}</p>
+                </div>
+                <i class="fas fa-gift text-orange-500 text-2xl"></i>
             </div>
         </div>
     </div>
 
-    <!-- Quick Stats -->
-    <div class="row mb-5">
-        <div class="col-md-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="display-6 text-primary-dark mb-2 fw-bold">{{ total_tickets }}</div>
-                    <p class="text-muted mb-0">Total Tickets</p>
-                </div>
+    <!-- Filter Bar -->
+    <div class="bg-white rounded-xl shadow-lg p-4 mb-8">
+        <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+            <div class="flex items-center space-x-4">
+                <button class="filter-btn active bg-yellow-500 text-white px-4 py-2 rounded-lg" data-filter="all">
+                    <i class="fas fa-list mr-2"></i>Tous
+                </button>
+                <button class="filter-btn bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200"
+                    data-filter="pending">
+                    <i class="fas fa-clock mr-2"></i>En Attente
+                </button>
+                <button class="filter-btn bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200"
+                    data-filter="won">
+                    <i class="fas fa-trophy mr-2"></i>Gagnants
+                </button>
+                <button class="filter-btn bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200"
+                    data-filter="lost">
+                    <i class="fas fa-times mr-2"></i>Perdants
+                </button>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="display-6 text-success mb-2 fw-bold">${{ total_won|floatformat:2 }}</div>
-                    <p class="text-muted mb-0">Total Winnings</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="display-6 text-warning mb-2 fw-bold">{{ active_tickets }}</div>
-                    <p class="text-muted mb-0">Active Tickets</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-center h-100 border-0 shadow-sm">
-                <div class="card-body">
-                    <div class="display-6 text-info mb-2 fw-bold">{{ unclaimed_prizes }}</div>
-                    <p class="text-muted mb-0">Unclaimed Prizes</p>
-                </div>
+
+            <div class="flex items-center space-x-2">
+                <span class="text-sm text-slate-600">{{ tickets.count }} ticket{{ tickets.count|pluralize }}</span>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <!-- Left Column -->
-        <div class="col-lg-8">
-            <!-- Active Tickets -->
-            <div class="card mb-4 shadow-sm border-0 overflow-hidden">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold text-primary-dark"><i class="fas fa-ticket-alt me-2 text-gold"></i> Your
-                        Active Tickets</h5>
-                </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="bg-light">
-                                <tr>
-                                    <th class="ps-4">Ticket ID</th>
-                                    <th>Game</th>
-                                    <th>Numbers</th>
-                                    <th>Draw Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% if recent_tickets %}
-                                {% for ticket in recent_tickets %}
-                                <tr>
-                                    <td class="ps-4 fw-bold text-primary-dark">{{ ticket.ticket_id }}</td>
-                                    <td>{{ ticket.game.name }}</td>
-                                    <td>
-                                        {% for number in ticket.numbers %}
-                                        <span class="badge bg-primary-dark  me-1" style="color: black;">{{ number }}</span>
-                                        {% endfor %}
-                                        {% if ticket.powerball %}
-                                        <span class="badge bg-danger" style="color: black;">{{ ticket.powerball }}</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <div class="small fw-semibold">{{ ticket.draw_date|date:"M d" }}</div>
-                                        <div class="small text-muted">{{ ticket.draw_date|date:"H:i" }}</div>
-                                    </td>
-                                    <td>
-                                        {% if ticket.status == 'pending' %}
-                                        <span
-                                            class="badge bg-warning-subtle text-warning border border-warning-subtle">Pending</span>
-                                        {% elif ticket.status == 'won' %}
-                                        <span
-                                            class="badge bg-success-subtle text-success border border-success-subtle">Won
-                                            ${{ ticket.win_amount }}</span>
-                                        {% else %}
-                                        <span
-                                            class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">{{
-                                            ticket.status|title }}</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                {% else %}
-                                <tr>
-                                    <td colspan="5" class="text-center py-5 text-muted">
-                                        <i class="fas fa-ticket-alt fa-3x mb-3 text-secondary opacity-25"></i>
-                                        <p class="mb-2">You haven't purchased any tickets yet.</p>
-                                        <a href="{% url 'games' %}" class="btn btn-sm btn-gold">Play Now</a>
-                                    </td>
-                                </tr>
-                                {% endif %}
-                            </tbody>
-                        </table>
+    <!-- Tickets List -->
+    {% if tickets %}
+    <div class="space-y-4" id="ticketsList">
+        {% for ticket in tickets %}
+        <div class="ticket-item bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300"
+            data-status="{{ ticket.status }}">
+            <div class="p-6">
+                <!-- Ticket Header -->
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4">
+                    <div class="flex items-center mb-4 lg:mb-0">
+                        <div
+                            class="w-14 h-14 bg-gradient-to-r from-primary-500 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                            <i class="fas fa-ticket-alt text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-900">{{ ticket.game.name }}</h3>
+                            <div class="flex items-center space-x-2 text-sm text-gray-600">
+                                <span>ID: {{ ticket.ticket_id }}</span>
+                                <span>•</span>
+                                <span>{{ ticket.created_at|date:"d M Y à H:i" }}</span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Quick Actions -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-bolt me-2"></i> Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <a href="{% url 'games' %}"
-                                class="card text-center text-decoration-none h-100 border-0 shadow-sm custom-hover-card">
-                                <div class="card-body">
-                                    <i class="fas fa-plus-circle fa-2x text-primary mb-3"></i>
-                                    <h6>Buy Ticket</h6>
-                                    <p class="text-muted small">Purchase new lottery tickets</p>
-                                </div>
-                            </a>
+                    <!-- Status & Prize -->
+                    <div class="text-right">
+                        <div class="mb-2">
+                            {% if ticket.status == 'pending' %}
+                            <span class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
+                                <i class="fas fa-clock mr-1"></i>En Attente
+                            </span>
+                            {% elif ticket.status == 'won' %}
+                            <span class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-semibold">
+                                <i class="fas fa-trophy mr-1"></i>Gagnant
+                            </span>
+                            <div class="text-2xl font-bold text-green-600 mt-2">
+                                ${{ ticket.win_amount|floatformat:0 }}
+                            </div>
+                            {% elif ticket.status == 'lost' %}
+                            <span class="bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-semibold">
+                                <i class="fas fa-times mr-1"></i>Perdant
+                            </span>
+                            {% endif %}
                         </div>
-                        <div class="col-md-4">
-                            <a href="{% url 'results' %}"
-                                class="card text-center text-decoration-none h-100 border-0 shadow-sm custom-hover-card">
-                                <div class="card-body">
-                                    <i class="fas fa-check-circle fa-2x text-success mb-3"></i>
-                                    <h6>Check Results</h6>
-                                    <p class="text-muted small">Check if you've won</p>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="col-md-4">
-                            <a href="#"
-                                class="card text-center text-decoration-none h-100 border-0 shadow-sm custom-hover-card">
-                                <div class="card-body">
-                                    <i class="fas fa-money-bill-wave fa-2x text-warning mb-3"></i>
-                                    <h6>Withdraw</h6>
-                                    <p class="text-muted small">Withdraw your winnings</p>
-                                </div>
-                            </a>
+                        <div class="text-sm text-gray-600">
+                            Coût: ${{ ticket.game.ticket_price|mul:ticket.numbers|length }}
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Right Column -->
-        <div class="col-lg-4">
-            <!-- Account Summary -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-user-circle me-2"></i> Account Summary</h5>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <small class="text-muted">Username</small>
-                        <p class="mb-0">{{ user.username }}</p>
+                <!-- Ticket Details -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Selected Numbers -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">
+                            Vos Numéros ({{ ticket.numbers|length }})
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            {% for number in ticket.numbers %}
+                            <span
+                                class="w-10 h-10 bg-primary-100 text-primary-800 rounded-lg flex items-center justify-center font-bold text-sm">
+                                {{ number }}
+                            </span>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <small class="text-muted">Member Since</small>
-                        <p class="mb-0">January 1, 2024</p>
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-muted">Account Status</small>
-                        <p class="mb-0"><span class="badge bg-success">Verified</span></p>
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-muted">Last Login</small>
-                        <p class="mb-0">Today, 10:30 AM</p>
-                    </div>
-                    <hr>
-                    <a href="#" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-cog me-1"></i> Account Settings
-                    </a>
-                </div>
-            </div>
 
-            <!-- Recent Activity -->
-            <div class="card mb-4 border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h5 class="mb-0 fw-bold text-primary-dark"><i class="fas fa-history me-2 text-gold"></i> Recent
-                        Activity</h5>
-                </div>
-                <div class="card-body">
-                    <div class="activity-timeline">
-                        {% if recent_tickets %}
-                        {% for ticket in recent_tickets %}
-                        <div class="activity-item mb-3">
-                            <div class="d-flex">
-                                <div class="flex-shrink-0">
-                                    <div class="rounded-circle bg-primary-dark text-white d-flex align-items-center justify-content-center"
-                                        style="width: 40px; height: 40px;">
-                                        <i class="fas fa-ticket-alt"></i>
-                                    </div>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <p class="mb-0 fw-semibold text-primary-dark">Purchased {{ ticket.game.name }}
-                                        ticket</p>
-                                    <small class="text-muted">{{ ticket.created_at|date:"M d, Y H:i" }}</small>
-                                </div>
-                                <div class="text-end">
-                                    <span class="badge bg-gold-subtle text-primary-dark border border-gold-subtle">
-                                        -${{ ticket.game.ticket_price }}
+                    <!-- Draw Information -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">
+                            Informations du Tirage
+                        </h4>
+                        <div class="space-y-1 text-sm text-gray-600">
+                            <div class="flex justify-between">
+                                <span>Date du tirage:</span>
+                                <span class="font-medium">{{ ticket.draw_date|date:"d M Y" }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Heure:</span>
+                                <span class="font-medium">{{ ticket.draw_date|date:"H:i" }}</span>
+                            </div>
+                            {% if ticket.draw %}
+                            <div class="flex justify-between">
+                                <span>Statut:</span>
+                                <span class="font-medium text-green-600">
+                                    <i class="fas fa-check mr-1"></i>Effectué
+                                </span>
+                            </div>
+                            {% else %}
+                            <div class="flex justify-between">
+                                <span>Statut:</span>
+                                <span class="font-medium text-blue-600">
+                                    <i class="fas fa-clock mr-1"></i>En attente
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div>
+                        <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-2">
+                            Résultats
+                        </h4>
+                        {% if ticket.draw and ticket.draw.winning_numbers %}
+                        <div class="space-y-2">
+                            <div>
+                                <span class="text-sm text-gray-600">Numéro gagnant:</span>
+                                <div class="mt-1">
+                                    <span
+                                        class="w-10 h-10 bg-green-500 text-white rounded-lg flex items-center justify-center font-bold text-sm inline-flex">
+                                        {{ ticket.draw.winning_numbers.0 }}
                                     </span>
                                 </div>
                             </div>
+                            {% if ticket.status == 'won' %}
+                            <div class="bg-green-50 p-2 rounded-lg">
+                                <span class="text-green-700 text-sm font-semibold">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    Correspondance trouvée !
+                                </span>
+                            </div>
+                            {% else %}
+                            <div class="bg-red-50 p-2 rounded-lg">
+                                <span class="text-red-700 text-sm">
+                                    <i class="fas fa-times-circle mr-1"></i>
+                                    Aucune correspondance
+                                </span>
+                            </div>
+                            {% endif %}
                         </div>
-                        {% endfor %}
                         {% else %}
-                        <p class="text-muted text-center my-3">No recent activity.</p>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <span class="text-blue-700 text-sm">
+                                <i class="fas fa-hourglass-half mr-1"></i>
+                                Tirage en attente
+                            </span>
+                        </div>
                         {% endif %}
                     </div>
                 </div>
+
+                <!-- Actions -->
+                {% if ticket.status == 'won' and not ticket.checked %}
+                <div class="mt-6 pt-6 border-t border-gray-200">
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <i class="fas fa-gift text-green-600 text-xl mr-3"></i>
+                                <div>
+                                    <h4 class="text-green-800 font-semibold">Félicitations ! Vous avez gagné !</h4>
+                                    <p class="text-green-700 text-sm">Vos gains ont été automatiquement crédités sur
+                                        votre compte.</p>
+                                </div>
+                            </div>
+                            <button
+                                class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                                <i class="fas fa-check mr-2"></i>Marquer comme lu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
+        {% endfor %}
     </div>
+
+    <!-- Load More Button -->
+    <div class="text-center mt-8">
+        <button
+            class="px-6 py-3 border-2 border-primary-500 text-primary-600 rounded-xl hover:bg-primary-500 hover:text-white transition-colors">
+            <i class="fas fa-chevron-down mr-2"></i>
+            Charger Plus
+        </button>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="bg-white rounded-xl shadow-lg p-12 text-center">
+        <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i class="fas fa-ticket-alt text-gray-400 text-3xl"></i>
+        </div>
+        <h3 class="text-2xl font-semibold text-gray-600 mb-4">Aucun ticket trouvé</h3>
+        <p class="text-gray-500 mb-6 max-w-md mx-auto">
+            Vous n'avez pas encore participé à nos jeux de loterie.
+            Achetez votre premier ticket dès maintenant !
+        </p>
+        <a href="{% url 'games' %}"
+            class="inline-flex items-center px-6 py-3 btn-primary text-white rounded-xl transition-colors">
+            <i class="fas fa-plus mr-2"></i>
+            Acheter mon Premier Ticket
+        </a>
+    </div>
+    {% endif %}
 </div>
+{% endblock %}
 
-<style>
-    .activity-item {
-        border-left: 3px solid #0A2463;
-        padding-left: 15px;
-    }
-
-    .activity-item:last-child {
-        margin-bottom: 0 !important;
-    }
-
-    .custom-hover-card {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .custom-hover-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
-    }
-</style>
-
+{% block extra_js %}
 <script>
-    // Dashboard scripts can be added here if needed
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const ticketItems = document.querySelectorAll('.ticket-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const filter = this.getAttribute('data-filter');
+
+                // Update active button
+                filterBtns.forEach(b => {
+                    b.classList.remove('active', 'bg-primary-500', 'text-white');
+                    b.classList.add('bg-gray-100', 'text-gray-700');
+                });
+                this.classList.remove('bg-gray-100', 'text-gray-700');
+                this.classList.add('active', 'bg-primary-500', 'text-white');
+
+                // Filter tickets
+                ticketItems.forEach(item => {
+                    const status = item.getAttribute('data-status');
+
+                    if (filter === 'all' || status === filter) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
 </script>
 {% endblock %}

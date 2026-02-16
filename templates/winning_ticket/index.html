@@ -1,620 +1,490 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load i18n %}
 {% load static %}
 
+{% block title %}Winning Ticket{% endblock %}
+
 {% block content %}
-<!-- Modern Hero Section -->
-<section class="hero-v2 section-padding position-relative overflow-hidden">
-    <div class="hero-bg-accent"></div>
-    <div class="container position-relative z-2">
-        <div class="row align-items-center min-vh-75">
-            <div class="col-lg-7 text-white mb-5 mb-lg-0">
-                <div class="animate-up">
-                    <span class="badge bg-gold text-dark px-3 py-2 rounded-pill mb-4 glow-gold">
-                        ✨ L'EXCÉLLENCE
+<div class="bg-slate-950 text-white font-sans antialiased">
+
+    <!-- HERO SECTION -->
+    <section class="relative overflow-hidden py-20 md:py-32 lg:py-40">
+        <!-- Animated Background Blobs -->
+        <div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-yellow-500/20 rounded-full blur-[140px] animate-pulse"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[120px] animate-pulse" style="animation-delay: 1s;"></div>
+        
+        <!-- Floating Confetti Particles -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-[10%] w-3 h-3 bg-yellow-400 rounded-full opacity-60 animate-float"></div>
+            <div class="absolute top-40 left-[20%] w-2 h-2 bg-orange-400 rounded-full opacity-40 animate-float" style="animation-delay: 0.5s;"></div>
+            <div class="absolute top-32 right-[15%] w-4 h-4 bg-yellow-300 rounded-full opacity-50 animate-float" style="animation-delay: 1s;"></div>
+            <div class="absolute top-60 right-[25%] w-2 h-2 bg-orange-300 rounded-full opacity-60 animate-float" style="animation-delay: 1.5s;"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center relative z-10">
+
+            <!-- LEFT COLUMN -->
+            <div class="space-y-8 lg:space-y-10 text-center lg:text-left">
+                <!-- Trust Badge -->
+                <div class="inline-flex items-center gap-2 px-4 py-2 bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 text-xs md:text-sm font-bold rounded-full tracking-widest uppercase backdrop-blur-sm">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    {% trans "Plateforme sécurisée & certifiée" %}
+                </div>
+                
+                <!-- Main Title -->
+                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight">
+                    <span class="block text-white mb-2">{% trans "Gagnez jusqu'à" %}</span>
+                    <span class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-orange-500 animate-gradient-x">
+                        ${{ total_jackpot|floatformat:0 }}
                     </span>
-                    <h1 class="display-2 fw-bold mb-4 line-height-1 shadow-text">
-                        Découvrez le Pouvoir <br>
-                        <span class="text-gold">De Votre Chance</span>
-                    </h1>
-                    <p class="lead mb-5 opacity-75 fs-4 max-w-600">
-                        Plongez dans l'univers de Winning Ticket. Sécurisé, transparent et conçu pour transformer des
-                        vies, un tirage à la fois.
-                    </p>
-
-                    <div class="d-flex flex-wrap gap-4 align-items-center">
-                        <a href="{% url 'games' %}"
-                            class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold transform-hover">
-                            JOUER MAINTENANT <i class="fas fa-chevron-right ms-2"></i>
-                        </a>
-                        <div class="hero-stats d-flex gap-4">
-                            <div class="h-stat">
-                                <span class="h2 fw-bold mb-0 d-block text-gold">{{ total_winners_count|default:"0" }}</span>
-                                <small class="text-uppercase opacity-50 letter-spacing-1">Gagnants</small>
-                            </div>
-                            <div class="h-stat-border"></div>
-                            <div class="h-stat text-center">
-                                <span class="h2 fw-bold mb-0 d-block text-gold">${{ total_jackpot|floatformat:0 }}</span>
-                                <small class="text-uppercase opacity-50 letter-spacing-1">En Jeu</small>
-                            </div>
-                        </div>
+                </h1>
+                
+                <!-- Description -->
+                <p class="text-base sm:text-lg lg:text-xl text-slate-300 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                    {% trans "Une expérience de jeu moderne, transparente et conçue pour maximiser vos chances." %}
+                </p>
+                
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                    <a href="{% url 'games' %}"
+                        class="group relative bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 font-bold px-8 py-4 rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-yellow-400/50">
+                        <span class="relative z-10 flex items-center justify-center gap-2">
+                            {% trans "Jouer maintenant" %}
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                        </span>
+                        <div class="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    </a>
+                    <a href="#how-it-works"
+                        class="border-2 border-slate-700 hover:border-slate-600 px-8 py-4 rounded-xl hover:bg-slate-900/50 transition-all duration-300 font-semibold backdrop-blur-sm">
+                        {% trans "Comment ça marche" %}
+                    </a>
+                </div>
+                
+                <!-- Social Proof Stats -->
+                <div class="grid grid-cols-3 gap-6 pt-8 border-t border-slate-800">
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-yellow-400">2.4K+</p>
+                        <p class="text-xs sm:text-sm text-slate-400 mt-1">{% trans "Gagnants" %}</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-yellow-400">$5M+</p>
+                        <p class="text-xs sm:text-sm text-slate-400 mt-1">{% trans "Distribués" %}</p>
+                    </div>
+                    <div>
+                        <p class="text-2xl sm:text-3xl font-black text-yellow-400">99%</p>
+                        <p class="text-xs sm:text-sm text-slate-400 mt-1">{% trans "Satisfaits" %}</p>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-5 position-relative">
-                <div class="hero-visual-v2 animate-float">
-                    <div class="glass-card main-ticket">
-                        <div class="card-glow"></div>
-                        <div class="ticket-header d-flex justify-content-between">
-                            <span class="fw-bold">WINNING TICKET</span>
-                            <i class="fas fa-wifi text-success ripple"></i>
-                        </div>
-                        <div class="ticket-body my-4 text-center">
-                            <div class="luck-number mb-2">NUMÉRO CHANCE</div>
-                            <div class="d-flex justify-content-center gap-2">
-                                <span class="ball-v2">07</span>
-                                <span class="ball-v2">14</span>
-                                <span class="ball-v2">21</span>
-                                <span class="ball-v2 gold">42</span>
-                            </div>
-                        </div>
-                        <div class="ticket-footer pt-3 border-top border-white-10 text-center">
-                            <small class="opacity-50">SCANNÉ & VÉRIFIÉ</small>
-                        </div>
+            <!-- RIGHT COLUMN - Hero Image -->
+            <div class="relative group">
+                <div class="absolute -inset-4 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-3xl blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-500"></div>
+                <div class="relative rounded-3xl overflow-hidden border border-slate-800 shadow-2xl">
+                    <img src="{% static 'images/hero_lottery.jpg' %}"
+                        class="w-full h-full object-cover brightness-110 contrast-105 group-hover:scale-105 transition-transform duration-700"
+                        alt="Winner">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent"></div>
+                    
+                    <!-- Live Badge -->
+                    <div class="absolute top-6 right-6 bg-white/95 backdrop-blur-md px-4 py-2 rounded-full shadow-xl flex items-center gap-2">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                        </span>
+                        <span class="text-sm font-bold text-slate-900">{% trans "Live" %}</span>
                     </div>
-
-                    <!-- Floating Orbs -->
-                    <div class="orb orb-1"></div>
-                    <div class="orb orb-2"></div>
+                    
+                    <!-- Floating Jackpot Badge -->
+                    <div class="absolute -bottom-6 -left-6 bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-2xl shadow-2xl border border-slate-700 backdrop-blur-sm">
+                        <p class="text-xs text-slate-400 font-bold uppercase tracking-widest mb-1">{% trans "Dernier gain" %}</p>
+                        <p class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">$700</p>
+                    </div>
                 </div>
             </div>
+
         </div>
-    </div>
-</section>
+    </section>
 
-
-<!-- Games Grid Section -->
-<section class="section-padding bg-light">
-    <div class="container">
-        <div class="row justify-content-center mb-60">
-            <div class="col-lg-8 text-center">
-                <h6 class="text-primary fw-bold text-uppercase mb-3">Nos Opportunités</h6>
-                <h2 class="display-5 fw-bold mb-4">Jeux En Vedette</h2>
-                <div class="section-divider mx-auto mb-4"></div>
-                <p class="text-muted fs-5">Choisissez votre défi et tentez de décrocher la cagnotte dès aujourd'hui.</p>
+    <!-- FEATURED GAMES -->
+    <section class="py-24 md:py-32 bg-gradient-to-b from-slate-950 to-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Section Header -->
+            <div class="text-center mb-16 md:mb-20 space-y-4">
+                <span class="inline-block text-yellow-400 font-bold text-sm uppercase tracking-widest">{% trans "Opportunités du moment" %}</span>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-black">
+                    {% trans "Jackpots du moment" %}
+                </h2>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+                    {% trans "Choisissez votre chance et tentez de décrocher le prochain gros lot." %}
+                </p>
             </div>
-        </div>
 
-        <div class="row g-4">
-            {% for game in featured_games %}
-            <div class="col-lg-4 col-md-6">
-                <div class="game-card-v2">
-                    <div class="gc-image position-relative">
-                        <div class="gc-overlay"></div>
-                        <div class="gc-badge">{{ game.company.name }}</div>
-                        <div class="gc-icon-hover">
-                            <i class="fas fa-play"></i>
+            {% if featured_games %}
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+                {% for game in featured_games %}
+                <div class="group relative">
+                    <!-- Card Glow Effect -->
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-3xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-500"></div>
+                    
+                    <!-- Card -->
+                    <div class="relative bg-slate-900/90 backdrop-blur-sm border border-slate-800 rounded-3xl overflow-hidden hover:-translate-y-2 transition-all duration-500 shadow-xl hover:shadow-2xl hover:shadow-orange-500/20">
+                        <!-- Image -->
+                        <div class="relative h-56 md:h-60 overflow-hidden bg-slate-800">
+                            <img src="{% static 'images/game_placeholder.jpg' %}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                alt="{{ game.name }}">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
+                            
+                            <!-- Price Badge -->
+                            <div class="absolute top-4 right-4 bg-slate-950/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-slate-700">
+                                <span class="text-yellow-400 font-bold text-sm">${{ game.ticket_price }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="gc-content">
-                        <h3 class="fw-bold mb-3 h4">{{ game.name }}</h3>
-                        <div class="d-flex justify-content-between align-items-end mb-4">
+                        
+                        <!-- Content -->
+                        <div class="p-8 space-y-6">
                             <div>
-                                <small class="text-muted d-block text-uppercase">Prix total</small>
-                                <span class="h3 fw-bold text-primary mb-0">${{ game.prize_amount|floatformat:0 }}</span>
+                                <h3 class="text-2xl font-bold mb-2 group-hover:text-yellow-400 transition-colors">
+                                    {{ game.name }}
+                                </h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    {{ game.description|truncatewords:18 }}
+                                </p>
                             </div>
-                            <div class="text-end">
-                                <small class="text-muted d-block text-uppercase">Ticket</small>
-                                <span class="fw-bold">${{ game.ticket_price|floatformat:2 }}</span>
+                            
+                            <!-- Jackpot Display -->
+                            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 p-4 rounded-xl border border-slate-800">
+                                <p class="text-xs uppercase text-slate-500 tracking-widest font-bold mb-1">
+                                    {% trans "Jackpot estimé" %}
+                                </p>
+                                <p class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">
+                                    ${{ game.prize_amount|floatformat:0 }}
+                                </p>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <a href="{% url 'play_game' game.slug %}"
+                                class="block w-full text-center bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-900 font-bold py-4 rounded-xl hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-yellow-400/50">
+                                {% trans "Jouer maintenant" %}
+                            </a>
+                            
+                            <!-- Draw Time -->
+                            <p class="text-center text-xs text-slate-500">
+                                <svg class="inline w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                {% trans "Tirage dans" %} 2h 15min
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-20 bg-slate-900/50 rounded-3xl border-2 border-dashed border-slate-800">
+                <svg class="w-16 h-16 mx-auto text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+                <p class="text-slate-400 font-medium">{% trans "Nouveaux jeux en préparation..." %}</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="py-24 md:py-32 bg-slate-950 relative overflow-hidden">
+        <!-- Decorative Background -->
+        <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-slate-900 to-transparent opacity-50"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <!-- Header -->
+            <div class="text-center mb-16 md:mb-20 space-y-4">
+                <span class="inline-block text-yellow-400 font-bold text-sm uppercase tracking-widest">{% trans "Processus simplifié" %}</span>
+                <h2 class="text-4xl md:text-5xl lg:text-6xl font-black">
+                    {% trans "Simple comme" %} <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">1, 2, 3</span>
+                </h2>
+                <p class="text-slate-400 text-lg max-w-2xl mx-auto">
+                    {% trans "Trois étapes simples pour tenter votre chance et potentiellement changer votre vie." %}
+                </p>
+            </div>
+            
+            <!-- Steps -->
+            <div class="relative">
+                <!-- Connector Line (Desktop) -->
+                <div class="hidden lg:block absolute top-12 left-[calc(16.666%+2.5rem)] right-[calc(16.666%+2.5rem)] h-1 bg-gradient-to-r from-yellow-400/20 via-orange-400/40 to-yellow-400/20"></div>
+                
+                <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
+                    <!-- Step 1 -->
+                    <div class="relative group text-center">
+                        <div class="relative inline-block mb-8">
+                            <!-- Glow Effect -->
+                            <div class="absolute -inset-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                            
+                            <!-- Icon Circle -->
+                            <div class="relative w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 text-slate-950 font-black text-2xl rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/>
+                                </svg>
+                            </div>
+                            
+                            <!-- Step Number Badge -->
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-slate-950 border-2 border-yellow-400 rounded-full flex items-center justify-center font-black text-yellow-400 text-sm shadow-lg">
+                                1
                             </div>
                         </div>
-
-                        <div class="gc-details-row mb-4">
-                            <div class="gc-detail">
-                                <i class="fas fa-calendar-alt me-2 text-gold"></i>
-                                <span>{{ game.next_draw|date:"d M, H:i" }}</span>
+                        
+                        <h3 class="text-xl md:text-2xl font-bold mb-3">{% trans "Choisissez" %}</h3>
+                        <p class="text-slate-400 leading-relaxed max-w-xs mx-auto">
+                            {% trans "Sélectionnez votre jeu préféré parmi nos loteries exclusives et sécurisées." %}
+                        </p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="relative group text-center">
+                        <div class="relative inline-block mb-8">
+                            <div class="absolute -inset-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                            <div class="relative w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 text-slate-950 font-black text-2xl rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300" style="transition-delay: 100ms;">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
                             </div>
-                            <div class="gc-detail">
-                                <i class="fas fa-check-circle me-2 text-success"></i>
-                                <span>Actif</span>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-slate-950 border-2 border-yellow-400 rounded-full flex items-center justify-center font-black text-yellow-400 text-sm shadow-lg">
+                                2
                             </div>
                         </div>
-
-                        <a href="{% url 'play_game' game.slug %}"
-                            class="btn btn-outline-primary w-100 rounded-pill py-2 transform-hover">
-                            SÉLECTIONNER MES NUMÉROS
-                        </a>
+                        <h3 class="text-xl md:text-2xl font-bold mb-3">{% trans "Validez" %}</h3>
+                        <p class="text-slate-400 leading-relaxed max-w-xs mx-auto">
+                            {% trans "Confirmez votre ticket en quelques secondes grâce à notre interface intuitive." %}
+                        </p>
                     </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <i class="fas fa-hourglass fa-3x text-muted mb-3"></i>
-                <p class="fs-5 text-muted">Aucun tirage actif pour le moment. Revenez bientôt !</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-<!-- How It Works Section -->
-<section class="section-padding position-relative overflow-hidden">
-    <div class="container">
-        <div class="row justify-content-center mb-60">
-            <div class="col-lg-8 text-center">
-                <h6 class="text-gold fw-bold text-uppercase mb-3">Simple & Rapide</h6>
-                <h2 class="display-5 fw-bold mb-4">Comment Jouer ?</h2>
-                <div class="section-divider mx-auto"></div>
-            </div>
-        </div>
-
-        <div class="row g-4 position-relative">
-            <!-- Step 1 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card-v2 text-center p-4">
-                    <div class="step-icon-v2 mb-4 mx-auto">
-                        <i class="fas fa-th-list text-gold fa-2x"></i>
-                        <span class="step-number-badge">1</span>
+                    
+                    <!-- Step 3 -->
+                    <div class="relative group text-center">
+                        <div class="relative inline-block mb-8">
+                            <div class="absolute -inset-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                            <div class="relative w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 text-slate-950 font-black text-2xl rounded-full flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300" style="transition-delay: 200ms;">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-slate-950 border-2 border-yellow-400 rounded-full flex items-center justify-center font-black text-yellow-400 text-sm shadow-lg">
+                                3
+                            </div>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-bold mb-3">{% trans "Encaissez" %}</h3>
+                        <p class="text-slate-400 leading-relaxed max-w-xs mx-auto">
+                            {% trans "Recevez vos gains instantanément sur votre compte en toute sécurité." %}
+                        </p>
                     </div>
-                    <h4 class="fw-bold mb-3">Choix du Jeu</h4>
-                    <p class="text-muted small">Parcourez notre catalogue et sélectionnez la loterie qui vous inspire
-                        aujourd'hui.</p>
-                </div>
-            </div>
-
-            <!-- Step 2 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card-v2 text-center p-4">
-                    <div class="step-icon-v2 mb-4 mx-auto">
-                        <i class="fas fa-magic text-gold fa-2x"></i>
-                        <span class="step-number-badge">2</span>
-                    </div>
-                    <h4 class="fw-bold mb-3">Vos Numéros</h4>
-                    <p class="text-muted small">Sélectionnez vos numéros fétiches ou laissez le destin décider avec le
-                        choix automatique.</p>
-                </div>
-            </div>
-
-            <!-- Step 3 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card-v2 text-center p-4">
-                    <div class="step-icon-v2 mb-4 mx-auto">
-                        <i class="fas fa-credit-card text-gold fa-2x"></i>
-                        <span class="step-number-badge">3</span>
-                    </div>
-                    <h4 class="fw-bold mb-3">Paiement</h4>
-                    <p class="text-muted small">Validez votre participation via notre système de paiement sécurisé et
-                        instantané.</p>
-                </div>
-            </div>
-
-            <!-- Step 4 -->
-            <div class="col-lg-3 col-md-6">
-                <div class="step-card-v2 text-center p-4">
-                    <div class="step-icon-v2 mb-4 mx-auto">
-                        <i class="fas fa-wallet text-gold fa-2x"></i>
-                        <span class="step-number-badge">4</span>
-                    </div>
-                    <h4 class="fw-bold mb-3">Gains</h4>
-                    <p class="text-muted small">Vos gains sont automatiquement crédités sur votre portefeuille après
-                        chaque tirage.</p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Live Winners Carousel Style -->
-<section class="section-padding bg-dark position-relative overflow-hidden">
-    <div class="decor-line"></div>
-    <div class="container animate-right">
-        <div class="row align-items-center">
-            <div class="col-lg-4 text-white mb-5 mb-lg-0">
-                <h2 class="display-6 fw-bold mb-4">Ils Ont <br><span class="text-gold">Déjà Gagné</span></h2>
-                <p class="opacity-75 mb-5">Chaque jour, de nouveaux millionnaires rejoignent notre communauté.
-                    Serez-vous le prochain ?</p>
-                <a href="{% url 'winners' %}" class="btn btn-gold px-4 py-2 rounded-pill">VOIR TOUS LES GAGNANTS</a>
+    <!-- WINNERS HALL -->
+    {% if recent_winners %}
+    <section class="py-24 md:py-32 bg-gradient-to-b from-slate-900 to-[#1e293b]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <!-- Header -->
+            <div class="flex flex-col md:flex-row justify-between items-center mb-16 md:mb-20 gap-6">
+                <div class="text-center md:text-left">
+                    <span class="inline-block text-yellow-400 font-bold text-sm uppercase tracking-widest mb-4">{% trans "Success Stories" %}</span>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-4">
+                        {% trans "Hall des" %} <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">{% trans "Gagnants" %}</span>
+                    </h2>
+                    <p class="text-slate-400 text-lg max-w-lg">
+                        {% trans "Ils ont osé, ils ont joué, ils ont gagné. Serez-vous le prochain ?" %}
+                    </p>
+                </div>
+                <a href="{% url 'winners' %}"
+                    class="group px-6 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 hover:border-slate-600 rounded-xl font-bold transition-all duration-300">
+                    <span class="flex items-center gap-2">
+                        {% trans "Voir tous" %}
+                        <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </span>
+                </a>
             </div>
 
-            <div class="col-lg-8">
-                <div class="winners-scroll-container">
-                    <div class="d-flex gap-4">
-                        {% for winner in recent_winners %}
-                        <div class="winner-card-v2 glass-card">
-                            <div class="d-flex align-items-center gap-3 mb-3">
-                                <div class="w-avatar-v2 bg-gold">
-                                    <i class="fas fa-user-circle"></i>
+            <!-- Winners Grid -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+                {% for winner in recent_winners %}
+                <div class="group relative">
+                    <!-- Card Glow -->
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-2xl opacity-0 group-hover:opacity-20 blur transition-opacity duration-500"></div>
+                    
+                    <!-- Card -->
+                    <div class="relative bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700 p-8 rounded-2xl hover:-translate-y-2 transition-all duration-300 shadow-xl hover:shadow-2xl">
+                        <!-- Decorative Medal Icon -->
+                        <div class="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <svg class="w-12 h-12 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="flex items-center gap-5 relative z-10">
+                            <!-- Avatar -->
+                            <div class="relative flex-shrink-0">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 text-slate-950 font-black text-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                    {{ winner.user.username|slice:":1"|upper }}
                                 </div>
-                                <div>
-                                    <h6 class="mb-0 text-white">
-                                        {% if winner.user.first_name %}
-                                            {{ winner.user.first_name }}
-                                        {% else %}
-                                            {{ winner.user.username }}
-                                        {% endif %}
-                                    </h6>
-                                    <small class="text-gold">Gagnant certifié</small>
+                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-slate-900 flex items-center justify-center">
+                                    <svg class="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                    </svg>
                                 </div>
                             </div>
-                            <div class="h4 fw-bold text-success mb-2">${{ winner.prize_amount|floatformat:0 }}</div>
-                            <div class="opacity-50 small mb-0">{{ winner.draw.game.name }}</div>
-                            <div class="opacity-50 small">{{ winner.draw.draw_date|date:"d M, Y" }}</div>
+                            
+                            <!-- Info -->
+                            <div class="flex-1 min-w-0">
+                                <p class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-1">
+                                    ${{ winner.prize_amount|floatformat:0 }}
+                                </p>
+                                <p class="text-sm font-semibold text-slate-300 mb-2 truncate">
+                                    {{ winner.user.get_full_name|default:winner.user.username }}
+                                </p>
+                                <div class="inline-flex items-center gap-2 px-2 py-1 bg-slate-800/80 rounded-lg">
+                                    <svg class="w-3 h-3 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z"/>
+                                    </svg>
+                                    <span class="text-xs text-slate-400 font-medium truncate">{{ winner.draw.game.name }}</span>
+                                </div>
+                            </div>
                         </div>
-                        {% empty %}
-                        <p class="text-white opacity-50">En attente des premiers gagnants de la journée...</p>
-                        {% endfor %}
                     </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- TRUST SECTION -->
+    <section class="py-24 md:py-32 bg-slate-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-12 lg:gap-16">
+                <!-- Feature 1 -->
+                <div class="group text-center">
+                    <div class="relative inline-block mb-6">
+                        <div class="absolute -inset-2 bg-green-500/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                        <div class="relative w-20 h-20 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">{% trans "100% Sécurisé" %}</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        {% trans "Transactions cryptées SSL et données protégées. Votre sécurité est notre priorité absolue." %}
+                    </p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="group text-center">
+                    <div class="relative inline-block mb-6">
+                        <div class="absolute -inset-2 bg-blue-500/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                        <div class="relative w-20 h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">{% trans "Équité Garantie" %}</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        {% trans "Tirages aléatoires certifiés et vérifiables. Chaque joueur a les mêmes chances de gagner." %}
+                    </p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="group text-center">
+                    <div class="relative inline-block mb-6">
+                        <div class="absolute -inset-2 bg-orange-500/20 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                        <div class="relative w-20 h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <h3 class="text-xl md:text-2xl font-bold mb-4">{% trans "Support 24/7" %}</h3>
+                    <p class="text-slate-400 leading-relaxed">
+                        {% trans "Une équipe dédiée disponible pour répondre à toutes vos questions, à tout moment." %}
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<!-- Call To Action -->
-<section class="section-padding position-relative">
-    <div class="container">
-        <div class="cta-banner-v2 glass-card-dark p-5 rounded-4 border-gold shadow-lg text-center">
-            <h2 class="display-5 fw-bold text-white mb-4">Prêt à Tenter Votre Chance ?</h2>
-            <p class="text-white opacity-75 mb-5 fs-5">Inscrivez-vous en 30 secondes et recevez vos tickets
-                instantanément.</p>
-            <div class="d-flex flex-wrap justify-content-center gap-4">
+    <!-- FINAL CTA -->
+    <section class="py-24 md:py-32 bg-gradient-to-br from-yellow-400 via-orange-400 to-orange-500 text-slate-950 relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10">
+            <div class="absolute top-10 left-10 w-32 h-32 bg-slate-950 rounded-full blur-2xl"></div>
+            <div class="absolute bottom-10 right-10 w-40 h-40 bg-slate-950 rounded-full blur-2xl"></div>
+        </div>
+        
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-10">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight">
+                {% trans "Votre prochain gain" %}<br>
+                <span class="text-white">{% trans "commence ici." %}</span>
+            </h2>
+            
+            <p class="text-lg md:text-xl text-slate-800 max-w-2xl mx-auto font-medium leading-relaxed">
+                {% trans "Rejoignez des milliers de gagnants et vivez l'excitation du jeu dans un environnement sûr et transparent." %}
+            </p>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4 pt-4">
                 <a href="{% url 'register' %}"
-                    class="btn btn-gold btn-lg px-5 py-3 rounded-pill fw-bold transform-hover">
-                    CRÉER MON COMPTE
+                    class="group px-10 py-5 bg-slate-950 hover:bg-slate-900 text-yellow-400 rounded-xl font-bold hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-slate-950/50">
+                    <span class="flex items-center justify-center gap-2">
+                        {% trans "Créer un compte" %}
+                        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </span>
                 </a>
-                <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill transform-hover">
-                    SE CONNECTER
+                <a href="{% url 'games' %}"
+                    class="px-10 py-5 border-2 border-slate-950 hover:bg-slate-950 hover:text-yellow-400 rounded-xl font-bold transition-all duration-300">
+                    {% trans "Explorer les jeux" %}
                 </a>
             </div>
+            
+            <p class="text-sm text-slate-800 font-medium pt-4">
+                <svg class="inline w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                {% trans "Inscription gratuite, aucune carte de crédit requise" %}
+            </p>
         </div>
-    </div>
-</section>
+    </section>
 
-{% include 'components/age_modal.html' %}
+</div>
 
-{% endblock %}
-
-{% block extra_css %}
+<!-- Custom Animations -->
 <style>
-    /* New Index Styles - Premium & Dynamic */
-    :root {
-        --color-gold: #ffd700;
-        --color-gold-hover: #ffed4e;
-        --color-deep: #0a2463;
-        --color-deep-light: #1e3a8a;
-        --color-dark: #0f172a;
-        --glass-white: rgba(255, 255, 255, 0.1);
-        --glass-border: rgba(255, 255, 255, 0.2);
-    }
-
-    .hero-v2 {
-        background: radial-gradient(circle at top right, var(--color-deep-light), var(--color-dark));
-        padding: 100px 0;
-    }
-
-    .hero-bg-accent {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: url('https://www.transparenttextures.com/patterns/cubes.png');
-        opacity: 0.05;
-        pointer-events: none;
-    }
-
-    .text-gold {
-        color: var(--color-gold) !important;
-    }
-
-    .bg-gold {
-        background-color: var(--color-gold) !important;
-    }
-
-    .btn-gold {
-        background-color: var(--color-gold);
-        color: var(--color-deep);
-        border: none;
-    }
-
-    .btn-gold:hover {
-        background-color: var(--color-gold-hover);
-        color: var(--color-deep);
-        transform: translateY(-3px);
-    }
-
-    .border-gold {
-        border: 1px solid var(--color-gold) !important;
-    }
-
-    .glow-gold {
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
-    }
-
-    .shadow-text {
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .line-height-1 {
-        line-height: 1.1;
-    }
-
-    .letter-spacing-1 {
-        letter-spacing: 2px;
-    }
-
-    .max-w-600 {
-        max-width: 600px;
-    }
-
-    .h-stat-border {
-        width: 1px;
-        height: 40px;
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Glassmorphism Cards */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(15px);
-        border: 1px solid var(--glass-border);
-        border-radius: 20px;
-        padding: 25px;
-        color: white;
-    }
-
-    .glass-card-dark {
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 215, 0, 0.2);
-    }
-
-    /* Hero Visual Anim */
-    .main-ticket {
-        width: 320px;
-        transform: rotate(-5deg);
-        position: relative;
-        z-index: 5;
-    }
-
-    .ball-v2 {
-        width: 45px;
-        height: 45px;
-        background: white;
-        color: var(--color-deep);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    .ball-v2.gold {
-        background: var(--color-gold);
-    }
-
-    .orb {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(50px);
-        z-index: 1;
-    }
-
-    .orb-1 {
-        width: 200px;
-        height: 200px;
-        background: var(--color-gold);
-        opacity: 0.2;
-        top: -20px;
-        right: -20px;
-    }
-
-    .orb-2 {
-        width: 150px;
-        height: 150px;
-        background: var(--color-deep-light);
-        opacity: 0.3;
-        bottom: -20px;
-        left: -20px;
-    }
-
-    /* Game Card V2 */
-    .game-card-v2 {
-        background: white;
-        border-radius: 24px;
-        overflow: hidden;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border: 1px solid #eee;
-        height: 100%;
-    }
-
-    .game-card-v2:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        border-color: var(--color-gold);
-    }
-
-    .gc-image {
-        height: 120px;
-        background: linear-gradient(135deg, var(--color-deep), var(--color-deep-light));
-    }
-
-    .gc-badge {
-        position: absolute;
-        top: 20px;
-        left: 20px;
-        background: var(--color-gold);
-        color: var(--color-deep);
-        padding: 4px 12px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: bold;
-    }
-
-    .gc-icon-hover {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 2rem;
-        opacity: 0;
-        transition: 0.3s;
-    }
-
-    .game-card-v2:hover .gc-icon-hover {
-        opacity: 1;
-    }
-
-    .gc-content {
-        padding: 30px;
-    }
-
-    .gc-details-row {
-        display: flex;
-        justify-content: space-between;
-        background: #f8f9fa;
-        padding: 12px 20px;
-        border-radius: 12px;
-    }
-
-    .gc-detail {
-        font-size: 0.85rem;
-    }
-
-    /* Winners Scroll */
-    .winners-scroll-container {
-        overflow-x: auto;
-        padding-bottom: 20px;
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-
-    .winners-scroll-container::-webkit-scrollbar {
-        display: none;
-    }
-
-    .winner-card-v2 {
-        min-width: 250px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .w-avatar-v2 {
-        width: 45px;
-        height: 45px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        color: var(--color-deep);
-    }
-
-    /* Animations */
     @keyframes float {
-
-        0%,
-        100% {
-            transform: translateY(0) rotate(-5deg);
-        }
-
-        50% {
-            transform: translateY(-20px) rotate(-2deg);
-        }
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
     }
-
+    
     .animate-float {
-        animation: float 6s ease-in-out infinite;
+        animation: float 3s ease-in-out infinite;
     }
-
-    .section-divider {
-        width: 100px;
-        height: 5px;
-        background: var(--color-gold);
-        border-radius: 10px;
+    
+    @keyframes gradient-x {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
     }
-
-    .mb-60 {
-        margin-bottom: 60px;
-    }
-
-    .section-padding {
-        padding: 100px 0;
-    }
-
-    /* Transitions */
-    .transform-hover {
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .transform-hover:hover {
-        transform: scale(1.03);
-    }
-
-    .border-y-gold {
-        border-top: 1px solid rgba(255, 215, 0, 0.3);
-        border-bottom: 1px solid rgba(255, 215, 0, 0.3);
-    }
-
-    /* Steps V2 */
-    .step-card-v2 {
-        background: white;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-        height: 100%;
-        border: 1px solid #eee;
-    }
-
-    .step-card-v2:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
-        border-color: var(--color-gold);
-    }
-
-    .step-icon-v2 {
-        width: 80px;
-        height: 80px;
-        background: #fdfdfd;
-        border-radius: 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .step-number-badge {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        width: 30px;
-        height: 30px;
-        background: var(--color-deep);
-        color: var(--color-gold);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 0.9rem;
-        border: 2px solid white;
+    
+    .animate-gradient-x {
+        background-size: 200% 200%;
+        animation: gradient-x 3s ease infinite;
     }
 </style>
-{% endblock %}
 
-{% block extra_js %}
-<script>
-    $(document).ready(function () {
-        // Initial simple reveal animations
-        $('.animate-up').css({ 'opacity': 0, 'transform': 'translateY(30px)' });
-        $('.animate-right').css({ 'opacity': 0, 'transform': 'translateX(30px)' });
-
-        setTimeout(() => {
-            $('.animate-up').animate({ 'opacity': 1, 'transform': 'translateY(0)' }, 800);
-            $('.animate-right').animate({ 'opacity': 1, 'transform': 'translateX(0)' }, 800);
-        }, 200);
-    });
-</script>
 {% endblock %}

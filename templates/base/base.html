@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+{% load i18n %}
+<html lang="{{ LANGUAGE_CODE }}" class="h-full">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Winning Ticket - La Plateforme de Loterie{% endblock %}</title>
+
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        brand: ['"Outfit"', 'sans-serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: {
+                            50: '#FFFDE7',
+                            100: '#FFF9C4',
+                            300: '#FFF176',
+                            400: '#FFEE58',
+                            500: '#FFD700', // Gold Main
+                            600: '#FBC02D',
+                            700: '#F9A825',
+                            800: '#F57F17',
+                            900: '#B8860B', // Gold Dark
+                        },
+                        navy: {
+                            600: '#1E40AF',
+                            700: '#0A2463', // Deep Navy Main
+                            800: '#071A4D', // Deep Navy Dark
+                            900: '#051235',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        .font-brand {
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.02em;
+        }
+
+        .gradient-bg {
+            background: radial-gradient(circle at top right, #051235, #020617);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(234, 179, 8, 0.05), transparent 70%);
+            pointer-events: none;
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #020617;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0) scale(0.95);
+        }
+    </style>
+</head>
+
+<body class="min-h-full bg-slate-950 text-white selection:bg-yellow-400/30">
+    {% include 'base/header.html' %}
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="fixed top-20 right-4 z-50 space-y-2">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} backdrop-blur-md bg-slate-900/80 border border-slate-700/50 
+                    {% if message.tags == 'success' %}border-l-4 border-l-emerald-500 text-emerald-400
+                    {% elif message.tags == 'error' %}border-l-4 border-l-rose-500 text-rose-400
+                    {% elif message.tags == 'warning' %}border-l-4 border-l-amber-500 text-amber-400
+                    {% else %}border-l-4 border-l-sky-500 text-sky-400{% endif %}
+                    px-4 py-4 rounded-2xl shadow-2xl max-w-sm animate-fade-in-right">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    {% if message.tags == 'success' %}
+                    <i class="fas fa-check-circle text-green-500"></i>
+                    {% elif message.tags == 'error' %}
+                    <i class="fas fa-exclamation-triangle text-red-500"></i>
+                    {% elif message.tags == 'warning' %}
+                    <i class="fas fa-exclamation-circle text-yellow-500"></i>
+                    {% else %}
+                    <i class="fas fa-info-circle text-blue-500"></i>
+                    {% endif %}
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm font-medium">{{ message }}</p>
+                </div>
+                <div class="ml-auto pl-3">
+                    <button onclick="this.parentElement.parentElement.parentElement.remove()"
+                        class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="{% block main_class %}{% endblock %}">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% include 'base/footer.html' %}
+
+    <!-- JavaScript -->
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.transition = 'opacity 0.5s ease';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

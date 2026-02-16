@@ -1,123 +1,159 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load i18n %}
 
-{% block title %}Manage Companies - Admin{% endblock %}
+{% block title %}Gestion des Entreprises - Admin{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h1 class="h3 fw-bold text-primary-dark"><i class="fas fa-building me-2 text-gold"></i>Company Management
-            </h1>
-            <p class="text-muted mb-0">Manage lottery companies and verify their details.</p>
+<div class="bg-slate-950 text-white min-h-screen font-sans pb-20 pt-24">
+    <!-- Header Section -->
+    <section class="relative pt-16 pb-12 overflow-hidden">
+        <!-- background glow effects -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
+            <div
+                class="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px]">
+            </div>
+            <div class="absolute bottom-0 left-[-10%] w-[400px] h-[400px] bg-yellow-400/5 rounded-full blur-[100px]">
+            </div>
         </div>
-        <a href="{% url 'create_company' %}" class="btn btn-gold shadow-sm">
-            <i class="fas fa-plus me-2"></i>Create New Company
-        </a>
-    </div>
 
-    <!-- Companies Table -->
-    <div class="card shadow-lg border-0 overflow-hidden">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-primary-dark text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-medium text-yellow-400 mb-4">
+                        <i class="fas fa-building"></i>
+                        PARTENAIRES OFFICIELS
+                    </div>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-2">
+                        Gestion des Entreprises
+                    </h1>
+                    <p class="text-slate-400">Gérez les partenaires de loterie et vérifiez leurs informations légales.
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="{% url 'admin_dashboard' %}"
+                        class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-xl border border-slate-700 transition-all flex items-center">
+                        <i class="fas fa-arrow-left mr-2 text-slate-400"></i>Retour
+                    </a>
+                    <a href="{% url 'create_company' %}"
+                        class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] flex items-center">
+                        <i class="fas fa-plus mr-2"></i>Nouvelle Entreprise
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Companies Table Content -->
+        <div class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-3xl overflow-hidden shadow-2xl">
+            <div class="p-6 border-b border-slate-700 bg-slate-800/30">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-list-ul mr-3 text-yellow-400"></i>Liste des Partenaires
+                </h2>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-700/50">
+                    <thead class="bg-slate-900/50">
                         <tr>
-                            <th class="ps-4 py-3">Company Name</th>
-                            <th class="py-3">Registration No.</th>
-                            <th class="py-3">Contact</th>
-                            <th class="py-3">Status</th>
-                            <th class="text-end pe-4 py-3">Actions</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest text-nowrap">
+                                Entreprise / Statut</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest text-nowrap">
+                                N° Enregistrement</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest text-nowrap">
+                                Contact</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest text-nowrap">
+                                Disponibilité</th>
+                            <th
+                                class="px-6 py-4 text-right text-[10px] font-bold text-slate-500 uppercase tracking-widest text-nowrap">
+                                Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-slate-700/30">
                         {% if companies %}
                         {% for company in companies %}
-                        <tr>
-                            <td class="ps-4 py-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="rounded-circle bg-light-blue p-2 me-3 text-primary-dark">
-                                        <i class="fas fa-building"></i>
+                        <tr class="hover:bg-slate-700/20 transition-colors group">
+                            <td class="px-6 py-5">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-slate-900 rounded-xl border border-slate-700 flex items-center justify-center mr-4 group-hover:border-yellow-400/30 transition-all">
+                                        <i class="fas fa-building text-slate-400 group-hover:text-yellow-400"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold text-primary-dark">{{ company.name }}</h6>
+                                        <div
+                                            class="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors">
+                                            {{ company.name }}</div>
                                         {% if company.verified %}
-                                        <small class="text-success fw-bold" style="font-size: 0.75rem;"><i
-                                                class="fas fa-check-circle me-1"></i>Verified</small>
+                                        <div
+                                            class="flex items-center text-[10px] font-bold text-emerald-400 mt-1 uppercase tracking-tighter">
+                                            <i class="fas fa-check-circle mr-1"></i>Vérifié
+                                        </div>
                                         {% else %}
-                                        <small class="text-warning fw-bold" style="font-size: 0.75rem;"><i
-                                                class="fas fa-exclamation-triangle me-1"></i>Unverified</small>
+                                        <div
+                                            class="flex items-center text-[10px] font-bold text-orange-400 mt-1 uppercase tracking-tighter">
+                                            <i class="fas fa-exclamation-triangle mr-1"></i>En attente
+                                        </div>
                                         {% endif %}
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="font-monospace text-muted">{{ company.registration_number }}</span></td>
-                            <td>
-                                <div class="small fw-semibold text-primary-dark">{{ company.contact_email }}</div>
-                                <div class="small text-muted">{{ company.contact_phone }}</div>
-                            </td>
-                            <td>
+                            <td class="px-6 py-5">
                                 <span
-                                    class="badge {% if company.is_active %}bg-success-subtle text-success border border-success-subtle{% else %}bg-secondary-subtle text-secondary border border-secondary-subtle{% endif %} px-3 py-2 rounded-pill">
-                                    {% if company.is_active %}Active{% else %}Inactive{% endif %}
-                                </span>
+                                    class="text-sm font-mono text-slate-300 bg-slate-900/50 px-2 py-1 rounded border border-slate-700/50">{{.registration_number
+                                    }}</span>
                             </td>
-                            <td class="text-end pe-4">
-                                <div class="btn-group">
-                                    <a href="{% url 'edit_company' company.id %}" class="btn btn-sm btn-outline-primary"
-                                        title="Edit">
-                                        <i class="fas fa-edit"></i>
+                            <td class="px-6 py-5">
+                                <div class="text-sm font-semibold text-slate-300">{{ company.contact_email }}</div>
+                                <div class="text-[10px] text-slate-500 font-medium">{{ company.contact_phone }}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                {% if company.is_active %}
+                                <span
+                                    class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">
+                                    Actif
+                                </span>
+                                {% else %}
+                                <span
+                                    class="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold bg-slate-700 text-slate-400 border border-slate-600 uppercase tracking-widest">
+                                    Inactif
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    <a href="{% url 'edit_company' company.id %}"
+                                        class="w-9 h-9 flex items-center justify-center bg-blue-500/10 text-blue-400 rounded-xl hover:bg-blue-500 hover:text-white transition-all border border-blue-500/20"
+                                        title="Modifier">
+                                        <i class="fas fa-edit text-sm"></i>
                                     </a>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteCompanyModal{{ company.id }}" title="Delete">
-                                        <i class="fas fa-trash-alt"></i>
+                                    <button onclick="handleDeleteCompany({{ company.id }}, '{{ company.name }}')"
+                                        class="w-9 h-9 flex items-center justify-center bg-red-500/10 text-red-400 rounded-xl hover:bg-red-500 hover:text-white transition-all border border-red-500/20"
+                                        title="Supprimer">
+                                        <i class="fas fa-trash-alt text-sm"></i>
                                     </button>
-                                </div>
-
-                                <!-- Delete Modal -->
-                                <div class="modal fade" id="deleteCompanyModal{{ company.id }}" tabindex="-1"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header border-0 pb-0">
-                                                <h5 class="modal-title fw-bold text-danger">Delete Company?</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body text-start text-wrap">
-                                                <div class="text-center mb-3">
-                                                    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                                                    <p>Are you sure you want to delete <strong>{{ company.name
-                                                            }}</strong>?</p>
-                                                    <p class="small text-muted">This action cannot be undone.</p>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer border-0 pt-0 justify-content-center">
-                                                <button type="button" class="btn btn-light px-4"
-                                                    data-bs-dismiss="modal">Cancel</button>
-                                                <form action="{% url 'delete_company' company.id %}" method="post"
-                                                    class="d-inline">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-danger px-4">Delete
-                                                        Company</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </td>
                         </tr>
                         {% endfor %}
                         {% else %}
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">
-                                <div class="py-5">
-                                    <i class="fas fa-folder-open fa-3x mb-3 text-secondary opacity-25"></i>
-                                    <h5 class="fw-bold text-secondary">No companies found</h5>
-                                    <p class="mb-3">Add your first company to get started!</p>
-                                    <a href="{% url 'create_company' %}" class="btn btn-sm btn-gold">
-                                        <i class="fas fa-plus me-2"></i>Create New Company
-                                    </a>
+                            <td colspan="5" class="px-6 py-20 text-center">
+                                <div
+                                    class="w-20 h-20 bg-slate-900 border border-slate-700 shadow-inner rounded-full flex items-center justify-center mx-auto mb-6">
+                                    <i class="fas fa-folder-open text-slate-600 text-2xl"></i>
                                 </div>
+                                <h3 class="text-xl font-bold text-white mb-2">Aucune entreprise trouvée</h3>
+                                <p class="text-slate-500 mb-8 max-w-xs mx-auto">Commencez par ajouter votre premier
+                                    partenaire de loterie.</p>
+                                <a href="{% url 'create_company' %}"
+                                    class="inline-flex items-center px-8 py-3 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-xl transition-all shadow-lg">
+                                    <i class="fas fa-plus mr-2"></i>Ajouter une Entreprise
+                                </a>
                             </td>
                         </tr>
                         {% endif %}
@@ -128,38 +164,61 @@
     </div>
 </div>
 
-<style>
-    .text-primary-dark {
-        color: #0A2463;
+<!-- Delete Modal (JS Controlled) -->
+<div id="deleteCompanyModal"
+    class="fixed inset-0 bg-[#0f172a]/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div
+        class="bg-slate-800 border border-slate-700 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent">
+        </div>
+
+        <div class="text-center">
+            <div
+                class="w-20 h-20 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-red-500/20 shadow-lg">
+                <i class="fas fa-exclamation-triangle text-red-500 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-3">Supprimer l'Entreprise ?</h3>
+            <p class="text-slate-400 mb-8 leading-relaxed">
+                Êtes-vous certain de vouloir supprimer <span class="text-white font-bold"
+                    id="companyNameToDelete"></span> ? Cette action est définitive.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="closeCompanyModal()"
+                    class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all border border-slate-600 w-full sm:w-auto">
+                    Annuler
+                </button>
+                <form id="deleteCompanyForm" method="POST" class="w-full sm:w-auto">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="px-6 py-3 bg-red-500 hover:bg-red-400 text-white font-bold rounded-xl transition-all shadow-lg w-full">
+                        Confirmer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function handleDeleteCompany(id, name) {
+        document.getElementById('companyNameToDelete').textContent = name;
+        document.getElementById('deleteCompanyForm').action = `/manage-companies/delete/${id}/`;
+        const modal = document.getElementById('deleteCompanyModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
     }
 
-    .text-gold {
-        color: #FFD700 !important;
+    function closeCompanyModal() {
+        const modal = document.getElementById('deleteCompanyModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
     }
 
-    .bg-primary-dark {
-        background-color: #0A2463;
-    }
-
-    .bg-light-blue {
-        background-color: #F0F4FF;
-    }
-
-    .table thead th {
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
-
-    .btn-outline-primary {
-        color: #0A2463;
-        border-color: #0A2463;
-    }
-
-    .btn-outline-primary:hover {
-        background-color: #0A2463;
-        color: white;
-    }
-</style>
+    // Close on background click
+    document.getElementById('deleteCompanyModal').addEventListener('click', function (e) {
+        if (e.target === this) closeCompanyModal();
+    });
+</script>
 {% endblock %}

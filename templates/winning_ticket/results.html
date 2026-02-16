@@ -1,170 +1,366 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load custom_filters %}
+{% load i18n %}
 
-{% block title %}Results - WINNING TICKET{% endblock %}
+{% block title %}{% trans "Résultats des Tirages - Winning Ticket" %}{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="text-center mb-5">
-        <h1 class="display-5 mb-3">RÉSULTATS DES LOTERIES</h1>
-        <p class="lead text-muted">Consultez les derniers numéros gagnants et découvrez si vous avez gagné</p>
+<div class="relative overflow-hidden pt-20 pb-20">
+    <!-- background glow effects -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
+        <div class="absolute top-[10%] right-[-5%] w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[10%] left-[-10%] w-[400px] h-[400px] bg-yellow-400/5 rounded-full blur-[100px]">
+        </div>
     </div>
 
-    {% if recent_draws %}
-    {% for draw in recent_draws %}
-    <div class="card mb-5 {% if forloop.first %}border-primary{% endif %} shadow-sm">
-        <div class="card-header {% if forloop.first %}bg-primary{% else %}bg-dark-subtle{% endif %} text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">
-                <i class="fas fa-trophy me-2"></i>
-                {{ draw.game.name }} - {{ draw.draw_date|date:"F d, Y" }}
-            </h4>
-            <span class="badge bg-light text-dark fw-bold">Tirage #{{ draw.draw_number }}</span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Hero Section -->
+        <div class="text-center mb-16">
+            <div
+                class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl rotate-6 flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-yellow-400/20">
+                <i class="fas fa-trophy text-slate-950 text-3xl"></i>
+            </div>
+            <h1 class="text-4xl md:text-6xl font-black mb-6 tracking-tighter text-white">
+                {% trans "Résultats des" %} <span
+                    class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-500 to-yellow-600">{%
+                    trans "Tirages" %}</span>
+            </h1>
+            <p class="text-lg text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+                {% trans "L'historique officiel de tous les tirages. La transparence et l'équité sont au cœur de chaque
+                numéro tiré." %}
+            </p>
         </div>
-        <div class="card-body">
-            <div class="result-card mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <div class="text-muted">
-                        <i class="fas fa-building me-1"></i> 
-                        Organisé par: 
-                        {% if draw.game.company %}
-                            {{ draw.game.company.name }}
-                        {% else %}
-                            WINNING TICKET
-                        {% endif %}
-                    </div>
-                    <span class="badge bg-success">Terminé</span>
-                </div>
 
-                <!-- Numéros gagnants -->
-                <div class="text-center my-4">
-                    <h5 class="mb-3 text-uppercase fw-bold text-primary">Numéros Gagnants</h5>
-                    <div class="d-flex justify-content-center flex-wrap gap-3">
-                        {% if draw.winning_numbers %}
-                            {% for num in draw.winning_numbers %}
-                            <span class="number-ball big">{{ num }}</span>
-                            {% endfor %}
-                        {% else %}
-                            <div class="alert alert-warning">
-                                Numéros non disponibles
-                            </div>
-                        {% endif %}
-                        {% if draw.winning_powerball %}
-                        <span class="number-ball big powerball">{{ draw.winning_powerball }}</span>
-                        {% endif %}
-                    </div>
-                </div>
+        <!-- Filter Bar -->
+        <div
+            class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 p-2 rounded-3xl bg-slate-900/40 backdrop-blur-xl border border-slate-800/50 sticky top-24 z-30">
+            <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto p-2 no-scrollbar">
+                <button
+                    class="result-filter active whitespace-nowrap bg-yellow-400 text-slate-950 px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all shadow-lg shadow-yellow-400/10"
+                    data-filter="all">
+                    {% trans "Tous" %}
+                </button>
+                <button
+                    class="result-filter whitespace-nowrap bg-slate-950/50 text-slate-400 hover:text-white px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border border-slate-800"
+                    data-filter="recent">
+                    {% trans "Récents" %}
+                </button>
+                <button
+                    class="result-filter whitespace-nowrap bg-slate-950/50 text-slate-400 hover:text-white px-6 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all border border-slate-800"
+                    data-filter="jackpot">
+                    {% trans "Gros Lots" %}
+                </button>
+            </div>
 
-                <!-- Détails des résultats -->
-                <div class="row text-center mt-5">
-                    <div class="col-md-3 border-end">
-                        <div class="p-2">
-                            <h3 class="text-warning fw-bold">${{ draw.jackpot_amount|floatformat:2|default:"0.00" }}</h3>
-                            <p class="text-muted small mb-0 text-uppercase">Cagnotte</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 border-end">
-                        <div class="p-2">
-                            <h3 class="{% if draw.jackpot_won %}text-success{% else %}text-muted{% endif %} fw-bold">
-                                {% if draw.jackpot_won %}OUI{% else %}NON{% endif %}
-                            </h3>
-                            <p class="text-muted small mb-0 text-uppercase">Gagnée</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 border-end">
-                        <div class="p-2">
-                            <h3 class="text-info fw-bold">{{ draw.total_winners|default:"0" }}</h3>
-                            <p class="text-muted small mb-0 text-uppercase">Total Gagnants</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="p-2">
-                            <h3 class="text-primary fw-bold">${{ draw.total_prize_paid|floatformat:2|default:"0.00" }}</h3>
-                            <p class="text-muted small mb-0 text-uppercase">Gains Distribués</p>
-                        </div>
-                    </div>
+            <div class="w-full md:w-auto px-2">
+                <div class="relative w-full md:w-64">
+                    <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-xs"></i>
+                    <select
+                        class="w-full pl-10 pr-10 py-3 bg-slate-950 border border-slate-800 rounded-2xl text-xs font-bold text-slate-300 focus:outline-none focus:border-yellow-400/50 appearance-none cursor-pointer">
+                        <option value="">{% trans "Filtrer par jeu..." %}</option>
+                        <option>New York Trip</option>
+                        <option>Birthday Special</option>
+                        <option>Canada Tourism</option>
+                    </select>
                 </div>
             </div>
         </div>
-        <div class="card-footer bg-light text-center py-3">
-            <a href="{% url 'play_game' draw.game.slug %}" class="btn btn-primary">
-                <i class="fas fa-play me-2"></i>Jouer au Prochain Tirage
-            </a>
+
+        {% if recent_draws %}
+        <div class="space-y-8">
+            {% for draw in recent_draws %}
+            <article
+                class="draw-card group relative bg-slate-900/40 rounded-[32px] overflow-hidden border border-slate-800/50 hover:border-yellow-400/30 transition-all duration-500 animate-fade-in"
+                data-category="{% if draw.jackpot_amount >= 100000 %}jackpot{% else %}recent{% endif %}">
+
+                <!-- Card Header -->
+                <div
+                    class="p-8 border-b border-slate-800/50 flex flex-col lg:flex-row lg:items-center justify-between gap-8">
+                    <div class="flex items-center gap-6">
+                        <div
+                            class="w-16 h-16 bg-slate-950 rounded-2xl border border-slate-800 flex items-center justify-center text-yellow-400 shadow-inner group-hover:scale-110 transition-transform">
+                            <i class="fas fa-ticket-alt text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3
+                                class="text-2xl font-black text-white group-hover:text-yellow-400 transition-colors uppercase tracking-tight">
+                                {{ draw.game.name }}</h3>
+                            <div
+                                class="flex items-center gap-4 text-xs font-bold text-slate-500 mt-2 uppercase tracking-widest">
+                                <span class="flex items-center"><i
+                                        class="far fa-calendar-alt mr-2 text-yellow-400/50"></i> {{
+                                    draw.draw_date|date:"d M Y" }}</span>
+                                <span class="w-1 h-1 rounded-full bg-slate-800"></span>
+                                <span class="flex items-center"><i class="far fa-clock mr-2 text-yellow-400/50"></i> {{
+                                    draw.draw_date|date:"H:i" }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between lg:justify-end gap-10">
+                        <!-- Status Badge -->
+                        <div>
+                            {% if draw.processed %}
+                            <div
+                                class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-4 py-2 rounded-full">
+                                <span
+                                    class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></span>
+                                <span class="text-emerald-500 text-[10px] font-black uppercase tracking-widest">{% trans
+                                    "Confirmé" %}</span>
+                            </div>
+                            {% else %}
+                            <div
+                                class="flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full">
+                                <span
+                                    class="w-2 h-2 rounded-full bg-blue-500 animate-pulse shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span>
+                                <span class="text-blue-500 text-[10px] font-black uppercase tracking-widest">{% trans
+                                    "En Cours" %}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Jackpot -->
+                        <div class="text-right">
+                            <p class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">JACKPOT</p>
+                            <p class="text-3xl font-black text-white tracking-tighter"><span
+                                    class="text-yellow-400">$</span>{{ draw.jackpot_amount|floatformat:0 }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-8">
+                    {% if draw.processed and draw.winning_numbers %}
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                        <!-- 1. Winning Number -->
+                        <div
+                            class="bg-slate-950/60 rounded-3xl p-8 border border-slate-800/50 text-center relative overflow-hidden group/num">
+                            <div
+                                class="absolute inset-0 bg-yellow-400/5 opacity-0 group-hover/num:opacity-100 transition-opacity">
+                            </div>
+                            <h4
+                                class="text-[10px] font-black text-yellow-400 uppercase mb-6 tracking-[0.2em] relative z-10">
+                                {% trans "Numéro Gagnant" %}</h4>
+                            <div class="relative z-10">
+                                <div
+                                    class="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 text-slate-950 rounded-full flex items-center justify-center mx-auto shadow-2xl shadow-yellow-400/20 font-black text-4xl border-4 border-slate-950 transform group-hover/num:scale-110 transition-transform duration-500">
+                                    {{ draw.winning_numbers.0 }}
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-slate-600 mt-6 font-bold uppercase tracking-widest">{% trans
+                                "Certifié RNG" %}</p>
+                        </div>
+
+                        <!-- 2. Statistics -->
+                        <div class="text-center px-4 relative">
+                            <div
+                                class="absolute top-1/2 left-0 w-px h-24 bg-gradient-to-b from-transparent via-slate-800 to-transparent hidden lg:block">
+                            </div>
+                            <div
+                                class="absolute top-1/2 right-0 w-px h-24 bg-gradient-to-b from-transparent via-slate-800 to-transparent hidden lg:block">
+                            </div>
+
+                            <h4 class="text-[10px] font-black text-slate-500 uppercase mb-6 tracking-[0.2em]">{% trans
+                                "Gagnants Total" %}</h4>
+                            {% if draw.total_winners > 0 %}
+                            <div class="text-6xl font-black text-white mb-2 tracking-tighter">{{ draw.total_winners }}
+                            </div>
+                            <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">{% trans
+                                "Félicitations !" %}</p>
+                            {% if draw.jackpot_won %}
+                            <div class="mt-6">
+                                <span
+                                    class="inline-flex items-center px-4 py-2 rounded-xl text-[10px] font-black bg-yellow-400/10 text-yellow-400 uppercase tracking-widest border border-yellow-400/20">
+                                    <i class="fas fa-crown mr-2"></i> {% trans "Jackpot remporté" %}
+                                </span>
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <div class="text-5xl font-black text-slate-800 mb-2">0</div>
+                            <p class="text-xs font-bold text-slate-600 uppercase tracking-widest">{% trans "Aucun
+                                gagnant" %}</p>
+                            <div class="mt-4">
+                                <span
+                                    class="text-[10px] font-black text-blue-400 bg-blue-400/10 px-3 py-1.5 rounded-lg border border-blue-400/20 uppercase">
+                                    {% trans "Reporté" %} ⟳
+                                </span>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- 3. Distribution -->
+                        <div class="text-center lg:text-right">
+                            <h4 class="text-[10px] font-black text-slate-500 uppercase mb-6 tracking-[0.2em]">{% trans
+                                "Gains Distribués" %}</h4>
+                            <div class="text-4xl font-black text-white mb-2 tracking-tighter"><span
+                                    class="text-emerald-500">$</span>{{ draw.total_prize_paid|floatformat:0 }}</div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">{% trans "Versés aux
+                                joueurs" %}</p>
+
+                            {% if draw.total_prize_paid < draw.jackpot_amount %} <div
+                                class="mt-8 pt-6 border-t border-slate-800/50">
+                                <p class="text-[10px] font-black text-slate-600 mb-1 uppercase">{% trans "Cagnotte
+                                    Reportée" %}</p>
+                                <p class="text-xl font-black text-blue-400 tracking-tight">${{
+                                    draw.jackpot_amount|sub:draw.total_prize_paid|floatformat:0 }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <!-- Upcoming State -->
+                <div class="flex flex-col items-center justify-center py-12 text-center">
+                    <div
+                        class="w-20 h-20 bg-slate-950 rounded-full flex items-center justify-center mb-6 border border-slate-800 relative group">
+                        <i class="fas fa-hourglass-half text-blue-500 text-2xl animate-spin-slow"></i>
+                        <div class="absolute inset-0 rounded-full border-2 border-blue-500/20 scale-125 animate-ping">
+                        </div>
+                    </div>
+                    <h4 class="text-2xl font-black text-white mb-3 tracking-tight">{% trans "Tirage imminent" %}</h4>
+                    <p class="text-slate-400 mb-8 max-w-md font-medium leading-relaxed">
+                        {% trans "Résultats prévus pour le" %} <span class="text-white font-bold">{{
+                            draw.draw_date|date:"d F Y à H:i" }}</span>.
+                    </p>
+
+                    <div class="flex gap-12 text-center">
+                        <div>
+                            <p class="text-3xl font-black text-white tracking-tighter">{{ draw.game.total_tickets_sold
+                                }}</p>
+                            <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest">{% trans
+                                "Tickets" %}</p>
+                        </div>
+                        <div class="w-px bg-slate-800"></div>
+                        <div>
+                            <p class="text-3xl font-black text-yellow-400 tracking-tighter">${{
+                                draw.jackpot_amount|floatformat:0 }}</p>
+                            <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest">{% trans "En jeu"
+                                %}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
         </div>
+
+        <!-- Tech Footer -->
+        {% if draw.processed %}
+        <div class="px-8 py-4 bg-slate-950/50 border-t border-slate-800/50 flex justify-between items-center">
+            <span class="text-[10px] font-black text-slate-600 tracking-widest uppercase">ID: #{{
+                draw.id|stringformat:"06d" }}</span>
+            <span class="flex items-center gap-2 text-[10px] font-black text-emerald-500 uppercase tracking-widest">
+                <i class="fas fa-check-circle"></i> {% trans "Blockchain Verified" %}
+            </span>
+        </div>
+        {% endif %}
+        </article>
+        {% endfor %}
     </div>
-    {% endfor %}
+
+    <div class="text-center mt-16">
+        <button
+            class="bg-slate-950 border border-slate-800 text-slate-400 hover:text-white hover:border-yellow-400/50 px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:shadow-[0_0_20px_rgba(250,204,21,0.1)]">
+            <i class="fas fa-plus-circle mr-3"></i>
+            {% trans "Afficher plus de résultats" %}
+        </button>
+    </div>
     {% else %}
-    <div class="card py-5 border-0 shadow-sm text-center">
-        <div class="card-body">
-            <i class="fas fa-history fa-4x text-muted mb-4"></i>
-            <h3>Aucun résultat trouvé</h3>
-            <p class="text-muted">Aucun résultat de loterie n'a encore été enregistré. Revenez bientôt !</p>
-            <a href="{% url 'games' %}" class="btn btn-primary mt-3">Voir les Jeux Actifs</a>
+    <!-- Empty State -->
+    <div
+        class="text-center py-32 bg-slate-900/20 rounded-[40px] border border-dashed border-slate-800 group overflow-hidden relative">
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-blue-600/5 rounded-full blur-[80px]"></div>
+        <div
+            class="w-24 h-24 bg-slate-950 rounded-3xl flex items-center justify-center mx-auto mb-8 border border-slate-800 group-hover:border-yellow-400/30 transition-colors">
+            <i class="far fa-folder-open text-slate-700 text-4xl"></i>
         </div>
+        <h3 class="text-3xl font-black text-white mb-4 tracking-tight">{% trans "Aucun résultat" %}</h3>
+        <p class="text-slate-400 mb-10 max-w-sm mx-auto font-medium leading-relaxed">
+            {% trans "Les résultats s'afficheront ici après les premiers tirages." %}
+        </p>
+        <a href="{% url 'games' %}"
+            class="inline-flex items-center px-10 py-4 bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black rounded-2xl transition-all shadow-lg shadow-yellow-400/20 uppercase tracking-widest text-xs">
+            {% trans "Jouer maintenant" %}
+        </a>
     </div>
     {% endif %}
-
-    <!-- Section vérification de ticket -->
-    <div class="card mb-5 shadow-sm overflow-hidden border-0">
-        <div class="row g-0">
-            <div class="col-lg-8 p-5 bg-white">
-                <h3 class="fw-bold mb-4">Dernière vérification</h3>
-                <p class="text-muted lead mb-4">Connectez-vous à votre tableau de bord pour vérifier vos tickets automatiquement.</p>
-                <a href="{% url 'dashboard' %}" class="btn btn-gold btn-lg">Accéder au Dashboard</a>
-            </div>
-            <div class="col-lg-4 bg-primary d-flex align-items-center justify-content-center p-5">
-                <div class="text-center text-white">
-                    <i class="fas fa-ticket-alt fa-5x mb-4 opacity-50"></i>
-                    <h4 class="mb-0">Prêt à gagner ?</h4>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const filterBtns = document.querySelectorAll('.result-filter');
+        const drawCards = document.querySelectorAll('.draw-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const filter = this.getAttribute('data-filter');
+
+                // Reset visual state
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-yellow-400', 'text-slate-950', 'shadow-yellow-400/10');
+                    b.classList.add('bg-slate-950/50', 'text-slate-400', 'border-slate-800');
+                });
+
+                // Set active state
+                this.classList.remove('bg-slate-950/50', 'text-slate-400', 'border-slate-800');
+                this.classList.add('bg-yellow-400', 'text-slate-950', 'shadow-yellow-400/10');
+
+                // Filter cards
+                drawCards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'all' || category === filter) {
+                        card.classList.remove('hidden');
+                        card.style.opacity = '0';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                        }, 50);
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+    });
+</script>
 
 <style>
-    .number-ball {
-        width: 50px;
-        height: 50px;
-        background: white;
-        border: 2px solid #0a2463;
-        color: #0a2463;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 1.2rem;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease;
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    .number-ball.big {
-        width: 70px;
-        height: 70px;
-        font-size: 1.8rem;
+    .animate-fade-in {
+        animation: fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
     }
 
-    .number-ball.powerball {
-        background: #ffd700;
-        border-color: #ffd700;
-        color: #0a2463;
+    .animate-spin-slow {
+        animation: spin 3s linear infinite;
     }
 
-    .number-ball:hover {
-        transform: scale(1.1) rotate(5deg);
-        background: #0a2463;
-        color: white;
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
     }
 
-    .card {
-        border-radius: 20px;
-        overflow: hidden;
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
     }
 
-    .btn-gold {
-        background: linear-gradient(135deg, #FFD700, #B8860B);
-        border: none;
-        color: #0A2463;
-        font-weight: bold;
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 </style>
 {% endblock %}

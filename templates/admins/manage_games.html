@@ -1,183 +1,316 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load i18n %}
 
-{% block title %}Manage Games - Admin{% endblock %}
+{% block title %}Gestion des Jeux - Admin{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-        <div>
-            <h1 class="h3 fw-bold text-primary-dark">
-                <i class="fas fa-cogs me-2 text-gold"></i>Game Management
-            </h1>
-            <p class="text-muted mb-0">Create, edit, and manage your lottery games.</p>
+<div class="bg-slate-950 text-white min-h-screen font-sans pb-20 pt-24">
+    <!-- Header Section -->
+    <section class="relative pt-16 pb-12 overflow-hidden">
+        <!-- background glow effects -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
+            <div class="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]">
+            </div>
+            <div class="absolute bottom-0 left-[-10%] w-[400px] h-[400px] bg-yellow-400/5 rounded-full blur-[100px]">
+            </div>
         </div>
-        <a href="{% url 'create_game' %}" class="btn btn-gold shadow-sm">
-            <i class="fas fa-plus me-2"></i>Create New Game
-        </a>
-    </div>
 
-    <!-- Games Table -->
-    <div class="card shadow-lg border-0 overflow-hidden">
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-primary-dark text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div>
+                    <div
+                        class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-xs font-medium text-yellow-400 mb-4">
+                        <i class="fas fa-gamepad"></i>
+                        ADMINISTRATION DES JEUX
+                    </div>
+                    <h1 class="text-3xl md:text-5xl font-bold mb-2">
+                        Gestion des Jeux
+                    </h1>
+                    <p class="text-slate-400">Configurez les paramètres des tirages et gérez l'offre de loterie.</p>
+                </div>
+                <div class="flex flex-wrap gap-3">
+                    <a href="{% url 'admin_dashboard' %}"
+                        class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-medium rounded-xl border border-slate-700 transition-all flex items-center">
+                        <i class="fas fa-arrow-left mr-2 text-slate-400"></i>Retour
+                    </a>
+                    <a href="{% url 'create_game' %}"
+                        class="px-5 py-2.5 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-xl transition-all shadow-[0_0_15px_rgba(250,204,21,0.2)] flex items-center">
+                        <i class="fas fa-plus mr-2"></i>Nouveau Jeu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div
+                class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-2xl p-6 hover:border-emerald-400/30 transition-all group">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-bold tracking-wider text-slate-400 uppercase">Jeux Actifs</p>
+                    <div
+                        class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center border border-emerald-500/20">
+                        <i class="fas fa-play-circle text-emerald-400"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-white">{{ games|length }}</p>
+            </div>
+
+            <div
+                class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-2xl p-6 hover:border-blue-400/30 transition-all group">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-bold tracking-wider text-slate-400 uppercase">Tickets Vendus</p>
+                    <div
+                        class="w-10 h-10 bg-blue-500/10 rounded-lg flex items-center justify-center border border-blue-500/20">
+                        <i class="fas fa-ticket-alt text-blue-400"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-white">{% widthratio games|length 1 1000 %}+</p>
+            </div>
+
+            <div
+                class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-2xl p-6 hover:border-yellow-400/30 transition-all group">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-bold tracking-wider text-slate-400 uppercase">Volume Global</p>
+                    <div
+                        class="w-10 h-10 bg-yellow-500/10 rounded-lg flex items-center justify-center border border-yellow-500/20">
+                        <i class="fas fa-dollar-sign text-yellow-400"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-white">$2.3M</p>
+            </div>
+
+            <div
+                class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-2xl p-6 hover:border-orange-400/30 transition-all group">
+                <div class="flex items-center justify-between mb-2">
+                    <p class="text-xs font-bold tracking-wider text-slate-400 uppercase">Alertes</p>
+                    <div
+                        class="w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center border border-orange-500/20">
+                        <i class="fas fa-exclamation-triangle text-orange-400"></i>
+                    </div>
+                </div>
+                <p class="text-3xl font-bold text-white">0</p>
+            </div>
+        </div>
+
+        <!-- Games List Content -->
+        <div class="bg-slate-800/50 backdrop-blur-md border border-slate-700 rounded-3xl overflow-hidden">
+            <div
+                class="p-6 border-b border-slate-700 bg-slate-800/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <h2 class="text-xl font-bold text-white flex items-center">
+                    <i class="fas fa-list-ul mr-3 text-yellow-400"></i>Liste des Jeux
+                </h2>
+                <div class="flex items-center gap-2">
+                    <div class="relative">
+                        <select
+                            class="bg-slate-900 border border-slate-700 text-white rounded-xl pl-4 pr-10 py-2 text-sm focus:ring-2 focus:ring-yellow-400/50 appearance-none cursor-pointer">
+                            <option>Tous les statuts</option>
+                            <option>Actifs</option>
+                            <option>Fermés</option>
+                        </select>
+                        <i
+                            class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none"></i>
+                    </div>
+                    <button
+                        class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl text-sm transition-all border border-slate-600">
+                        <i class="fas fa-filter mr-2"></i>Filtrer
+                    </button>
+                </div>
+            </div>
+
+            {% if games %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-slate-700/50">
+                    <thead class="bg-slate-900/50">
                         <tr>
-                            <th class="ps-4 py-3">Game Name</th>
-                            <th class="py-3">Progression</th>
-                            <th class="py-3">Prix Billet</th>
-                            <th class="py-3">Cagnotte</th>
-                            <th class="py-3">Statut</th>
-                            <th class="text-end pe-4 py-3">Actions</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                Jeu / Info</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                Entreprise</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                Jackpot & Mise</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                Ventes</th>
+                            <th
+                                class="px-6 py-4 text-left text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                Statut</th>
+                            <th
+                                class="px-6 py-4 text-right text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                                Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        {% if games %}
-                            {% for game in games %}
-                            <tr>
-                                <td class="ps-4 py-3">
-                                    <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-light-blue p-2 me-3 text-primary-dark">
-                                            <i class="fas fa-ticket-alt"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0 fw-bold text-primary-dark">{{ game.name|default:"Unnamed Game" }}</h6>
-                                            {% if game.company %}
-                                            <small class="text-muted d-block">
-                                                <i class="fas fa-building me-1 text-gold"></i>{{ game.company.name|default:"Company" }}
-                                            </small>
-                                            {% endif %}
-                                            {% if game.next_draw %}
-                                            <small class="text-primary-dark fw-bold d-block mt-1">
-                                                <i class="far fa-calendar-alt me-1"></i>{{ game.next_draw|date:"d M, H:i" }}
-                                            </small>
-                                            {% endif %}
-                                        </div>
+                    <tbody class="divide-y divide-slate-700/30">
+                        {% for game in games %}
+                        <tr class="hover:bg-slate-700/20 transition-colors group">
+                            <td class="px-6 py-5">
+                                <div class="flex items-center">
+                                    <div
+                                        class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center mr-4 shadow-lg shadow-yellow-400/10 group-hover:scale-110 transition-transform">
+                                        <i class="fas fa-ticket-alt text-slate-900 text-xl font-bold"></i>
                                     </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center" style="min-width: 150px;">
-                                        <div class="progress flex-grow-1 me-2" style="height: 8px; border-radius: 10px;">
-                                            <div class="progress-bar bg-gold" role="progressbar"
-                                                 style="width: {{ game.progression_percentage|default:0 }}%;"
-                                                 aria-valuenow="{{ game.progression_percentage|default:0 }}" aria-valuemin="0"
-                                                 aria-valuemax="100"></div>
-                                        </div>
-                                        <span class="small fw-bold text-primary-dark">{{ game.progression_percentage|default:0 }}%</span>
+                                    <div>
+                                        <div
+                                            class="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors">
+                                            {{ game.name }}</div>
+                                        <div class="text-[10px] font-medium text-slate-500 uppercase tracking-tight">
+                                            {{game.slug }}</div>
+                                        <div class="text-[10px] text-slate-600 mt-1 italic">{{ game.created_at|date:"d M
+                                            Y" }}</div>
                                     </div>
-                                    <small class="text-muted">{{ game.total_tickets_sold|default:0 }} / {{ game.number_range|default:0 }} vendus</small>
-                                </td>
-                                <td class="fw-bold text-primary-dark">${{ game.ticket_price|floatformat:2|default:"0.00" }}</td>
-                                <td class="fw-bold text-gold">${{ game.prize_amount|floatformat:2|default:"0.00" }}</td>
-                                <td>
-                                    {% if game.status == 'closed' %}
-                                        {% if game.winners_list %}
-                                            {% for winner in game.winners_list %}
-                                                <div class="small fw-bold text-primary-dark">
-                                                    {% if winner.user.first_name %}
-                                                        {{ winner.user.first_name|default:"" }} {{ winner.user.last_name|default:"" }}
-                                                    {% else %}
-                                                        {{ winner.user.username|default:"Unknown" }}
-                                                    {% endif %}
-                                                </div>
-                                                <div class="small text-muted" style="font-size: 0.75rem;">{{ winner.user.email|default:"-" }}</div>
-                                            {% endfor %}
-                                        {% else %}
-                                            <span class="text-muted small">Aucun gagnant</span>
-                                        {% endif %}
-                                    {% elif game.status == 'active' %}
-                                        <span class="badge bg-light text-muted fw-normal">En attente...</span>
-                                    {% else %}
-                                        <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if game.status == 'active' %}
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">
-                                            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i> Active
-                                        </span>
-                                    {% elif game.status == 'pending' %}
-                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill">
-                                            Pending
-                                        </span>
-                                    {% elif game.status == 'closed' %}
-                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2 rounded-pill">
-                                            Closed
-                                        </span>
-                                    {% else %}
-                                        <span class="badge bg-dark-subtle text-dark border border-dark-subtle px-3 py-2 rounded-pill">
-                                            {{ game.get_status_display|default:"Unknown" }}
-                                        </span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-end pe-4">
-                                    <div class="btn-group">
-                                        <a href="{% url 'edit_game' game.id %}" class="btn btn-sm btn-outline-primary" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ game.id }}" title="Delete">
-                                            <i class="fas fa-trash-alt"></i>
-                                        </button>
-                                    </div>
-
-                                    <!-- Delete Modal -->
-                                    <div class="modal fade" id="deleteModal{{ game.id }}" tabindex="-1" aria-hidden="true text-start">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header border-0 pb-0">
-                                                    <h5 class="modal-title fw-bold text-danger">Delete Game?</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body text-start text-wrap">
-                                                    <div class="text-center mb-3">
-                                                        <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                                                        <p>Are you sure you want to delete <strong>{{ game.name|default:"this game" }}</strong>?</p>
-                                                        <p class="small text-muted">This action cannot be undone and will verify cascading deletions.</p>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer border-0 pt-0 justify-content-center">
-                                                    <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
-                                                    <form action="{% url 'delete_game' game.id %}" method="post" class="d-inline">
-                                                        {% csrf_token %}
-                                                        <button type="submit" class="btn btn-danger px-4">Delete Permanently</button>
-                                                    </form>
-                                                </div>
-                                            </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-sm font-semibold text-slate-300">{{ game.company.name }}</div>
+                                <div class="text-[10px] text-slate-500 font-medium">{{
+                                    game.company.registration_number}}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="text-lg font-bold text-emerald-400 block">${{game.prize_amount|floatformat:0
+                                    }}</div>
+                                <div class="text-[10px] font-bold text-slate-500 uppercase">Mise: ${{
+                                    game.ticket_price}}</div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <div class="flex flex-col">
+                                    <span class="text-sm font-bold text-white">{{ game.total_tickets_sold }}
+                                        vendus</span>
+                                    <div
+                                        class="w-24 h-1.5 bg-slate-900 rounded-full mt-2 overflow-hidden border border-slate-700/50">
+                                        {% widthratio game.total_tickets_sold 110 100 as prog_val %}
+                                        <div class="bg-yellow-400 h-full rounded-full"
+                                            style="width: {% if prog_val > 100 %}100{% else %}{{ prog_val }}{% endif %}%">
                                         </div>
                                     </div>
-
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        {% else %}
-                        <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">
-                                <div class="py-5">
-                                    <i class="fas fa-folder-open fa-3x mb-3 text-secondary opacity-25"></i>
-                                    <h5 class="fw-bold text-secondary">No games found</h5>
-                                    <p class="mb-3">Get started by creating your first lottery game.</p>
-                                    <a href="{% url 'create_game' %}" class="btn btn-sm btn-gold">
-                                        <i class="fas fa-plus me-2"></i>Create Game
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                {% if game.status == 'active' %}
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 uppercase tracking-widest">
+                                    <span
+                                        class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-2 animate-pulse"></span>Actif
+                                </span>
+                                {% elif game.status == 'closed' %}
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold bg-red-500/10 text-red-400 border border-red-500/20 uppercase tracking-widest">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-400 mr-2"></span>Fermé
+                                </span>
+                                {% else %}
+                                <span
+                                    class="inline-flex items-center px-2 py-1 rounded-md text-[10px] font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 uppercase tracking-widest">
+                                    <span
+                                        class="w-1.5 h-1.5 rounded-full bg-yellow-400 mr-2 animate-bounce"></span>Attente
+                                </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-5 text-right">
+                                <div class="flex items-center justify-end gap-2">
+                                    {% if game.status == 'active' and game.total_tickets_sold > 0 %}
+                                    <a href="{% url 'perform_draw' game.id %}"
+                                        class="w-8 h-8 flex items-center justify-center bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500 hover:text-white transition-all border border-emerald-500/30 shadow-lg shadow-emerald-500/5"
+                                        title="Effectuer le tirage"
+                                        onclick="return confirm('Effectuer le tirage pour {{ game.name }} ?')">
+                                        <i class="fas fa-play text-xs"></i>
                                     </a>
+                                    {% endif %}
+                                    <a href="{% url 'edit_game' game.id %}"
+                                        class="w-8 h-8 flex items-center justify-center bg-blue-500/20 text-blue-400 rounded-lg hover:bg-blue-500 hover:text-white transition-all border border-blue-500/30"
+                                        title="Modifier">
+                                        <i class="fas fa-edit text-xs"></i>
+                                    </a>
+                                    <button onclick="deleteGame({{ game.id }}, '{{ game.name }}')"
+                                        class="w-8 h-8 flex items-center justify-center bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500 hover:text-white transition-all border border-red-500/30"
+                                        title="Supprimer">
+                                        <i class="fas fa-trash text-xs"></i>
+                                    </button>
                                 </div>
                             </td>
                         </tr>
-                        {% endif %}
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% else %}
+            <!-- Empty State -->
+            <div class="p-20 text-center">
+                <div
+                    class="w-24 h-24 bg-slate-900 border border-slate-700 shadow-inner rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-gamepad text-slate-600 text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Aucun jeu créé</h3>
+                <p class="text-slate-500 mb-8 max-w-xs mx-auto">Vous n'avez pas encore configuré de jeux de loterie pour
+                    Winning Ticket.</p>
+                <a href="{% url 'create_game' %}"
+                    class="inline-flex items-center px-8 py-3 bg-yellow-400 hover:bg-yellow-300 text-slate-900 font-bold rounded-xl transition-all shadow-lg shadow-yellow-400/20">
+                    <i class="fas fa-plus mr-2"></i>
+                    Créer le Premier Jeu
+                </a>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
 
-<style>
-    .text-primary-dark { color: #0A2463; }
-    .text-gold { color: #FFD700 !important; }
-    .bg-primary-dark { background-color: #0A2463; }
-    .bg-light-blue { background-color: #F0F4FF; }
-    .bg-gold { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); }
-    .table thead th { font-weight: 600; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px; }
-    .btn-outline-primary { color: #0A2463; border-color: #0A2463; }
-    .btn-outline-primary:hover { background-color: #0A2463; color: white; }
-</style>
+<!-- Delete Modal -->
+<div id="deleteModal"
+    class="fixed inset-0 bg-[#0f172a]/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+    <div
+        class="bg-slate-800 border border-slate-700 rounded-3xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden">
+        <!-- Glow top -->
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-red-500 to-transparent">
+        </div>
+
+        <div class="text-center">
+            <div
+                class="w-20 h-20 bg-red-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-red-500/20 shadow-lg shadow-red-500/10">
+                <i class="fas fa-trash-alt text-red-500 text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-3">Supprimer le Jeu ?</h3>
+            <p class="text-slate-400 mb-8 leading-relaxed">
+                Êtes-vous certain de vouloir supprimer <span class="text-white font-bold" id="gameNameToDelete"></span>
+                ? Cette action entraînera la perte définitive de toutes les données associées.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button onclick="closeDeleteModal()"
+                    class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition-all border border-slate-600 w-full sm:w-auto">
+                    Annuler
+                </button>
+                <form id="deleteForm" method="POST" class="w-full sm:w-auto">
+                    {% csrf_token %}
+                    <button type="submit"
+                        class="px-6 py-3 bg-red-500 hover:bg-red-400 text-white font-bold rounded-xl transition-all shadow-lg shadow-red-500/20 w-full">
+                        Confirmer la Suppression
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function deleteGame(gameId, gameName) {
+        document.getElementById('gameNameToDelete').textContent = gameName;
+        document.getElementById('deleteForm').action = `/manage-games/delete/${gameId}/`;
+        document.getElementById('deleteModal').classList.remove('hidden');
+        document.getElementById('deleteModal').classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+        document.getElementById('deleteModal').classList.add('hidden');
+        document.getElementById('deleteModal').classList.remove('flex');
+    }
+
+    document.getElementById('deleteModal').addEventListener('click', function (e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+</script>
 {% endblock %}

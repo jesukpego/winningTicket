@@ -1,155 +1,320 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+
 
 {% block title %}{{ title }} - Admin{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="card shadow-lg border-0 overflow-hidden">
-                <div class="card-header bg-primary-dark text-white p-4">
-                    <h4 class="mb-0 fw-bold"><i class="fas fa-gamepad me-2 text-gold"></i>{{ title }}</h4>
-                </div>
-                <div class="card-body p-4 p-md-5 bg-white">
-
-                    <!-- Messages -->
-                    {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm border-0"
-                        role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
-
-                    <!-- Erreurs globales du formulaire -->
-                    {% if form.non_field_errors %}
-                    <div class="alert alert-danger" role="alert">
-                        {{ form.non_field_errors }}
-                    </div>
-                    {% endif %}
-
-                    <form method="post">
-                        {% csrf_token %}
-
-                        <!-- Informations de Base -->
-                        <div class="mb-4">
-                            <label for="{{ form.name.id_for_label }}" class="form-label fw-bold text-primary-dark">{{
-                                form.name.label }}</label>
-                            {{ form.name }}
-                            {% if form.name.errors %}<div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="{{ form.description.id_for_label }}"
-                                class="form-label fw-bold text-primary-dark">{{ form.description.label }}</label>
-                            {{ form.description }}
-                            {% if form.description.errors %}<div class="text-danger small mt-1">{{
-                                form.description.errors.0 }}</div>{% endif %}
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="{{ form.company.id_for_label }}" class="form-label fw-bold text-primary-dark">
-                                <i class="fas fa-building me-2 text-gold"></i>{{ form.company.label }}
-                            </label>
-                            {{ form.company }}
-                            {% if form.company.errors %}<div class="text-danger small mt-1">{{ form.company.errors.0 }}
-                            </div>{% endif %}
-                            <div class="form-text text-muted">Sélectionnez l'entreprise qui organise ce jeu</div>
-                        </div>
-
-                        <!-- Configuration -->
-                        <div class="mb-4">
-                            <label for="{{ form.number_range.id_for_label }}"
-                                class="form-label fw-bold text-primary-dark">{{
-                                form.number_range.label }}</label>
-                            {{ form.number_range }}
-                            {% if form.number_range.errors %}<div class="text-danger small mt-1">{{
-                                form.number_range.errors.0 }}</div>{% endif %}
-                            <div class="form-text text-muted">Plage de numéros pour le jeu (ex: 50 signifie de 1 à 50)
-                            </div>
-                        </div>
-
-                        <!-- Tarification -->
-                        <div class="row">
-                            <div class="col-md-6 mb-4">
-                                <label for="{{ form.ticket_price.id_for_label }}"
-                                    class="form-label fw-bold text-primary-dark">{{
-                                    form.ticket_price.label }}</label>
-                                <div class="input-group">
-                                    <span
-                                        class="input-group-text bg-light text-primary-dark border-end-0 fw-bold">$</span>
-                                    {{ form.ticket_price }}
-                                </div>
-                                {% if form.ticket_price.errors %}<div class="text-danger small mt-1">{{
-                                    form.ticket_price.errors.0 }}</div>{% endif %}
-                            </div>
-                            <div class="col-md-6 mb-4">
-                                <label for="{{ form.prize_amount.id_for_label }}"
-                                    class="form-label fw-bold text-primary-dark">{{
-                                    form.prize_amount.label }}</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-light text-gold border-end-0 fw-bold">$</span>
-                                    {{ form.prize_amount }}
-                                </div>
-                                {% if form.prize_amount.errors %}<div class="text-danger small mt-1">{{
-                                    form.prize_amount.errors.0 }}</div>{% endif %}
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info border-0 bg-light-blue mt-4 shadow-sm" role="alert">
-                            <div class="d-flex">
-                                <i class="fas fa-info-circle me-3 mt-1 text-primary-dark"></i>
-                                <div>
-                                    <strong class="text-primary-dark">Note:</strong>
-                                    <span class="text-muted">Un enregistrement GameFinance sera automatiquement créé
-                                        pour ce jeu.</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
-                            <a href="{% url 'manage_games' %}" class="btn btn-outline-secondary px-4">
-                                <i class="fas fa-times me-2"></i>Annuler
-                            </a>
-                            <button type="submit" class="btn btn-gold px-5 btn-lg shadow-sm">
-                                <i class="fas fa-save me-2"></i>Enregistrer le Jeu
-                            </button>
-                        </div>
-                    </form>
-                </div>
+<!-- Header -->
+<section class="bg-gradient-to-r from-red-600 to-red-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                    <i class="fas fa-plus-circle mr-3"></i>
+                    {{ title }}
+                </h1>
+                <p class="text-red-100">Configurez les paramètres de votre jeu de loterie</p>
+            </div>
+            <div class="flex space-x-3">
+                <a href="{% url 'manage_games' %}" class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour
+                </a>
             </div>
         </div>
     </div>
+</section>
+
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100">
+        <div class="p-8">
+            <form method="POST" id="gameForm">
+                {% csrf_token %}
+                
+                <!-- Basic Information -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-info-circle text-primary-500 mr-3"></i>
+                        Informations de Base
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Game Name -->
+                        <div class="md:col-span-2">
+                            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-gamepad text-gray-400 mr-2"></i>
+                                {{ form.name.label }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.name }}
+                            {% if form.name.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.name.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Company -->
+                        <div>
+                            <label for="{{ form.company.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-building text-gray-400 mr-2"></i>
+                                {{ form.company.label }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.company }}
+                            {% if form.company.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.company.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Number Range -->
+                        <div>
+                            <label for="{{ form.number_range.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-hashtag text-gray-400 mr-2"></i>
+                                {{ form.number_range.label }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.number_range }}
+                            <p class="mt-1 text-sm text-gray-500">Les joueurs choisiront des numéros de 1 à cette valeur</p>
+                            {% if form.number_range.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.number_range.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Description -->
+                        <div class="md:col-span-2">
+                            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-align-left text-gray-400 mr-2"></i>
+                                {{ form.description.label }}
+                            </label>
+                            {{ form.description }}
+                            <p class="mt-1 text-sm text-gray-500">Description qui apparaîtra sur la page du jeu</p>
+                            {% if form.description.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.description.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pricing & Rewards -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-dollar-sign text-green-500 mr-3"></i>
+                        Prix & Récompenses
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Ticket Price -->
+                        <div>
+                            <label for="{{ form.ticket_price.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-ticket-alt text-gray-400 mr-2"></i>
+                                {{ form.ticket_price.label }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                {{ form.ticket_price }}
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">Prix par numéro sélectionné</p>
+                            {% if form.ticket_price.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.ticket_price.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Prize Amount -->
+                        <div>
+                            <label for="{{ form.prize_amount.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-trophy text-gray-400 mr-2"></i>
+                                {{ form.prize_amount.label }}
+                                <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+                                {{ form.prize_amount }}
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">Montant total du jackpot</p>
+                            {% if form.prize_amount.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.prize_amount.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Revenue Calculation Preview -->
+                    <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-4">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-3">
+                            <i class="fas fa-calculator text-green-600 mr-2"></i>
+                            Estimation des Revenus (100 tickets vendus)
+                        </h3>
+                        <div class="grid grid-cols-3 gap-4 text-sm">
+                            <div>
+                                <span class="text-gray-600">Ventes totales:</span>
+                                <div id="totalSales" class="font-bold text-green-600">$0</div>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Frais plateforme (15%):</span>
+                                <div id="platformFee" class="font-bold text-blue-600">$0</div>
+                            </div>
+                            <div>
+                                <span class="text-gray-600">Bénéfice organisateur:</span>
+                                <div id="organizerProfit" class="font-bold text-primary-600">$0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Schedule -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-calendar-alt text-blue-500 mr-3"></i>
+                        Planification
+                    </h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Next Draw -->
+                        <div>
+                            <label for="{{ form.next_draw.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-clock text-gray-400 mr-2"></i>
+                                {{ form.next_draw.label }}
+                            </label>
+                            {{ form.next_draw }}
+                            <p class="mt-1 text-sm text-gray-500">Date et heure du premier tirage</p>
+                            {% if form.next_draw.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ form.next_draw.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Status Preview -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-info-circle text-gray-400 mr-2"></i>
+                                Statut du Jeu
+                            </label>
+                            <div class="p-3 bg-green-50 border border-green-200 rounded-lg">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                                    <i class="fas fa-play mr-1"></i>
+                                    Sera activé automatiquement
+                                </span>
+                                <p class="text-sm text-green-700 mt-1">
+                                    Le jeu sera visible par les joueurs dès sa création
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-6 border-t border-gray-200">
+                    <div class="mb-4 sm:mb-0">
+                        <p class="text-sm text-gray-500">
+                            <i class="fas fa-shield-alt text-green-500 mr-1"></i>
+                            Un enregistrement GameFinance sera automatiquement créé
+                        </p>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <a href="{% url 'manage_games' %}" 
+                           class="px-6 py-3 border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors">
+                            Annuler
+                        </a>
+                        <button type="submit" 
+                                class="px-6 py-3 btn-primary text-white rounded-xl transition-all duration-300 hover:shadow-lg transform hover:scale-105">
+                            <i class="fas fa-save mr-2"></i>
+                            {% if game %}Mettre à jour{% else %}Créer le Jeu{% endif %}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+{% endblock %}
 
-<style>
-    .text-primary-dark {
-        color: #0A2463;
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ticketPriceField = document.getElementById('id_ticket_price');
+    const prizeAmountField = document.getElementById('id_prize_amount');
+    
+    function updateRevenueCalculation() {
+        const ticketPrice = parseFloat(ticketPriceField.value) || 0;
+        const prizeAmount = parseFloat(prizeAmountField.value) || 0;
+        const estimatedTickets = 100; // Fixed for estimation
+        
+        const totalSales = ticketPrice * estimatedTickets;
+        const platformFee = totalSales * 0.15; // 15% platform fee
+        const remainingAmount = totalSales - platformFee;
+        const organizerProfit = Math.max(0, remainingAmount - prizeAmount);
+        
+        document.getElementById('totalSales').textContent = `$${totalSales.toFixed(2)}`;
+        document.getElementById('platformFee').textContent = `$${platformFee.toFixed(2)}`;
+        document.getElementById('organizerProfit').textContent = `$${organizerProfit.toFixed(2)}`;
+        
+        // Warning if prize amount is too high
+        if (organizerProfit < 0) {
+            document.getElementById('organizerProfit').innerHTML = `<span class="text-red-600">-$${Math.abs(organizerProfit).toFixed(2)} (Déficit)</span>`;
+        }
     }
-
-    .text-gold {
-        color: #FFD700 !important;
-    }
-
-    .bg-primary-dark {
-        background-color: #0A2463;
-    }
-
-    .bg-light-blue {
-        background-color: #F0F4FF;
-    }
-
-    .form-control:focus,
-    .form-select:focus {
-        border-color: #FFD700;
-        box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25);
-    }
-
-    .input-group-text {
-        border-color: #ced4da;
-    }
-</style>
+    
+    // Update calculations on input change
+    ticketPriceField.addEventListener('input', updateRevenueCalculation);
+    prizeAmountField.addEventListener('input', updateRevenueCalculation);
+    
+    // Initial calculation
+    updateRevenueCalculation();
+    
+    // Form validation
+    document.getElementById('gameForm').addEventListener('submit', function(e) {
+        const requiredFields = ['id_name', 'id_company', 'id_ticket_price', 'id_prize_amount', 'id_number_range'];
+        let isValid = true;
+        
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field.value.trim()) {
+                field.classList.add('border-red-500');
+                isValid = false;
+            } else {
+                field.classList.remove('border-red-500');
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            alert('Veuillez remplir tous les champs obligatoires.');
+            return;
+        }
+        
+        // Validate number range
+        const numberRange = parseInt(document.getElementById('id_number_range').value);
+        if (numberRange < 10 || numberRange > 1000) {
+            e.preventDefault();
+            alert('La plage de numéros doit être entre 10 et 1000.');
+            return;
+        }
+        
+        // Validate pricing
+        const ticketPrice = parseFloat(document.getElementById('id_ticket_price').value);
+        const prizeAmount = parseFloat(document.getElementById('id_prize_amount').value);
+        
+        if (ticketPrice <= 0) {
+            e.preventDefault();
+            alert('Le prix du ticket doit être supérieur à 0.');
+            return;
+        }
+        
+        if (prizeAmount <= 0) {
+            e.preventDefault();
+            alert('Le montant du prix doit être supérieur à 0.');
+            return;
+        }
+        
+        // Confirm creation
+        const confirmMessage = `Créer le jeu avec les paramètres suivants ?\n\n` +
+                             `• Nom: ${document.getElementById('id_name').value}\n` +
+                             `• Prix du ticket: $${ticketPrice}\n` +
+                             `• Jackpot: $${prizeAmount}\n` +
+                             `• Numéros: 1-${numberRange}`;
+        
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
 {% endblock %}

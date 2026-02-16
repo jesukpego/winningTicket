@@ -1,342 +1,275 @@
-{% extends 'base.html' %}
+{% extends 'base/base.html' %}
+{% load i18n %}
 
-{% block title %}Register - WINNING TICKET{% endblock %}
+{% block title %}{% trans "Créer un Compte - Winning Ticket" %}{% endblock %}
+
+{% block main_class %}min-h-screen bg-slate-950{% endblock %}
 
 {% block content %}
-<div class="login-page-container d-flex align-items-center justify-content-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 col-xl-9">
-                <div class="card login-card shadow-lg border-0 overflow-hidden">
-                    <div class="row g-0">
-                        <!-- Left Side - Brand Panel -->
-                        <div class="col-md-6 d-none d-md-block brand-panel position-relative">
-                            <div
-                                class="brand-content h-100 p-5 d-flex flex-column justify-content-between position-relative z-2">
-                                <div>
-                                    <div class="brand-logo mb-4">
-                                        <i class="fas fa-ticket-alt fa-3x text-white"></i>
-                                    </div>
-                                    <h2 class="text-white fw-bold mb-3 display-6">Join the Winners</h2>
-                                    <p class="text-white-50 lead fs-6">Create your account today and start your journey
-                                        to life-changing wins.</p>
-                                </div>
+<div class="relative min-h-screen flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <!-- background glow effects -->
+    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-0 pointer-events-none">
+        <div class="absolute top-[-10%] right-[-10%] w-[600px] h-[600px] bg-yellow-400/5 rounded-full blur-[140px]">
+        </div>
+        <div class="absolute bottom-[10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/5 rounded-full blur-[120px]">
+        </div>
+    </div>
 
-                                <div class="brand-footer">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="icon-box rounded-circle bg-white-10 p-2 me-3">
-                                            <i class="fas fa-gift text-white"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-white mb-0 fw-medium">Welcome Bonus</p>
-                                            <small class="text-white-50">Get started with free plays</small>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-items-center">
-                                        <div class="icon-box rounded-circle bg-white-10 p-2 me-3">
-                                            <i class="fas fa-users text-white"></i>
-                                        </div>
-                                        <div>
-                                            <p class="text-white mb-0 fw-medium">Community</p>
-                                            <small class="text-white-50">Join thousands of daily winners</small>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="max-w-xl w-full space-y-10 relative z-10 animate-fade-in">
+        <!-- Header -->
+        <div class="text-center">
+            <div
+                class="w-24 h-24 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl shadow-yellow-400/20 -rotate-3">
+                <i class="fas fa-user-plus text-slate-950 text-4xl"></i>
+            </div>
+            <h2 class="text-4xl font-black text-white mb-2 tracking-tighter uppercase">{% trans "Rejoignez l'élite" %}
+            </h2>
+            <p class="text-slate-400 font-medium">{% trans "Créez votre compte en quelques secondes." %}</p>
+        </div>
 
-                            <!-- Background Pattern/Overlay -->
-                            <div class="pattern-overlay"></div>
-                        </div>
+        <!-- Registration Form -->
+        <div class="bg-slate-900/40 backdrop-blur-xl rounded-[40px] shadow-2xl p-10 border border-slate-800/50">
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
 
-                        <!-- Right Side - Register Form -->
-                        <div class="col-md-6 bg-white">
-                            <div
-                                class="login-form-container p-4 p-lg-5 h-100 d-flex flex-column justify-content-center">
-                                <div class="mb-4">
-                                    <a href="{% url 'home' %}"
-                                        class="text-decoration-none text-muted small hover-primary mb-3 d-inline-block">
-                                        <i class="fas fa-arrow-left me-2"></i>Back to Home
-                                    </a>
-                                    <h3 class="fw-bold text-dark mb-1">Create Account</h3>
-                                    <p class="text-muted">Fill in your details to get started</p>
-                                </div>
-
-                                <!-- Messages -->
-                                {% if messages %}
-                                <div class="mb-3">
-                                    {% for message in messages %}
-                                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 small shadow-sm"
-                                        role="alert">
-                                        <i
-                                            class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %} me-2"></i>
-                                        {{ message }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                            aria-label="Close"></button>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-
-                                <form method="post" action="{% url 'register' %}" class="login-form">
-                                    {% csrf_token %}
-
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="id_first_name"
-                                                    name="first_name" placeholder="First Name" required>
-                                                <label for="id_first_name">First Name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="id_last_name"
-                                                    name="last_name" placeholder="Last Name" required>
-                                                <label for="id_last_name">Last Name</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" id="id_username" name="username"
-                                            placeholder="Username" required>
-                                        <label for="id_username">Username</label>
-                                    </div>
-
-                                    <div class="form-floating mb-3">
-                                        <input type="email" class="form-control" id="id_email" name="email"
-                                            placeholder="name@example.com" required>
-                                        <label for="id_email">Email Address</label>
-                                    </div>
-
-                                    <div class="form-floating mb-3 position-relative">
-                                        <input type="password" class="form-control" id="id_password1" name="password1"
-                                            placeholder="Password" required>
-                                        <label for="id_password1">Password</label>
-                                        <button
-                                            class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none me-2 toggle-password"
-                                            type="button" data-target="id_password1">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="form-floating mb-3 position-relative">
-                                        <input type="password" class="form-control" id="id_password2" name="password2"
-                                            placeholder="Confirm Password" required>
-                                        <label for="id_password2">Confirm Password</label>
-                                        <button
-                                            class="btn btn-link text-muted position-absolute top-50 end-0 translate-middle-y text-decoration-none me-2 toggle-password"
-                                            type="button" data-target="id_password2">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-
-                                    <div class="form-check mb-4">
-                                        <input class="form-check-input" type="checkbox" id="terms" required>
-                                        <label class="form-check-label text-muted small" for="terms">
-                                            I agree to the <a href="#" class="text-primary text-decoration-none">Terms
-                                                of Service</a> and <a href="#"
-                                                class="text-primary text-decoration-none">Privacy Policy</a>
-                                        </label>
-                                    </div>
-
-                                    <div class="d-grid mb-4">
-                                        <button type="submit"
-                                            class="btn btn-primary btn-lg fw-semibold py-3 shadow-sm btn-login">
-                                            Create Account
-                                        </button>
-                                    </div>
-                                </form>
-
-                                <div class="text-center mt-2">
-                                    <p class="text-muted small mb-0">
-                                        Already have an account?
-                                        <a href="{% url 'login' %}"
-                                            class="text-primary fw-semibold text-decoration-none">Sign In</a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                <!-- First Name & Last Name -->
+                <div class="grid grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label for="first_name"
+                            class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{% trans "Prénom" %}</label>
+                        <input id="first_name" name="first_name" type="text" required
+                            value="{{ values.first_name|default:'' }}"
+                            class="w-full px-5 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-white placeholder-slate-700 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/20 transition-all text-sm">
+                    </div>
+                    <div class="space-y-2">
+                        <label for="last_name"
+                            class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{% trans "Nom" %}</label>
+                        <input id="last_name" name="last_name" type="text" required
+                            value="{{ values.last_name|default:'' }}"
+                            class="w-full px-5 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-white placeholder-slate-700 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/20 transition-all text-sm">
                     </div>
                 </div>
-            </div>
+
+                <!-- Username -->
+                <div class="space-y-2">
+                    <label for="username"
+                        class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{% trans "Nom d'utilisateur" %}</label>
+                    <div class="relative group">
+                        <i class="fas fa-at absolute left-5 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                        <input id="username" name="username" type="text" required
+                            value="{{ values.username|default:'' }}"
+                            class="w-full pl-12 pr-5 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-white placeholder-slate-700 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/20 transition-all text-sm"
+                            placeholder="lucky_player">
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="space-y-2">
+                    <label for="email" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{% trans "Adresse e-mail" %}</label>
+                    <div class="relative group">
+                        <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                        <input id="email" name="email" type="email" required value="{{ values.email|default:'' }}"
+                            class="w-full pl-12 pr-5 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-white placeholder-slate-700 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/20 transition-all text-sm"
+                            placeholder="player@example.com">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="space-y-2">
+                    <label for="password1"
+                        class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{% trans "Mot de passe" %}</label>
+                    <div class="relative group">
+                        <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                        <input id="password1" name="password1" type="password" required
+                            class="w-full pl-12 pr-12 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-white placeholder-slate-700 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/20 transition-all text-sm"
+                            placeholder="••••••••">
+                        <button type="button" onclick="togglePassword('password1', 'toggle1')"
+                            class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors">
+                            <i id="toggle1" class="fas fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                    <!-- Strength -->
+                    <div class="mt-3 px-1">
+                        <div id="passwordStrength"
+                            class="h-1 bg-slate-950 rounded-full overflow-hidden border border-slate-800">
+                            <div id="passwordStrengthBar" class="h-full transition-all duration-500 w-0"></div>
+                        </div>
+                        <p id="passwordStrengthText"
+                            class="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em] mt-2">{% trans "Sécurité : Inconnue" %}</p>
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="space-y-2">
+                    <label for="password2"
+                        class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">{% trans "Confirmer" %}</label>
+                    <div class="relative group">
+                        <i class="fas fa-lock absolute left-5 top-1/2 -translate-y-1/2 text-slate-600"></i>
+                        <input id="password2" name="password2" type="password" required
+                            class="w-full pl-12 pr-12 py-4 bg-slate-950 border border-slate-800 rounded-2xl text-white placeholder-slate-700 focus:outline-none focus:border-yellow-400/50 focus:ring-1 focus:ring-yellow-400/20 transition-all text-sm"
+                            placeholder="••••••••">
+                        <button type="button" onclick="togglePassword('password2', 'toggle2')"
+                            class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-600 hover:text-white transition-colors">
+                            <i id="toggle2" class="fas fa-eye text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="space-y-4 pt-2">
+                    <div class="flex items-start">
+                        <input id="terms" name="terms" type="checkbox" required
+                            class="h-4 w-4 bg-slate-950 border-slate-800 rounded text-yellow-400 focus:ring-yellow-400/20 mt-1">
+                        <label for="terms"
+                            class="ml-4 block text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-relaxed">
+                            {% trans "J'accepte les" %} <a href="#" class="text-yellow-500 hover:underline">{% trans "Conditions" %}</a> {% trans "et la" %} <a href="#"
+                                class="text-yellow-500 hover:underline">{% trans "Politique" %}</a>
+                        </label>
+                    </div>
+                    <div class="flex items-start">
+                        <input id="marketing" name="marketing" type="checkbox"
+                            class="h-4 w-4 bg-slate-950 border-slate-800 rounded text-yellow-500 focus:ring-yellow-400/20 mt-1">
+                        <label for="marketing"
+                            class="ml-4 block text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            {% trans "Recevoir les alertes de nouveaux jackpots" %}
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submitBtn" disabled
+                    class="w-full group relative inline-flex items-center justify-center py-5 bg-white text-slate-950 disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed hover:bg-yellow-400 transition-all duration-300 rounded-2xl font-black text-xs uppercase tracking-[0.2em] overflow-hidden shadow-xl shadow-white/5">
+                    <span class="relative z-10 flex items-center gap-2">
+                        <i class="fas fa-user-plus text-[10px]"></i>
+                        {% trans "CRÉER MON COMPTE" %}
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Bonus Banner -->
+        <div
+            class="relative bg-gradient-to-br from-yellow-400 to-orange-500 rounded-3xl p-6 text-center shadow-xl shadow-yellow-400/10 overflow-hidden group">
+            <div class="absolute inset-0 bg-slate-950/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <p class="text-[10px] font-black text-slate-950/60 uppercase tracking-widest mb-1">{% trans "Offre de lancement" %}</p>
+            <p class="text-slate-950 font-black text-sm uppercase tracking-tight">
+                {% trans "Inscrivez-vous aujourd'hui et recevez" %} <span
+                    class="text-white bg-slate-950 px-2 py-0.5 rounded ml-1">$1,000</span> {% trans "de bonus !" %}
+            </p>
+        </div>
+
+        <!-- Login Link -->
+        <div class="text-center pb-10">
+            <p class="text-slate-500 font-medium">
+                {% trans "Déjà un compte ?" %}
+                <a href="{% url 'login' %}"
+                    class="text-yellow-500 hover:text-yellow-400 font-black uppercase tracking-widest text-xs ml-2 transition-colors">
+                    {% trans "Se connecter ici" %}
+                </a>
+            </p>
         </div>
     </div>
 </div>
 {% endblock %}
 
-{% block extra_css %}
-<style>
-    /* 
-     * Standalone Page Overrides 
-     */
-    nav.navbar,
-    footer.footer,
-    .navbar-spacer {
-        display: none !important;
-    }
-
-    body {
-        background-color: #F3F4F6;
-        min-height: 100vh;
-    }
-
-    main {
-        padding-top: 0 !important;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .login-page-container {
-        flex: 1;
-        min-height: 100vh;
-        padding: 2rem 0;
-    }
-
-    .login-card {
-        border-radius: 20px;
-        background: #fff;
-    }
-
-    /* Brand Panel */
-    .brand-panel {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-        overflow: hidden;
-    }
-
-    .brand-footer .bg-white-10 {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    .pattern-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-        background-size: 30px 30px;
-        opacity: 0.6;
-        z-index: 1;
-    }
-
-    /* Form Styles */
-    .form-floating>.form-control {
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
-        height: calc(3.5rem + 2px);
-    }
-
-    .form-floating>.form-control:focus {
-        border-color: #0f172a;
-        box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.1);
-    }
-
-    .form-floating>label {
-        color: #94a3b8;
-    }
-
-    .btn-login {
-        background-color: #0f172a;
-        border-color: #0f172a;
-        border-radius: 10px;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-    }
-
-    .btn-login:hover {
-        background-color: #1e293b;
-        border-color: #1e293b;
-        transform: translateY(-1px);
-    }
-
-    .hover-primary:hover {
-        color: #0f172a !important;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .login-page-container {
-            padding: 1rem;
-            align-items: flex-start;
-            padding-top: 2rem;
-        }
-
-        .login-card {
-            border-radius: 16px;
-        }
-    }
-
-    /* Loading state */
-    .btn-loading {
-        position: relative;
-        color: transparent !important;
-        pointer-events: none;
-    }
-
-    .btn-loading::after {
-        content: '';
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        top: 50%;
-        left: 50%;
-        margin-left: -10px;
-        margin-top: -10px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        border-top-color: #fff;
-        animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-</style>
-{% endblock %}
-
 {% block extra_js %}
 <script>
-    $(document).ready(function () {
-        // Password toggle (Global for both fields)
-        $('.toggle-password').click(function () {
-            const targetId = $(this).data('target');
-            const input = $('#' + targetId);
-            const icon = $(this).find('i');
+    function togglePassword(fieldId, toggleId) {
+        const field = document.getElementById(fieldId);
+        const toggle = document.getElementById(toggleId);
 
-            if (input.attr('type') === 'password') {
-                input.attr('type', 'text');
-                icon.removeClass('fa-eye').addClass('fa-eye-slash');
-            } else {
-                input.attr('type', 'password');
-                icon.removeClass('fa-eye-slash').addClass('fa-eye');
-            }
-        });
+        if (field.type === 'password') {
+            field.type = 'text';
+            toggle.classList.remove('fa-eye');
+            toggle.classList.add('fa-eye-slash');
+        } else {
+            field.type = 'password';
+            toggle.classList.remove('fa-eye-slash');
+            toggle.classList.add('fa-eye');
+        }
+    }
 
-        // Form submission loading state
-        $('.login-form').on('submit', function () {
-            const btn = $(this).find('button[type="submit"]');
-            btn.addClass('btn-loading');
-        });
+    // Password strength checker
+    document.getElementById('password1').addEventListener('input', function () {
+        const password = this.value;
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        const strengthText = document.getElementById('passwordStrengthText');
 
-        // Match password validation visual hint
-        $('#id_password2').on('keyup', function () {
-            const pass1 = $('#id_password1').val();
-            const pass2 = $(this).val();
+        let strength = 0;
+        let strengthLabel = '';
+        let color = '';
 
-            if (pass1 && pass2) {
-                if (pass1 === pass2) {
-                    $(this).removeClass('is-invalid').addClass('is-valid');
-                } else {
-                    $(this).removeClass('is-valid').addClass('is-invalid');
-                }
-            } else {
-                $(this).removeClass('is-valid is-invalid');
-            }
-        });
+        if (password.length >= 8) strength += 1;
+        if (/[a-z]/.test(password)) strength += 1;
+        if (/[A-Z]/.test(password)) strength += 1;
+        if (/[0-9]/.test(password)) strength += 1;
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+        switch (strength) {
+            case 0:
+            case 1: strengthLabel = 'Faible'; color = 'bg-rose-500'; break;
+            case 2: strengthLabel = 'Moyen'; color = 'bg-orange-500'; break;
+            case 3: strengthLabel = 'Correct'; color = 'bg-yellow-500'; break;
+            case 4: strengthLabel = 'Fort'; color = 'bg-blue-500'; break;
+            case 5: strengthLabel = 'Excellent'; color = 'bg-emerald-500'; break;
+        }
+
+        if (password.length === 0) {
+            strengthLabel = 'Sécurité : Inconnue';
+            color = 'bg-slate-800';
+            strength = 0;
+        } else {
+            strengthLabel = 'Sécurité : ' + strengthLabel;
+        }
+
+        strengthBar.className = `h-full transition-all duration-500 ${color}`;
+        strengthBar.style.width = `${(strength / 5) * 100}%`;
+        strengthText.textContent = strengthLabel;
+
+        checkFormValidity();
     });
+
+    document.getElementById('password2').addEventListener('input', checkFormValidity);
+    document.getElementById('terms').addEventListener('change', checkFormValidity);
+
+    function checkFormValidity() {
+        const password1 = document.getElementById('password1').value;
+        const password2 = document.getElementById('password2').value;
+        const terms = document.getElementById('terms').checked;
+        const submitBtn = document.getElementById('submitBtn');
+
+        const isValid = password1.length >= 8 && password1 === password2 && terms;
+        submitBtn.disabled = !isValid;
+
+        const p2field = document.getElementById('password2');
+        if (password2.length > 0) {
+            if (password1 !== password2) {
+                p2field.classList.add('border-rose-500');
+            } else {
+                p2field.classList.remove('border-rose-500');
+            }
+        }
+    }
+
+    // Initial check
+    checkFormValidity();
 </script>
+
+<style>
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+</style>
 {% endblock %}

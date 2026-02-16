@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.utils.translation import gettext_lazy as _
 import dj_database_url
 
 # ==================== BASE ====================
@@ -12,15 +13,18 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # ==================== HOSTS ====================
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    ".railway.app",
+ALLOWED_HOSTS = ["*", "127.0.0.1", "localhost", "abcd-8000.use.devtunnels.ms", ".use.devtunnels.ms","merle-pruriginous-positively.ngrok-free.dev","3mvm0nfm-8000.use.devtunnels.ms"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.use.devtunnels.ms",
+    "https://3mvm0nfm-8000.use.devtunnels.ms",
+    "https://abcd-8000.use.devtunnels.ms",
+    "https://*.railway.app",
+    "https://merle-pruriginous-positively.ngrok-free.dev",  # ton lien ngrok
+    "https://*.ngrok-free.dev"  # optionnel pour tous les sous-domaines ngrok
 ]
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.railway.app",
-]
+
+
 
 # ==================== DATABASE ====================
 # Detect Railway environment safely
@@ -75,6 +79,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",  # i18n support
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -91,9 +96,12 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.i18n',
+                'principal.context_processors.navigation_context',
             ],
         },
     },
@@ -102,7 +110,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # ==================== STATIC FILES ====================
-STATIC_URL = "/static/"
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -111,10 +122,21 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # ==================== I18N ====================
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "fr-fr"  # Default language: French
 TIME_ZONE = "UTC"
 USE_I18N = True
+USE_L10N = True
 USE_TZ = True
+
+# Supported languages
+LANGUAGES = [
+    ('fr', _('French')),
+    ('en', _('English')),
+]
+# Locale paths for translation files
+LOCALE_PATHS = [
+    BASE_DIR / 'locale/',
+]
 
 # ==================== SECURITY (PROD ONLY) ====================
 if not DEBUG:

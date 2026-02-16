@@ -1,0 +1,814 @@
+{% load custom_filters %}
+{% load i18n %}
+
+<!-- HEADER -->
+<header
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/50"
+    id="main-header">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-20">
+
+            <!-- Logo -->
+            <div class="flex items-center">
+                <a href="{% url 'home' %}" class="flex items-center gap-3 group">
+                    <div class="relative">
+                        <!-- Glow Effect -->
+                        <div
+                            class="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-xl opacity-0 group-hover:opacity-50 blur transition-opacity duration-300">
+                        </div>
+                        <!-- Logo Icon -->
+                        <div
+                            class="relative w-11 h-11 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-yellow-400/20 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-6 h-6 text-slate-950" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <span
+                        class="hidden md:block lg:block text-xl font-black text-white tracking-tight group-hover:text-yellow-400 transition-colors duration-300">
+                        Winning Ticket
+                    </span>
+                </a>
+            </div>
+
+            <!-- Navigation Desktop -->
+            <nav class="hidden lg:flex items-center space-x-1">
+                <!-- Accueil Dropdown -->
+                <div class="relative group">
+                    <a href="{% url 'home' %}" class="relative px-4 py-2 text-sm font-bold rounded-lg transition-all duration-300 flex items-center gap-1
+                        {% if request.resolver_match.url_name == 'home' %}
+                            text-yellow-400 bg-yellow-400/10
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50
+                        {% endif %}">
+                        <span class="relative z-10">{% trans "Accueil" %}</span>
+                        <i
+                            class="fas fa-chevron-down text-[10px] opacity-50 group-hover:rotate-180 transition-transform"></i>
+                    </a>
+
+                    <!-- Mega Menu -->
+                    <div
+                        class="absolute top-full left-0 mt-2 w-[400px] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-4 transform origin-top scale-95 group-hover:scale-100 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                        <div class="grid gap-2">
+                            <a href="{% url 'home' %}"
+                                class="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800/50 transition-colors group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-yellow-400/10 flex items-center justify-center text-yellow-400 group-hover/item:scale-110 transition-transform">
+                                    <i class="fas fa-home"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white mb-1">{% trans "Haut de page" %}</p>
+                                    <p class="text-xs text-slate-500 font-medium">{% trans "Retourner à la section
+                                        principale." %}</p>
+                                </div>
+                            </a>
+                            <a href="{% url 'home' %}#how-it-works"
+                                class="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800/50 transition-colors group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-orange-400/10 flex items-center justify-center text-orange-400 group-hover/item:scale-110 transition-transform">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white mb-1">{% trans "Comment ça marche" %}</p>
+                                    <p class="text-xs text-slate-500 font-medium">{% trans "Découvrez le processus en 3
+                                        étapes." %}</p>
+                                </div>
+                            </a>
+                            <a href="{% url 'home' %}#featured-games"
+                                class="flex items-start gap-4 p-3 rounded-xl hover:bg-slate-800/50 transition-colors group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-blue-400/10 flex items-center justify-center text-blue-400 group-hover/item:scale-110 transition-transform">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white mb-1">{% trans "Jeux à la une" %}</p>
+                                    <p class="text-xs text-slate-500 font-medium">{% trans "Les jackpots les plus
+                                        importants." %}</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Jeux Dropdown -->
+                <div class="relative group">
+                    <a href="{% url 'games' %}" class="relative px-4 py-2 text-sm font-bold rounded-lg transition-all duration-300 flex items-center gap-1
+                        {% if request.resolver_match.url_name == 'games' %}
+                            text-yellow-400 bg-yellow-400/10
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50
+                        {% endif %}">
+                        <span class="relative z-10">{% trans "Jeux" %}</span>
+                        <i
+                            class="fas fa-chevron-down text-[10px] opacity-50 group-hover:rotate-180 transition-transform"></i>
+                    </a>
+
+                    <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[500px] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-6 transform origin-top scale-95 group-hover:scale-100 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2">{% trans
+                                    "Catégories" %}</p>
+                                <div class="grid gap-2">
+                                    <a href="{% url 'games' %}"
+                                        class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800/50 text-slate-300 hover:text-white transition-all text-sm font-bold">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-xs">
+                                            <i class="fas fa-th-large"></i>
+                                        </div>
+                                        {% trans "Tous les jeux" %}
+                                    </a>
+                                    <a href="{% url 'games' %}"
+                                        class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800/50 text-slate-300 hover:text-white transition-all text-sm font-bold">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-orange-500/10 text-orange-400 flex items-center justify-center text-xs">
+                                            <i class="fas fa-fire"></i>
+                                        </div>
+                                        {% trans "Populaires" %}
+                                    </a>
+                                    <a href="{% url 'games' %}"
+                                        class="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-800/50 text-slate-300 hover:text-white transition-all text-sm font-bold">
+                                        <div
+                                            class="w-8 h-8 rounded-lg bg-green-500/10 text-green-400 flex items-center justify-center text-xs">
+                                            <i class="fas fa-calendar-alt"></i>
+                                        </div>
+                                        {% trans "Hebdomadaires" %}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest pl-2">{% trans
+                                    "Par Entreprise" %}</p>
+                                <div class="grid gap-2">
+                                    {% if companies %}
+                                    {% for company in companies|slice:":4" %}
+                                    <a href="{% url 'games' %}?company={{ company.id }}"
+                                        class="p-3 rounded-xl bg-slate-800/30 border border-slate-800 hover:border-yellow-400/30 transition-all">
+                                        <p class="text-xs font-bold text-white">{{ company.name }}</p>
+                                        <p class="text-[10px] text-slate-500 font-medium">{{ company.game_set.count }}
+                                            {% trans "jeux" %}</p>
+                                    </a>
+                                    {% endfor %}
+                                    {% else %}
+                                    <div class="p-3 rounded-xl bg-slate-800/30 border border-slate-800">
+                                        <p class="text-xs font-bold text-slate-500">{% trans "Loterie Officielle" %}</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Résultats Dropdown -->
+                <div class="relative group">
+                    <a href="{% url 'results' %}" class="relative px-4 py-2 text-sm font-bold rounded-lg transition-all duration-300 flex items-center gap-1
+                        {% if request.resolver_match.url_name == 'results' %}
+                            text-yellow-400 bg-yellow-400/10
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50
+                        {% endif %}">
+                        <span class="relative z-10">{% trans "Résultats" %}</span>
+                        <i
+                            class="fas fa-chevron-down text-[10px] opacity-50 group-hover:rotate-180 transition-transform"></i>
+                    </a>
+
+                    <div
+                        class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[350px] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-4 transform origin-top scale-95 group-hover:scale-100 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                        <div class="grid gap-2">
+                            <a href="{% url 'results' %}"
+                                class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-800/50 group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-white uppercase tracking-tight">{% trans "Tirages
+                                        Confirmés" %}</p>
+                                    <p class="text-[10px] text-slate-500 font-black">{% trans "OFFICIEL" %}</p>
+                                </div>
+                            </a>
+                            <a href="{% url 'results' %}?filter=recent"
+                                class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-800/50 group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-white uppercase tracking-tight">{% trans "Dernières
+                                        24h" %}</p>
+                                    <p class="text-[10px] text-slate-500 font-black">{% trans "ACTUALITÉ" %}</p>
+                                </div>
+                            </a>
+                            <a href="{% url 'results' %}?filter=jackpot"
+                                class="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-800/50 group/item">
+                                <div
+                                    class="w-10 h-10 rounded-lg bg-yellow-400/10 flex items-center justify-center text-yellow-400">
+                                    <i class="fas fa-gem"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-bold text-white uppercase tracking-tight">{% trans "Gros
+                                        Jackpots" %}</p>
+                                    <p class="text-[10px] text-slate-500 font-black">{% trans "PREMIUM" %}</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gagnants Dropdown -->
+                <div class="relative group">
+                    <a href="{% url 'winners' %}" class="relative px-4 py-2 text-sm font-bold rounded-lg transition-all duration-300 flex items-center gap-1
+                        {% if request.resolver_match.url_name == 'winners' %}
+                            text-yellow-400 bg-yellow-400/10
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50
+                        {% endif %}">
+                        <span class="relative z-10">{% trans "Gagnants" %}</span>
+                        <i
+                            class="fas fa-chevron-down text-[10px] opacity-50 group-hover:rotate-180 transition-transform"></i>
+                    </a>
+
+                    <div
+                        class="absolute top-full right-0 mt-2 w-[400px] bg-slate-900/95 backdrop-blur-2xl border border-slate-800 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 p-6 transform origin-top scale-95 group-hover:scale-100 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                        <div class="flex flex-col gap-6">
+                            <div
+                                class="bg-gradient-to-br from-yellow-400/20 to-orange-500/20 p-4 rounded-2xl border border-yellow-400/20">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <i class="fas fa-crown text-yellow-400"></i>
+                                    <p class="text-xs font-black text-yellow-400 uppercase tracking-widest">{% trans
+                                        "Grand Gagnant" %}</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-slate-950 border border-yellow-400/50 overflow-hidden">
+                                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=LuckyWinner1" alt="">
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold text-white">Jean Dupont</p>
+                                        <p class="text-xl font-black text-yellow-500">$25,000</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid gap-2">
+                                <a href="{% url 'winners' %}"
+                                    class="flex items-center justify-between p-3 rounded-xl bg-slate-800/30 hover:bg-slate-800 transition-colors">
+                                    <span class="text-sm font-bold text-white uppercase tracking-tight">{% trans
+                                        "Tableau des Leaders" %}</span>
+                                    <i class="fas fa-arrow-right text-xs text-slate-600"></i>
+                                </a>
+                                <a href="{% url 'winners' %}"
+                                    class="flex items-center justify-between p-3 rounded-xl bg-slate-800/30 hover:bg-slate-800 transition-colors">
+                                    <span class="text-sm font-bold text-white uppercase tracking-tight">{% trans "Hall
+                                        of Fame" %}</span>
+                                    <i class="fas fa-medal text-xs text-yellow-500"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Right Side: Language + User Menu -->
+            <div class="hidden lg:flex items-center gap-4">
+
+                <!-- Language Switcher -->
+                <form action="{% url 'set_language' %}" method="post" class="relative group">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.path }}">
+                    <div
+                        class="flex items-center gap-2 px-3 py-2 bg-slate-800/50 hover:bg-slate-800 rounded-lg border border-slate-700/50 hover:border-slate-600 transition-all duration-300 cursor-pointer">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-yellow-400 transition-colors" fill="none"
+                            stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <select name="language" onchange="this.form.submit()"
+                            class="appearance-none bg-transparent text-slate-300 font-bold text-xs uppercase cursor-pointer focus:outline-none group-hover:text-white transition-colors">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                            <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                                {{ language.code|upper }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+
+                {% if user.is_authenticated %}
+                <!-- User Menu -->
+                <div class="flex items-center gap-3">
+
+                    <!-- Balance Display -->
+                    <div
+                        class="hidden lg:flex items-center gap-3 px-4 py-2 bg-slate-800/50 rounded-lg border border-slate-700/50">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        <div class="flex flex-col">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{% trans "Solde"
+                                %}</span>
+                            <span class="text-sm font-black text-yellow-400">
+                                {% if user.wallets.first %}
+                                ${{ user.wallets.first.balance|floatformat:2 }}
+                                {% else %}
+                                $0.00
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <a href="{% url 'my_tickets' %}"
+                        class="relative w-10 h-10 flex items-center justify-center text-slate-400 hover:text-yellow-400 hover:bg-slate-800/50 rounded-lg transition-all duration-300 group">
+                        <svg class="w-5 h-5 group-hover:animate-bounce" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                        </svg>
+                        {% if user|pending_ticket_count > 0 %}
+                        <span class="absolute -top-1 -right-1 flex h-5 w-5">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                            <span
+                                class="relative inline-flex rounded-full h-5 w-5 bg-red-500 items-center justify-center text-[10px] font-bold text-white">
+                                {{ user|pending_ticket_count }}
+                            </span>
+                        </span>
+                        {% endif %}
+                    </a>
+
+                    <!-- User Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="flex items-center gap-2 pl-2 pr-3 py-2 rounded-lg hover:bg-slate-800/50 transition-all duration-300">
+                            <div class="relative">
+                                <div
+                                    class="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-0 group-hover:opacity-50 blur transition-opacity">
+                                </div>
+                                <div
+                                    class="relative w-10 h-10 bg-gradient-to-br from-slate-700 to-slate-800 rounded-full flex items-center justify-center text-yellow-400 font-bold text-sm shadow-lg border-2 border-slate-600 group-hover:border-yellow-400 transition-all duration-300">
+                                    {{ user.username|slice:":1"|upper }}
+                                </div>
+                            </div>
+                            <svg class="w-4 h-4 text-slate-400 group-hover:text-yellow-400 transition-colors"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+
+                        <!-- Dropdown Menu -->
+                        <div
+                            class="absolute right-0 top-full mt-3 w-80 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform origin-top-right scale-95 group-hover:scale-100 z-[100] flex flex-col overflow-hidden">
+
+                            <div class="overflow-y-auto custom-scrollbar max-h-[calc(100vh-120px)]">
+
+                                <div
+                                    class="p-6 bg-gradient-to-br from-slate-800 to-slate-900 border-b border-slate-800">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <div
+                                            class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-950 font-black text-xl shadow-lg">
+                                            {{ user.username|slice:":1"|upper }}
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-bold text-white truncate text-lg">{{
+                                                user.get_full_name|default:user.username }}</p>
+                                            <p class="text-sm text-slate-400 truncate">{{ user.email }}</p>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        class="bg-slate-950/50 backdrop-blur-sm p-4 rounded-xl border border-slate-700/50">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <div
+                                                    class="w-8 h-8 bg-green-500/10 rounded-lg flex items-center justify-center">
+                                                    <svg class="w-4 h-4 text-green-400" fill="none"
+                                                        stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                </div>
+                                                <div>
+                                                    <p class="text-xs font-medium text-slate-400">{% trans "Solde
+                                                        disponible" %}</p>
+                                                    <p
+                                                        class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                                                        {% if user.wallets.first %}
+                                                        ${{ user.wallets.first.balance|floatformat:2 }}
+                                                        {% else %}
+                                                        $0.00
+                                                        {% endif %}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <a href="{% url 'dashboard' %}"
+                                                class="px-3 py-1.5 bg-green-500/10 hover:bg-green-500/20 text-green-400 text-xs font-bold rounded-lg transition-colors">
+                                                {% trans "Recharger" %}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="p-3">
+                                    <a href="{% url 'dashboard' %}"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-all duration-300 group/item">
+                                        <div
+                                            class="w-9 h-9 bg-slate-800 group-hover/item:bg-slate-700 rounded-lg flex items-center justify-center transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400 group-hover/item:text-yellow-400"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v6a1 1 0 01-1 1h-4a1 1 0 01-1-1v-6z" />
+                                            </svg>
+                                        </div>
+                                        {% trans "Tableau de bord" %}
+                                    </a>
+
+                                    <a href="{% url 'my_tickets' %}"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition-all duration-300 group/item">
+                                        <div
+                                            class="w-9 h-9 bg-slate-800 group-hover/item:bg-slate-700 rounded-lg flex items-center justify-center transition-colors">
+                                            <svg class="w-4 h-4 text-slate-400 group-hover/item:text-yellow-400"
+                                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+                                            </svg>
+                                        </div>
+                                        {% trans "Mes Tickets" %}
+                                    </a>
+
+                                    {% if user.is_staff %}
+                                    <div class="my-3 border-t border-slate-800"></div>
+                                    <p class="px-4 py-2 text-[10px] uppercase font-bold text-slate-500 tracking-widest">
+                                        {% trans "Administration" %}
+                                    </p>
+
+                                    <a href="{% url 'admin_dashboard' %}"
+                                        class="flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-300 hover:text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-300 group/item">
+                                        <div
+                                            class="w-9 h-9 bg-slate-800 group-hover/item:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors">
+                                            <i class="fas fa-user-shield text-xs"></i>
+                                        </div>
+                                        {% trans "Panel Admin" %}
+                                    </a>
+                                    {% endif %}
+
+                                    <div class="my-3 border-t border-slate-800"></div>
+
+                                    <form action="{% url 'logout' %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit"
+                                            class="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-400 hover:bg-red-500/10 rounded-xl transition-all duration-300 group/item">
+                                            <div
+                                                class="w-9 h-9 bg-red-500/10 group-hover/item:bg-red-500/20 rounded-lg flex items-center justify-center transition-colors">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                                </svg>
+                                            </div>
+                                            {% trans "Déconnexion" %}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+                <!-- Not Authenticated -->
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'login' %}"
+                        class="px-4 py-2 text-sm font-bold text-slate-300 hover:text-white transition-colors duration-300">
+                        {% trans "Connexion" %}
+                    </a>
+                    <a href="{% url 'register' %}"
+                        class="group relative px-6 py-2.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-slate-950 text-sm font-bold rounded-xl overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-yellow-400/50">
+                        <span class="relative z-10 flex items-center gap-2">
+                            {% trans "S'inscrire" %}
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </span>
+                        <div
+                            class="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                        </div>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <div class="flex items-center lg:hidden gap-3">
+                {% if user.is_authenticated %}
+                <a href="{% url 'my_tickets' %}"
+                    class="relative w-10 h-10 flex items-center justify-center text-slate-400 hover:text-yellow-400 hover:bg-slate-800/50 rounded-lg transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    {% if user|pending_ticket_count > 0 %}
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    {% endif %}
+                </a>
+                {% endif %}
+
+                <button type="button" id="mobile-menu-btn"
+                    class="w-10 h-10 flex items-center justify-center text-slate-300 hover:text-white hover:bg-slate-800/50 rounded-lg transition-all duration-300">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="lg:hidden fixed inset-0 z-[60] hidden" id="mobile-menu">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+            id="mobile-menu-backdrop"></div>
+
+        <!-- Menu Panel -->
+        <div class="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-slate-900 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out"
+            id="mobile-menu-panel">
+
+            <!-- Header -->
+            <div class="flex items-center justify-between p-6 border-b border-slate-800">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
+                        <svg class="w-5 h-5 text-slate-950" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-black text-white">Menu</span>
+                </div>
+                <button type="button" id="mobile-menu-close"
+                    class="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Content -->
+            <div class="overflow-y-auto h-[calc(100%-88px)] p-6 space-y-6">
+
+                {% if user.is_authenticated %}
+                <!-- User Profile Mobile -->
+                <div
+                    class="relative group/user p-1 rounded-2xl bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 backdrop-blur-sm">
+                    <div class="flex items-center gap-4 p-4">
+                        <div class="relative">
+                            <div
+                                class="absolute -inset-1 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full opacity-50 blur-sm">
+                            </div>
+                            <div
+                                class="relative w-12 h-12 bg-slate-950 rounded-full flex items-center justify-center text-yellow-400 font-black text-lg border-2 border-slate-800">
+                                {{ user.username|slice:":1"|upper }}
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-bold text-white truncate text-base">{{ user.username }}</p>
+                            <p class="text-xs text-slate-500 truncate uppercase tracking-widest font-black">{% trans
+                                "Membre Premium" %}</p>
+                        </div>
+                    </div>
+                    <div
+                        class="mx-4 mb-4 p-3 rounded-xl bg-slate-950/50 border border-slate-800/50 flex items-center justify-between">
+                        <div>
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-0.5">{% trans
+                                "Solde" %}</p>
+                            <p class="text-xl font-black text-yellow-400">
+                                ${{ user.wallets.first.balance|default:"0.00"|floatformat:2 }}
+                            </p>
+                        </div>
+                        <a href="{% url 'dashboard' %}"
+                            class="w-8 h-8 rounded-lg bg-yellow-400/10 text-yellow-400 flex items-center justify-center hover:bg-yellow-400 hover:text-slate-950 transition-all">
+                            <i class="fas fa-plus text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Main Navigation -->
+                <div class="space-y-1.5">
+                    <p class="px-3 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">{% trans
+                        "Navigation Principale" %}</p>
+
+                    <a href="{% url 'home' %}" class="flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold transition-all duration-300
+                        {% if request.resolver_match.url_name == 'home' %}
+                            bg-yellow-400/10 text-yellow-400 border border-yellow-400/20
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent
+                        {% endif %}">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center text-sm">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <span class="flex-1">{% trans "Accueil" %}</span>
+                    </a>
+
+                    <a href="{% url 'games' %}" class="flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold transition-all duration-300
+                        {% if request.resolver_match.url_name == 'games' %}
+                            bg-yellow-400/10 text-yellow-400 border border-yellow-400/20
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent
+                        {% endif %}">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center text-sm">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <span class="flex-1">{% trans "Jeux" %}</span>
+                    </a>
+
+                    <a href="{% url 'results' %}" class="flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold transition-all duration-300
+                        {% if request.resolver_match.url_name == 'results' %}
+                            bg-yellow-400/10 text-yellow-400 border border-yellow-400/20
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent
+                        {% endif %}">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center text-sm">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span class="flex-1">{% trans "Résultats" %}</span>
+                    </a>
+
+                    <a href="{% url 'winners' %}" class="flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold transition-all duration-300
+                        {% if request.resolver_match.url_name == 'winners' %}
+                            bg-yellow-400/10 text-yellow-400 border border-yellow-400/20
+                        {% else %}
+                            text-slate-400 hover:text-white hover:bg-slate-800/50 border border-transparent
+                        {% endif %}">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center text-sm">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <span class="flex-1">{% trans "Gagnants" %}</span>
+                    </a>
+                </div>
+
+                {% if user.is_authenticated %}
+                <div class="border-t border-slate-800 pt-6 space-y-1.5">
+                    <p class="px-3 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">{% trans "Mon Compte" %}</p>
+
+                    <a href="{% url 'dashboard' %}"
+                        class="flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300 border border-transparent">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center text-sm">
+                            <i class="fas fa-columns"></i>
+                        </div>
+                        <span class="flex-1">{% trans "Tableau de bord" %}</span>
+                    </a>
+
+                    <a href="{% url 'my_tickets' %}"
+                        class="flex items-center gap-4 px-4 py-3.5 rounded-xl font-bold text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-300 border border-transparent">
+                        <div class="w-8 h-8 rounded-lg bg-slate-800/50 flex items-center justify-center text-sm">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                        <span class="flex-1">{% trans "Mes Tickets" %}</span>
+                    </a>
+
+                    <form action="{% url 'logout' %}" method="post" class="mt-6">
+                        {% csrf_token %}
+                        <button type="submit"
+                            class="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-xl font-black text-white bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 transition-all shadow-lg shadow-red-500/20 uppercase text-xs tracking-widest">
+                            <i class="fas fa-sign-out-alt"></i>
+                            {% trans "Déconnexion" %}
+                        </button>
+                    </form>
+                </div>
+                {% else %}
+                <!-- Auth Buttons Mobile -->
+                <div class="border-t border-slate-800 pt-8 grid grid-cols-1 gap-4">
+                    <a href="{% url 'register' %}"
+                        class="flex items-center justify-center px-6 py-4 rounded-xl font-black text-slate-950 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-300 hover:to-orange-400 transition-all shadow-xl shadow-yellow-400/20 uppercase text-xs tracking-widest">
+                        {% trans "S'inscrire" %}
+                    </a>
+                    <a href="{% url 'login' %}"
+                        class="flex items-center justify-center px-6 py-4 rounded-xl font-black text-white bg-slate-800 hover:bg-slate-700 transition-all border border-slate-700 uppercase text-xs tracking-widest">
+                        {% trans "Connexion" %}
+                    </a>
+                </div>
+                {% endif %}
+
+                <!-- Language Mobile -->
+                <div class="border-t border-slate-800 pt-6">
+                    <form action="{% url 'set_language' %}" method="post"
+                        class="flex items-center gap-3 px-4 py-3 bg-slate-800 rounded-xl">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.path }}">
+                        <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <select name="language" onchange="this.form.submit()"
+                            class="flex-1 bg-transparent text-sm font-bold text-slate-300 focus:outline-none">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                            <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                                {{ language.name_local }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script>
+    // Mobile Menu Toggle
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuClose = document.getElementById('mobile-menu-close');
+    const mobileMenuBackdrop = document.getElementById('mobile-menu-backdrop');
+    const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+
+    function openMobileMenu() {
+        mobileMenu.classList.remove('hidden');
+        setTimeout(() => {
+            mobileMenuBackdrop.classList.remove('opacity-0');
+            mobileMenuPanel.classList.remove('translate-x-full');
+        }, 10);
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        mobileMenuBackdrop.classList.add('opacity-0');
+        mobileMenuPanel.classList.add('translate-x-full');
+        setTimeout(() => {
+            mobileMenu.classList.add('hidden');
+            document.body.style.overflow = '';
+        }, 300);
+    }
+
+    mobileMenuBtn?.addEventListener('click', openMobileMenu);
+    mobileMenuClose?.addEventListener('click', closeMobileMenu);
+    mobileMenuBackdrop?.addEventListener('click', closeMobileMenu);
+
+    // Header Scroll Effect
+    let lastScroll = 0;
+    const header = document.getElementById('main-header');
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        if (currentScroll > 50) {
+            header.classList.add('shadow-2xl', 'shadow-slate-950/50');
+            header.classList.remove('bg-slate-950/80');
+            header.classList.add('bg-slate-950/95');
+        } else {
+            header.classList.remove('shadow-2xl', 'shadow-slate-950/50');
+            header.classList.remove('bg-slate-950/95');
+            header.classList.add('bg-slate-950/80');
+        }
+
+        lastScroll = currentScroll;
+    });
+</script>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.1);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(250, 204, 21, 0.2);
+        border-radius: 20px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(250, 204, 21, 0.4);
+    }
+
+    /* Ensure visibility and smooth transitions for mega menu */
+    .group:hover .group-hover\:visible {
+        visibility: visible;
+    }
+
+    /* Fixed header glassmorphism refinement */
+    #main-header.bg-slate-950\/95 {
+        backdrop-filter: blur(24px);
+        /* Tailwind's backdrop-blur-2xl */
+        border-bottom: 1px solid rgba(51, 65, 85, 0.5);
+        /* Equivalent to border-b border-slate-700/50 */
+    }
+</style>

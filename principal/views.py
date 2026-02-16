@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django import forms
 from django.utils import timezone
+from django.utils.translation import activate, gettext as _  # i18n
+from django.conf import settings
 from .models import Game, Company, Wallet, Ticket, Payment, Winner, Draw
 
 # ======================================================
@@ -44,31 +46,27 @@ def home(request):
     }
     return render(request, 'winning_ticket/index.html', context)
 
-
 # ======================================================
-# PAGES HTML (inchangées)
+# PAGES HTML SIMPLES
 # ======================================================
 
 def accueil(request):
     return render(request, 'winning_ticket/indx.html')
 
-
 def faq(request):
     return render(request, 'winning_ticket/faq.html')
 
+# ======================================================
+# LOGIQUE DES JEUX
+# ======================================================
 
 def games(request):
     """
-    Page listant les jeux disponibles.
-    Permet de filtrer par entreprise.
+    Page listant les jeux disponibles avec filtres optionnels.
     """
-    # Récupérer tous les jeux actifs
     games = Game.objects.filter(status='active').select_related('company').order_by('ticket_price')
-    
-    # Récupérer les entreprises actives qui ont des jeux actifs
     companies = Company.objects.filter(is_active=True, games__status='active').distinct()
     
-    # Filtrage par entreprise
     company_filter = request.GET.get('company')
     if company_filter:
         try:
@@ -84,25 +82,26 @@ def games(request):
     }
     return render(request, 'winning_ticket/games.html', context)
 
+
 def generate_ticket_id():
-    """Génère un ID unique pour le billet"""
+    """Génère un ID de billet aléatoire de 10 caractères"""
     return ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))
+
 
 @login_required
 def play_game(request, slug):
     """
-    Page pour jouer à un jeu spécifique (acheter un billet).
+    Page pour jouer à un jeu spécifique.
+    Gère l'affichage de la grille et l'achat de billets.
     """
     game = get_object_or_404(Game, slug=slug, status='active')
     
-    # Récupérer ou créer le wallet principal de l'utilisateur
     user_wallet, created = Wallet.objects.get_or_create(
         user=request.user, 
         wallet_type='main',
         defaults={'balance': 0}
     )
     
-    # Récupérer les numéros déjà joués pour ce jeu
     taken_numbers = set()
     existing_tickets = Ticket.objects.filter(game=game)
     for t in existing_tickets:
@@ -110,32 +109,27 @@ def play_game(request, slug):
             taken_numbers.update(t.numbers)
 
     if request.method == 'POST':
-        # Récupérer les numéros sélectionnés
-        selected_numbers_raw = request.POST.getlist('numbers')
+        selected_numbers_raw = request.POST.getlist('selected_numbers')
+
         selected_numbers = [int(n) for n in selected_numbers_raw if n.isdigit()]
         
-        # Validation du nombre de numéros
         if not selected_numbers:
-            messages.error(request, "Veuillez sélectionner au moins un numéro.")
+            messages.error(request, _("Veuillez sélectionner au moins un numéro."))
             return redirect('play_game', slug=slug)
 
-        # Validation: Vérifier si les numéros sont déjà pris
         for num in selected_numbers:
             if num in taken_numbers:
-                messages.error(request, f"Le numéro {num} a déjà été acheté par un autre joueur.")
+                messages.error(request, _("Le numéro %(num)s a déjà été acheté par un autre joueur.") % {'num': num})
                 return redirect('play_game', slug=slug)
 
-        # Validation du solde
         if user_wallet.balance < game.ticket_price:
-            messages.error(request, "Solde insuffisant. Veuillez recharger votre portefeuille.")
+            messages.error(request, _("Solde insuffisant. Veuillez recharger votre portefeuille."))
             return redirect('play_game', slug=slug)
             
         try:
             with transaction.atomic():
-                # Ensure we have a draw date (fallback to now if game.next_draw is null)
                 draw_date = game.next_draw or timezone.now()
                 
-                # 1. Créer le billet
                 ticket = Ticket.objects.create(
                     user=request.user,
                     game=game,
@@ -143,42 +137,37 @@ def play_game(request, slug):
                     ticket_id=generate_ticket_id(),
                     draw_date=draw_date,
                     status='pending',
-                    prize_tier='None',  # Default
+                    prize_tier='None',
                     match_count=0
                 )
                 
-                # 2. Déduire du wallet
-                user_wallet.balance -= game.ticket_price*len(selected_numbers)
+                user_wallet.balance -= game.ticket_price
                 user_wallet.save()
                 
-                # 3. Créer le paiement (Transaction record)
                 Payment.objects.create(
                     user=request.user,
                     game=game,
                     ticket=ticket,
-                    amount=game.ticket_price * len(selected_numbers),
+                    amount=game.ticket_price,
                     payment_type='ticket',
                     payment_method='wallet',
                     status='completed',
                     transaction_id=f"TXN-{ticket.ticket_id}"
                 )
                 
-                 # 4. Mettre à jour les stats du jeu
                 game.total_tickets_sold += 1
                 game.save()
                 
-                # 5. Mettre à jour GameFinance
                 if hasattr(game, 'finance'):
-                    game.finance.update_from_sales(game.ticket_price * len(selected_numbers))
+                    game.finance.update_from_sales(game.ticket_price)
             
-            messages.success(request, f"Félicitations! Billet acheté avec succès. ID: {ticket.ticket_id}")
+            messages.success(request, _("Félicitations! Votre billet a été acheté avec succès. ID: %(id)s") % {'id': ticket.ticket_id})
             return redirect('my_tickets')
             
         except Exception as e:
-            messages.error(request, f"Une erreur est survenue lors de l'achat: {str(e)}")
+            messages.error(request, _("Une erreur est survenue lors de l'achat : %(err)s") % {'err': str(e)})
             return redirect('play_game', slug=slug)
             
-    # Générer la grille de numéros (1 à number_range)
     number_grid = range(1, game.number_range + 1)
     
     context = {
@@ -190,9 +179,6 @@ def play_game(request, slug):
     return render(request, 'winning_ticket/play_game.html', context)
 
 
-
-
-
 def about(request):
     return render(request, 'winning_ticket/about.html')
 
@@ -202,9 +188,6 @@ def contact(request):
 
 
 def game_detail(request, game_id):
-    """
-    Page détail d’un jeu
-    """
     context = {
         'game_id': game_id,
     }
@@ -218,73 +201,59 @@ def buy_ticket(request):
 @login_required
 def my_tickets(request):
     """
-    User's ticket gallery and history.
+    Affiche les billets achetés par l'utilisateur connecté.
     """
     user = request.user
-    
-    # Get user's wallet for stats
     wallet, created = Wallet.objects.get_or_create(
         user=user, 
         wallet_type='main',
         defaults={'balance': 0}
     )
     
-    # Get all tickets
     tickets = Ticket.objects.filter(user=user).select_related('game').order_by('-created_at')
-    recent_tickets = tickets[:20]  # Just use the same name as in dashboard for template compatibility if needed
     
-    # Stats
-    total_tickets = tickets.count()
-    active_tickets = tickets.filter(status='pending').count()
     total_won = tickets.filter(status='won').aggregate(models.Sum('win_amount'))['win_amount__sum'] or 0
-    unclaimed_prizes = tickets.filter(status='won', checked=False).count()
     
     context = {
         'wallet': wallet,
         'tickets': tickets,
-        'recent_tickets': recent_tickets,
-        'total_tickets': total_tickets,
-        'active_tickets': active_tickets,
+        'total_tickets': tickets.count(),
+        'active_tickets': tickets.filter(status='pending').count(),
         'total_won': total_won,
-        'unclaimed_prizes': unclaimed_prizes,
+        'unclaimed_prizes': tickets.filter(status='won', checked=False).count(),
     }
     return render(request, 'winning_ticket/my_tickets.html', context)
 
 
 def results(request):
-    """
-    Affiche les derniers tirages effectués.
-    """
     recent_draws = Draw.objects.select_related('game').order_by('-draw_date')[:20]
-    
-    context = {
-        'recent_draws': recent_draws,
-    }
-    return render(request, 'winning_ticket/results.html', context)
+    return render(request, 'winning_ticket/results.html', {'recent_draws': recent_draws})
 
 
 def winners(request):
-    """
-    Galerie des derniers gagnants.
-    """
-    top_winners = Winner.objects.select_related('user', 'draw', 'draw__game').order_by('-prize_amount')[:30]
+    from django.db.models import Sum
+    winners_list = Winner.objects.select_related('user', 'draw', 'draw__game').order_by('-draw__draw_date')
+    
+    total_gains = Winner.objects.aggregate(total=Sum('prize_amount'))['total'] or 0
+    total_winners_count = Winner.objects.count()
+    last_win = winners_list.first()
     
     context = {
-        'top_winners': top_winners,
+        'winners': winners_list[:30],
+        'total_gains': total_gains,
+        'total_winners_count': total_winners_count,
+        'last_win_amount': last_win.prize_amount if last_win else 0
     }
     return render(request, 'winning_ticket/winners.html', context)
 
 
 # ======================================================
-# AUTH / DASHBOARD
+# AUTHENTIFICATION & DASHBOARD
 # ======================================================
 
 def is_staff(user):
-    """Check if user is staff OR supervisor leader"""
-    # Check for direct staff status
     if user.is_staff:
         return True
-    # Check for profile-based superuser status
     if hasattr(user, 'profile') and user.profile.is_superuser:
         return True
     return False
@@ -303,31 +272,29 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            
             if not remember_me:
-                # Session expires when browser closes
                 request.session.set_expiry(0)
             else:
-                # Session lasts 2 weeks (default) or configured time
-                request.session.set_expiry(1209600)  # 2 weeks
-                
-            messages.success(request, f"Welcome back, {user.username}!")
+                request.session.set_expiry(1209600)
+            
+            messages.success(request, _("Bon retour, %(user)s!") % {'user': user.username})
             
             if is_staff(user):
                 return redirect('manage_games')
-            next_url = request.POST.get('next') or request.GET.get('next')
+            
+            next_url = request.POST.get('next')
             if next_url:
                 return redirect(next_url)
             return redirect('dashboard')
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, _("Nom d'utilisateur ou mot de passe incorrect."))
             
     return render(request, 'users/login.html')
 
 
 def logout_view(request):
     logout(request)
-    messages.info(request, "You have successfully logged out.")
+    messages.info(request, _("Vous avez été déconnecté avec succès."))
     return redirect('login')
 
 
@@ -336,64 +303,31 @@ def register_view(request):
         return redirect('dashboard')
         
     if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password = request.POST.get('password1')
-        confirm_password = request.POST.get('password2')
-        
-        # Validation
-        if password != confirm_password:
-            messages.error(request, "Passwords do not match!")
-            return render(request, 'users/register.html', {
-                'values': request.POST
-            })
+        data = request.POST
+        if data.get('password1') != data.get('password2'):
+            messages.error(request, _("Les mots de passe ne correspondent pas !"))
+        elif User.objects.filter(username=data.get('username')).exists():
+            messages.error(request, _("Ce nom d'utilisateur est déjà pris !"))
+        else:
+            try:
+                user = User.objects.create_user(
+                    username=data.get('username'),
+                    email=data.get('email'),
+                    password=data.get('password1'),
+                    first_name=data.get('first_name'),
+                    last_name=data.get('last_name')
+                )
+                Wallet.objects.create(user=user, balance=1000, wallet_type='main')
+                messages.success(request, _("Votre compte a été créé avec succès ! Vous avez reçu 1000 unités de bienvenue."))
+                return redirect('login')
+            except Exception as e:
+                messages.error(request, _("Une erreur est survenue lors de la création du compte : %(e)s") % {'e': e})
             
-        if User.objects.filter(username=username).exists():
-            messages.error(request, "Username already exists!")
-            return render(request, 'users/register.html', {
-                'values': request.POST
-            })
-            
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email already registered!")
-            return render(request, 'users/register.html', {
-                'values': request.POST
-            })
-            
-        # Create User
-        try:
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=password,
-                first_name=first_name,
-                last_name=last_name
-            )
-            user.save()
-            wallet = Wallet.objects.create(
-                user=user,
-                balance=1000,
-                wallet_type='main'
-            )
-            wallet.save()
-            messages.success(request, "Account created successfully with 1000 dollars in your wallet! You can now login.")
-            return redirect('login')
-        except Exception as e:
-            messages.error(request, f"An error occurred: {e}")
-            return render(request, 'users/register.html', {
-                'values': request.POST
-            })
-            
-    return render(request, 'users/register.html')
-
-
     return render(request, 'users/register.html')
 
 
 # ======================================================
-# GAME ADMINISTRATION
+# ADMINISTRATION (GESTION DES JEUX ET ENTREPRISES)
 # ======================================================
 
 class CompanyForm(forms.ModelForm):
@@ -401,204 +335,133 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = ['name', 'registration_number', 'contact_email', 'contact_phone', 'address', 'verified']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Company Legal Name'}),
-            'registration_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Business Reg. Number'}),
-            'contact_email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}),
-            'contact_phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone Number'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'registration_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'contact_phone': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'verified': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 class GameForm(forms.ModelForm):
     class Meta:
         model = Game
-        fields = [
-            'name', 
-            'description', 
-            'company',
-            'number_range',
-            'ticket_price', 
-            'prize_amount',
-            'next_draw',
-        ]
+        fields = ['name', 'description', 'company', 'number_range', 'ticket_price', 'prize_amount', 'next_draw']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom du jeu'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Description du jeu'}),
-            'company': forms.Select(attrs={'class': 'form-select'}),
-            'number_range': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Plage de numéros'}),
-            'ticket_price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Prix du billet'}),
-            'prize_amount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01', 'placeholder': 'Montant du prix'}),
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'company': forms.Select(attrs={'class': 'form-control'}),
+            'number_range': forms.NumberInput(attrs={'class': 'form-control'}),
+            'ticket_price': forms.NumberInput(attrs={'class': 'form-control'}),
+            'prize_amount': forms.NumberInput(attrs={'class': 'form-control'}),
             'next_draw': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
         }
         labels = {
-            'name': 'Nom du Jeu',
-            'description': 'Description',
-            'company': 'Entreprise Organisatrice',
-            'number_range': 'Plage de Numéros (1 à X)',
-            'ticket_price': 'Prix du Billet',
-            'prize_amount': 'Montant Total du Prix',
-            'next_draw': 'Date et Heure du Tirage',
+            'name': _('Nom du Jeu'),
+            'description': _('Description'),
+            'company': _('Entreprise'),
+            'number_range': _('Plage de numéros'),
+            'ticket_price': _('Prix du ticket'),
+            'prize_amount': _('Montant du prix'),
+            'next_draw': _('Prochain tirage'),
         }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Populate company choices with all active companies
-        self.fields['company'].queryset = Company.objects.filter(is_active=True).order_by('name')
-        self.fields['company'].empty_label = "-- Sélectionner une entreprise --"
 
 @login_required
 @user_passes_test(is_staff)
 def admin_dashboard(request):
-    """Overall admin dashboard with stats and progression"""
-    from django.db.models import Sum, Count
+    from django.db.models import Sum
+    active_games = Game.objects.filter(status='active').order_by('-created_at')
     
     total_revenue = Payment.objects.filter(payment_type='ticket', status='completed').aggregate(total=Sum('amount'))['total'] or 0
     total_tickets = Ticket.objects.count()
-    active_games_count = Game.objects.filter(status='active').count()
     total_users = User.objects.count()
-    
-    recent_transactions = Payment.objects.select_related('user', 'game').order_by('-created_at')[:10]
-    active_games = Game.objects.filter(status='active').order_by('-total_tickets_sold')
-    ready_games = [g for g in active_games if g.ready_for_draw]
-    
+    active_games_count = active_games.count()
+
     context = {
-        'total_revenue': total_revenue,
-        'total_tickets': total_tickets,
-        'active_games_count': active_games_count,
-        'total_users': total_users,
-        'recent_transactions': recent_transactions,
+        'stats': {
+            'total_revenue': f"{total_revenue:,.2f}",
+            'total_tickets': f"{total_tickets:,}",
+            'total_users': f"{total_users:,}",
+            'active_games': active_games_count,
+        },
         'active_games': active_games,
-        'ready_games': ready_games,
+        'recent_transactions': Payment.objects.select_related('user', 'game').order_by('-created_at')[:10],
     }
     return render(request, 'admins/dashboard.html', context)
 
-@login_required
-@user_passes_test(is_staff)
-def revenue_report(request):
-    """Detailed financial report for platform and games"""
-    from django.db.models import Sum
-    from principal.models import GameFinance
-    
-    # Platform totals
-    total_stats = GameFinance.objects.aggregate(
-        total_sales=Sum('total_sales'),
-        total_platform_revenue=Sum('platform_fee_amount'),
-        total_organizer_profit=Sum('organizer_profit')
-    )
-    
-    # Breakdown by game
-    game_revenues = GameFinance.objects.select_related('game', 'game__company').order_by('-total_sales')
-            
-    context = {
-        'total_sales': total_stats['total_sales'] or 0,
-        'platform_revenue': total_stats['total_platform_revenue'] or 0,
-        'organizer_profit': total_stats['total_organizer_profit'] or 0,
-        'game_revenues': game_revenues
-    }
-    return render(request, 'admins/revenue_report.html', context)
 
 @login_required
 @user_passes_test(is_staff)
 def perform_draw(request, game_id):
-    """Effectue le tirage au sort pour un jeu terminé"""
-    import random
-    from django.utils import timezone
-    from principal.models import Draw, Winner, Ticket
-    
     game = get_object_or_404(Game, id=game_id, status='active')
-    
-    # 1. Récupérer tous les tickets vendus pour ce jeu
     tickets = Ticket.objects.filter(game=game, status='pending')
     
     if not tickets.exists():
-        messages.error(request, "Aucun ticket n'a été vendu pour ce jeu. Tirage impossible.")
+        messages.error(request, _("Aucun ticket n'a été vendu pour ce jeu. Tirage impossible."))
         return redirect('admin_dashboard')
     
-    # 2. Collecter tous les numéros choisis
-    all_chosen_numbers = []
+    all_numbers = []
     for t in tickets:
-        if isinstance(t.numbers, list):
-            all_chosen_numbers.extend(t.numbers)
+        if t.numbers:
+            all_numbers.extend(t.numbers)
     
-    if not all_chosen_numbers:
-        messages.error(request, "Erreur lors de la récupération des numéros.")
-        return redirect('admin_dashboard')
-        
-    # 3. Choisir le numéro gagnant au hasard parmi les numéros choisis
-    winning_number = random.choice(all_chosen_numbers)
+    winning_number = random.choice(all_numbers)
     
     try:
         with transaction.atomic():
-            # 4. Créer l'enregistrement Draw
             draw = Draw.objects.create(
                 game=game,
                 draw_date=timezone.now(),
                 winning_numbers=[winning_number],
                 jackpot_amount=game.prize_amount,
                 processed=True,
-                processed_at=timezone.now(),
                 created_by=request.user
             )
             
-            # 5. Identifier les tickets gagnants
-            winning_tickets = []
+            winners_count = 0
             for t in tickets:
                 if winning_number in t.numbers:
                     t.status = 'won'
-                    t.win_amount = game.prize_amount # Pour l'instant on donne tout au gagnant
+                    t.win_amount = game.prize_amount
                     t.checked = True
-                    t.checked_at = timezone.now()
                     t.draw = draw
                     t.save()
                     
-                    # Créer Winner record
                     Winner.objects.create(
                         user=t.user,
                         ticket=t,
                         draw=draw,
                         prize_amount=game.prize_amount
                     )
-                    winning_tickets.append(t)
                     
-                    # Créditer le wallet du gagnant
-                    from principal.models import Wallet
                     winner_wallet, _ = Wallet.objects.get_or_create(user=t.user, wallet_type='main')
                     winner_wallet.balance += game.prize_amount
                     winner_wallet.save()
+                    winners_count += 1
                 else:
                     t.status = 'lost'
                     t.checked = True
-                    t.checked_at = timezone.now()
                     t.draw = draw
                     t.save()
             
-            # 6. Fermer le jeu
             game.status = 'closed'
             game.save()
             
-            # Mettre à jour Draw stats
-            draw.total_winners = len(winning_tickets)
-            draw.total_prize_paid = game.prize_amount if winning_tickets else 0
-            draw.jackpot_won = len(winning_tickets) > 0
+            draw.total_winners = winners_count
             draw.save()
             
-        messages.success(request, f"Tirage effectué avec succès ! Le numéro gagnant est le {winning_number}.")
-        if winning_tickets:
-            winner = winning_tickets[0].user
-            winner_name = f"{winner.first_name} {winner.last_name}" if winner.first_name else winner.username
-            messages.info(request, f"Gagnant identifié : {winner_name} ({winner.email})")
-            
+        messages.success(request, _("Le tirage a été effectué avec succès ! Le numéro gagnant est le %(num)s.") % {'num': winning_number})
     except Exception as e:
-        messages.error(request, f"Une erreur est survenue lors du tirage : {str(e)}")
+        messages.error(request, _("Une erreur est survenue lors du tirage : %(e)s") % {'e': str(e)})
         
     return redirect('admin_dashboard')
+
 
 @login_required
 @user_passes_test(is_staff)
 def manage_games(request):
-    """List all games for administration"""
     games = Game.objects.all().order_by('-created_at')
     return render(request, 'admins/manage_games.html', {'games': games})
+
 
 @login_required
 @user_passes_test(is_staff)
@@ -607,14 +470,14 @@ def create_game(request):
         form = GameForm(request.POST)
         if form.is_valid():
             game = form.save(commit=False)
-            game.status = 'active'  # Auto-activate for now
+            game.status = 'active'
             game.save()
-            messages.success(request, "Jeu créé avec succès! Un enregistrement GameFinance a été créé automatiquement.")
+            messages.success(request, _("Le jeu a été créé avec succès !"))
             return redirect('manage_games')
     else:
         form = GameForm()
-    
-    return render(request, 'admins/game_form.html', {'form': form, 'title': 'Créer un Jeu'})
+    return render(request, 'admins/game_form.html', {'form': form, 'title': _('Créer un nouveau jeu')})
+
 
 @login_required
 @user_passes_test(is_staff)
@@ -624,12 +487,12 @@ def edit_game(request, game_id):
         form = GameForm(request.POST, instance=game)
         if form.is_valid():
             form.save()
-            messages.success(request, "Game updated successfully!")
+            messages.success(request, _("Le jeu a été mis à jour avec succès !"))
             return redirect('manage_games')
     else:
         form = GameForm(instance=game)
-    
-    return render(request, 'admins/game_form.html', {'form': form, 'title': 'Edit Game', 'game': game})
+    return render(request, 'admins/game_form.html', {'form': form, 'title': _('Modifier le jeu')})
+
 
 @login_required
 @user_passes_test(is_staff)
@@ -637,14 +500,10 @@ def delete_game(request, game_id):
     game = get_object_or_404(Game, id=game_id)
     if request.method == 'POST':
         game.delete()
-        messages.success(request, "Game deleted successfully!")
+        messages.success(request, _("Le jeu a été supprimé."))
         return redirect('manage_games')
-    return redirect('manage_games')
+    return render(request, 'admins/game_confirm_delete.html', {'game': game})
 
-
-# ======================================================
-# COMPANY ADMINISTRATION
-# ======================================================
 
 @login_required
 @user_passes_test(is_staff)
@@ -652,62 +511,55 @@ def manage_companies(request):
     companies = Company.objects.all().order_by('name')
     return render(request, 'admins/manage_companies.html', {'companies': companies})
 
-@login_required
-@user_passes_test(is_staff)
-def create_company(request):
-    if request.method == 'POST':
-        form = CompanyForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Company created successfully!")
-            return redirect('manage_companies')
-    else:
-        form = CompanyForm()
-    return render(request, 'admins/company_form.html', {'form': form, 'title': 'Create Company'})
 
 @login_required
 @user_passes_test(is_staff)
-def edit_company(request, company_id):
-    company = get_object_or_404(Company, id=company_id)
-    if request.method == 'POST':
-        form = CompanyForm(request.POST, instance=company)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Company updated successfully!")
-            return redirect('manage_companies')
-    else:
-        form = CompanyForm(instance=company)
-    return render(request, 'admins/company_form.html', {'form': form, 'title': 'Edit Company'})
-
-@login_required
-@user_passes_test(is_staff)
-def delete_company(request, company_id):
-    company = get_object_or_404(Company, id=company_id)
-    if request.method == 'POST':
-        company.delete()
-        messages.success(request, "Company deleted successfully!")
-        return redirect('manage_companies')
-    return redirect('manage_companies')
+def revenue_report(request):
+    from django.db.models import Sum
+    
+    # Global statistics
+    payments = Payment.objects.filter(payment_type='ticket', status='completed').select_related('user', 'game').order_by('-created_at')
+    total_sales = payments.aggregate(total=Sum('amount'))['total'] or 0
+    platform_revenue = (total_sales * 20) / 100  # 20% platform fee
+    
+    # Group by game for breakdown
+    game_revenues = []
+    active_games = Game.objects.all().select_related('company')
+    
+    total_organizer_profit = 0
+    
+    for game in active_games:
+        game_sales = game.ticket_price * game.total_tickets_sold
+        game_platform_fee = (game_sales * game.platform_fee_percent) / 100
+        # In this model, profit is what remains for organizer after prize and fee
+        # Let's use the property from model directly if possible or calculate here
+        game_profit = game_sales - game_platform_fee - game.prize_amount
+        
+        if game_sales > 0:
+            game_revenues.append({
+                'game': game,
+                'total_sales': game_sales,
+                'platform_fee_amount': game_platform_fee,
+                'organizer_profit': game_profit
+            })
+            total_organizer_profit += game_profit
+            
+    context = {
+        'payments': payments,
+        'total_sales': total_sales,
+        'platform_revenue': platform_revenue,
+        'organizer_profit': total_organizer_profit,
+        'game_revenues': game_revenues,
+    }
+    return render(request, 'admins/revenue_report.html', context)
 
 
 @login_required
 def dashboard(request):
-    """
-    User dashboard displaying stats and recent tickets.
-    """
     user = request.user
-    
-    # Get user's wallet
-    wallet, created = Wallet.objects.get_or_create(
-        user=user, 
-        wallet_type='main',
-        defaults={'balance': 0}
-    )
-    
-    # Get recent tickets (last 5)
+    wallet, _ = Wallet.objects.get_or_create(user=user, wallet_type='main', defaults={'balance': 0})
     recent_tickets = Ticket.objects.filter(user=user).select_related('game').order_by('-created_at')[:5]
     
-    # Calculate stats
     total_tickets = Ticket.objects.filter(user=user).count()
     active_tickets = Ticket.objects.filter(user=user, status='pending').count()
     total_won = Ticket.objects.filter(user=user, status='won').aggregate(models.Sum('win_amount'))['win_amount__sum'] or 0
@@ -722,3 +574,73 @@ def dashboard(request):
         'unclaimed_prizes': unclaimed_prizes,
     }
     return render(request, 'users/dashboard.html', context)
+
+
+# ======================================================
+# LANGUAGE SWITCHER
+# ======================================================
+
+def set_language(request):
+    """
+    Change la préférence de langue de l'utilisateur.
+    """
+    if request.method == 'POST':
+        language_code = request.POST.get('language')
+        
+        if language_code and language_code in [lang[0] for lang in settings.LANGUAGES]:
+            activate(language_code)
+            request.session['django_language'] = language_code
+            
+            next_url = request.POST.get('next', request.META.get('HTTP_REFERER', '/'))
+            response = redirect(next_url)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language_code)
+            return response
+            
+    return redirect('home')
+# À RAJOUTER À LA FIN DE principal/views.py
+
+@login_required
+@user_passes_test(is_staff)
+def create_company(request):
+    """
+    Vue pour créer une nouvelle entreprise (demandée par urls.py)
+    """
+    if request.method == 'POST':
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("L'entreprise a été créée avec succès !"))
+            return redirect('manage_companies')
+    else:
+        form = CompanyForm()
+    return render(request, 'admins/company_form.html', {'form': form, 'title': _("Créer une Entreprise")})
+
+@login_required
+@user_passes_test(is_staff)
+def edit_company(request, company_id):
+    """
+    Vue pour modifier une entreprise existante
+    """
+    company = get_object_or_404(Company, id=company_id)
+    if request.method == 'POST':
+        form = CompanyForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            messages.success(request, _("L'entreprise a été mise à jour !"))
+            return redirect('manage_companies')
+    else:
+        form = CompanyForm(instance=company)
+    return render(request, 'admins/company_form.html', {'form': form, 'title': _("Modifier l'Entreprise")})
+
+@login_required
+@user_passes_test(is_staff)
+def delete_company(request, company_id):
+    """
+    Vue pour supprimer une entreprise
+    """
+    company = get_object_or_404(Company, id=company_id)
+    if request.method == 'POST':
+        company.delete()
+        messages.success(request, _("L'entreprise a été supprimée."))
+        return redirect('manage_companies')
+    return render(request, 'admins/company_confirm_delete.html', {'company': company})
