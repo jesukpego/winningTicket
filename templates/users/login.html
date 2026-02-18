@@ -27,7 +27,8 @@
 
         <!-- Login Form -->
         <div class="bg-slate-900/40 backdrop-blur-xl rounded-[40px] shadow-2xl p-10 border border-slate-800/50">
-            <form method="POST" class="space-y-6">
+            <form method="POST" action="{% url 'login' %}">
+
                 {% csrf_token %}
 
                 {% if request.GET.next %}

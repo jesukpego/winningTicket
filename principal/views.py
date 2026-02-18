@@ -335,11 +335,11 @@ class CompanyForm(forms.ModelForm):
         model = Company
         fields = ['name', 'registration_number', 'contact_email', 'contact_phone', 'address', 'verified']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'registration_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'contact_email': forms.EmailInput(attrs={'class': 'form-control'}),
-            'contact_phone': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'name': forms.TextInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'registration_number': forms.TextInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'contact_email': forms.EmailInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'contact_phone': forms.TextInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'address': forms.Textarea(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all', 'rows': 3}),
         }
 
 class GameForm(forms.ModelForm):
@@ -347,13 +347,13 @@ class GameForm(forms.ModelForm):
         model = Game
         fields = ['name', 'description', 'company', 'number_range', 'ticket_price', 'prize_amount', 'next_draw']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'company': forms.Select(attrs={'class': 'form-control'}),
-            'number_range': forms.NumberInput(attrs={'class': 'form-control'}),
-            'ticket_price': forms.NumberInput(attrs={'class': 'form-control'}),
-            'prize_amount': forms.NumberInput(attrs={'class': 'form-control'}),
-            'next_draw': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'name': forms.TextInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'description': forms.Textarea(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all', 'rows': 3}),
+            'company': forms.Select(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'number_range': forms.NumberInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'ticket_price': forms.NumberInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-10 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'prize_amount': forms.NumberInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-10 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all'}),
+            'next_draw': forms.DateTimeInput(attrs={'class': 'w-full bg-slate-950/50 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-yellow-400/50 transition-all', 'type': 'datetime-local'}),
         }
         labels = {
             'name': _('Nom du Jeu'),
@@ -364,6 +364,14 @@ class GameForm(forms.ModelForm):
             'prize_amount': _('Montant du prix'),
             'next_draw': _('Prochain tirage'),
         }
+        def clean_name(self):
+               name = self.cleaned_data.get('name')
+       
+               # Vérifie si un jeu avec le même nom existe déjà
+               if Game.objects.filter(name__iexact=name).exists():
+                   raise ValidationError("Un jeu avec ce nom existe déjà.")
+       
+               return name
 
 @login_required
 @user_passes_test(is_staff)
