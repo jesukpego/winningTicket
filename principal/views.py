@@ -128,7 +128,7 @@ def play_game(request, slug):
             
         try:
             with transaction.atomic():
-                draw_date = game.next_draw or timezone.now()
+                draw_date = game.next_draw or timezone.now() #revoir
                 
                 ticket = Ticket.objects.create(
                     user=request.user,

@@ -94,27 +94,8 @@ class UserProfile(models.Model):
         
         today = timezone.now().date()
         
-        # Check daily limit
-        daily_spent = self.user.payments.filter(
-            created_at__date=today,
-            payment_type='ticket',
-            status='completed'
-        ).aggregate(Sum('amount'))['amount__sum'] or 0
+       
         
-        if daily_spent + amount > self.daily_limit:
-            return False, f"Daily limit of ${self.daily_limit} exceeded"
-        
-        # Check weekly limit if set
-        if self.weekly_limit > 0:
-            week_ago = today - timedelta(days=7)
-            weekly_spent = self.user.payments.filter(
-                created_at__date__gte=week_ago,
-                payment_type='ticket',
-                status='completed'
-            ).aggregate(Sum('amount'))['amount__sum'] or 0
-            
-            if weekly_spent + amount > self.weekly_limit:
-                return False, f"Weekly limit of ${self.weekly_limit} exceeded"
         
         return True, "OK"
     
@@ -511,30 +492,6 @@ class Game(models.Model):
         
         return True
     
-    def get_odds(self, match_count, has_powerball=False):
-        """
-        Calculate odds of winning based on match count.
-        
-        Note: This is a simplified calculation. Real lottery odds
-        would require combinatorial mathematics.
-        """
-        # Simplified odds calculation
-        import math
-        
-        n = self.number_range
-        k = self.max_numbers
-        
-        # Combinations formula: C(n, k) = n! / (k! * (n-k)!)
-        total_combinations = math.comb(n, k)
-        
-        if self.has_powerball and has_powerball:
-            total_combinations *= self.powerball_range
-        
-        # For simplicity, return approximate odds
-        if match_count == k:
-            return f"1 in {total_combinations:,}"
-        else:
-            return "Varies based on exact match"
     
     def can_user_buy_ticket(self, user):
         """Check if user can buy a ticket for this game"""
@@ -606,12 +563,7 @@ class Ticket(models.Model):
         verbose_name="Selected Numbers",
         help_text="Array of selected numbers, e.g., [1, 15, 23, 34, 45]"
     )
-    powerball = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name="Powerball Number",
-        help_text="Only if game has_powerball is True"
-    )
+   
     
     # Draw Information
     draw_date = models.DateTimeField(
@@ -643,16 +595,7 @@ class Ticket(models.Model):
         default=0,
         verbose_name="Numbers Matched"
     )
-    has_powerball_match = models.BooleanField(
-        default=False,
-        verbose_name="Powerball Matched"
-    )
-    prize_tier = models.CharField(
-        max_length=50,
-        blank=True,
-        verbose_name="Prize Tier",
-        help_text="e.g., 'Match 5 + Powerball'"
-    )
+   
     
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
@@ -694,122 +637,49 @@ class Ticket(models.Model):
                 self.draw_date = timezone.now()
         
         super().save(*args, **kwargs)
-    
-    def check_win(self, draw=None):
+    def check_win(self, draw):
         """
-        Check if this ticket is a winning ticket.
-        
-        Args:
-            draw (Draw, optional): Draw to check against. Uses self.draw if not provided.
-            
-        Returns:
-            dict: Results including match_count, has_powerball_match, win_amount
+        Compares ticket numbers against winning numbers.
+        Returns a dict with win status and amount.
         """
-        if not draw:
-            draw = self.draw
+        # Use set intersection to find matches
+        winning_set = set(draw.winning_numbers)
+        player_set = set(self.numbers)
+        matches = winning_set.intersection(player_set)
         
-        if not draw:
-            return {
-                'is_winner': False,
-                'error': 'No draw associated with ticket'
-            }
-        
-        # Get numbers
-        ticket_numbers = set(self.numbers)
-        winning_numbers = set(draw.winning_numbers)
-        
-        # Calculate matches
-        self.match_count = len(ticket_numbers.intersection(winning_numbers))
-        self.has_powerball_match = (
-            self.game.has_powerball and 
-            self.powerball == draw.winning_powerball
-        )
-        
-        # Determine prize tier (simplified - implement based on your prize structure)
-        self.prize_tier = self._determine_prize_tier()
-        
-        # Check if winner
-        is_winner = self._is_winning_ticket()
-        
-        if is_winner:
-            self.status = 'won'
-            # Calculate win amount (implement based on your prize structure)
-            self.win_amount = self._calculate_win_amount()
-        else:
-            self.status = 'lost'
-            self.win_amount = 0
-        
+        self.match_count = len(matches)
         self.checked = True
         self.checked_at = timezone.now()
+        
+        # Example logic: Only 5 matches wins the jackpot
+        is_jackpot = self.match_count == len(winning_set)
+        win_amount = 0
+        
+        if is_jackpot:
+            win_amount = draw.jackpot_amount
+            self.status = 'won'
+        elif self.match_count >= 3: # Example small prize
+            win_amount = 10.00 
+            self.status = 'won'
+        else:
+            self.status = 'lost'
+            
+        self.win_amount = win_amount
         self.save()
         
         return {
-            'is_winner': is_winner,
-            'match_count': self.match_count,
-            'has_powerball_match': self.has_powerball_match,
-            'prize_tier': self.prize_tier,
-            'win_amount': self.win_amount,
-            'ticket_id': self.ticket_id
-        }
+            'is_winner': self.status == 'won',
+            'win_amount': win_amount,
+            'matches': self.match_count
+    }
     
-    def _determine_prize_tier(self):
-        """Determine prize tier based on matches"""
-        if not self.game.has_powerball:
-            if self.match_count == self.game.max_numbers:
-                return f"Match {self.match_count}"
-            elif self.match_count >= self.game.min_numbers:
-                return f"Match {self.match_count}"
-            else:
-                return ""
-        else:
-            if self.match_count == self.game.max_numbers and self.has_powerball_match:
-                return f"Match {self.match_count} + Powerball"
-            elif self.match_count == self.game.max_numbers:
-                return f"Match {self.match_count}"
-            elif self.match_count >= self.game.min_numbers:
-                return f"Match {self.match_count}" + (" + Powerball" if self.has_powerball_match else "")
-            else:
-                return ""
-    
-    def _is_winning_ticket(self):
-        """Check if this is a winning ticket"""
-        # At least match minimum numbers
-        if self.match_count < self.game.min_numbers:
-            return False
-        
-        # If game has powerball, check powerball rules
-        if self.game.has_powerball:
-            # You might want to adjust these rules
-            return self.match_count >= self.game.min_numbers or self.has_powerball_match
-        
-        return self.match_count >= self.game.min_numbers
-    
-    def _calculate_win_amount(self):
-        """Calculate win amount based on prize tier"""
-        # Implement your prize distribution logic here
-        # This is a simplified example
-        
-        prize_structure = {
-            f"Match {self.game.max_numbers} + Powerball": self.game.prize_amount * 0.5,
-            f"Match {self.game.max_numbers}": self.game.prize_amount * 0.2,
-            f"Match {self.game.max_numbers - 1} + Powerball": self.game.prize_amount * 0.1,
-            # Add more tiers as needed
-        }
-        
-        return prize_structure.get(self.prize_tier, 0)
     
     @property
     def is_winner(self):
         """Check if ticket is a winner"""
         return self.status == 'won' and self.win_amount > 0
     
-    @property
-    def numbers_display(self):
-        """Display numbers in human-readable format"""
-        nums = ', '.join(str(n) for n in sorted(self.numbers))
-        if self.powerball:
-            nums += f" + {self.powerball}"
-        return nums
+   
 
 
 class Draw(models.Model):
@@ -841,12 +711,7 @@ class Draw(models.Model):
         verbose_name="Winning Numbers",
         help_text="Array of winning numbers"
     )
-    winning_powerball = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name="Winning Powerball",
-        help_text="Only if game has_powerball is True"
-    )
+    
     
     # Jackpot Information
     jackpot_amount = models.DecimalField(
@@ -956,7 +821,7 @@ class Draw(models.Model):
                         ticket=ticket,
                         draw=self,
                         prize_amount=result['win_amount'],
-                        prize_tier=result['prize_tier']
+                        
                     )
                     winners.append(winner)
                     total_prize += result['win_amount']
@@ -990,8 +855,7 @@ class Draw(models.Model):
     def winning_numbers_display(self):
         """Display winning numbers in human-readable format"""
         nums = ', '.join(str(n) for n in sorted(self.winning_numbers))
-        if self.winning_powerball:
-            nums += f" + {self.winning_powerball}"
+       
         return nums
     
     @property
@@ -1004,7 +868,6 @@ class Draw(models.Model):
             'total': self.game.prize_amount
         }
         return breakdown
-
 
 class Winner(models.Model):
     """
@@ -1039,11 +902,7 @@ class Winner(models.Model):
         decimal_places=2,
         verbose_name="Prize Amount"
     )
-    prize_tier = models.CharField(
-        max_length=100,
-        verbose_name="Prize Tier",
-        help_text="e.g., 'Match 5 + Powerball'"
-    )
+   
     
     # Payment Status
     claimed = models.BooleanField(
@@ -1108,7 +967,7 @@ class Winner(models.Model):
         ]
     
     def __str__(self):
-        return f"Winner: {self.user.username} - ${self.prize_amount} - {self.prize_tier}"
+        return f"Winner: {self.user.username} - ${self.prize_amount}"
     
     def claim_prize(self):
         """Mark prize as claimed by winner"""
@@ -1181,6 +1040,7 @@ class Winner(models.Model):
             return 0
         delta = timezone.now() - self.created_at
         return delta.days
+
 
 
 class Payment(models.Model):
@@ -1627,11 +1487,7 @@ class Syndicate(models.Model):
         verbose_name="Syndicate Numbers",
         help_text="Numbers for syndicate tickets"
     )
-    powerball = models.IntegerField(
-        null=True,
-        blank=True,
-        verbose_name="Syndicate Powerball"
-    )
+   
     
     # Status
     is_active = models.BooleanField(

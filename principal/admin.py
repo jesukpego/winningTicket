@@ -1,1076 +1,586 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from django.urls import reverse
-from django.utils.safestring import mark_safe
+from django.db.models import Sum, Count
+from django.utils import timezone
+
 from .models import (
-    UserProfile, Company, CompanyUser, Game, Ticket, Draw, Winner,
-    Payment, GameFinance, Syndicate, SyndicateMember, AuditLog, Wallet
+    UserProfile,
+    Company,
+    CompanyUser,
+    Game,
+    Ticket,
+    Winner,
+    Draw,
+    Payment,
+    GameFinance,
+    Syndicate,
+    SyndicateMember,
+    AuditLog,
+    Wallet,
 )
 
 
-# ============================================================================
-# USERPROFILE ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Inlines
+# ---------------------------------------------------------------------------
+
+class CompanyUserInline(admin.TabularInline):
+    model = CompanyUser
+    extra = 0
+    fields = ('user', 'role', 'is_active', 'can_create_games', 'can_view_finances', 'can_manage_users')
+    autocomplete_fields = ['user']
+
+
+class GameFinanceInline(admin.StackedInline):
+    model = GameFinance
+    can_delete = False
+    extra = 0
+    readonly_fields = (
+        'total_sales', 'total_tickets', 'platform_fee_amount',
+        'organizer_profit', 'total_prize_pool', 'prize_paid_out',
+        'prize_remaining', 'last_sale_at', 'prize_settled_at', 'profit_paid_at', 'settled_at',
+    )
+
+
+class TicketInline(admin.TabularInline):
+    model = Ticket
+    extra = 0
+    fields = ('ticket_id', 'user', 'status', 'win_amount', 'match_count', 'checked')
+    readonly_fields = ('ticket_id',)
+    ordering = ('-created_at',)
+    show_change_link = True
+    max_num = 20
+
+
+class SyndicateMemberInline(admin.TabularInline):
+    model = SyndicateMember
+    extra = 0
+    fields = ('user', 'shares', 'is_manager', 'paid', 'share_of_winnings', 'winnings_paid')
+
+
+class WalletInline(admin.TabularInline):
+    model = Wallet
+    extra = 0
+    fields = ('wallet_type', 'balance', 'is_active')
+
+
+# ---------------------------------------------------------------------------
+# UserProfile
+# ---------------------------------------------------------------------------
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les profils utilisateurs."""
-    
-    list_display = (
-        'user_link', 'email', 'total_spent_display', 'total_won_display',
-        'games_played', 'age_verified', 'created_at'
-    )
-    list_filter = (
-        'age_verified', 'email_notifications', 'sms_notifications',
-        'created_at', 'updated_at'
-    )
-    search_fields = ('user__username', 'user__email')
-    readonly_fields = (
-        'total_spent', 'total_won', 'games_played',
-        'net_profit', 'win_ratio', 'created_at', 'updated_at'
-    )
-    
+    list_display = ('user', 'total_spent', 'total_won', 'games_played', 'age_verified', 'created_at')
+    list_filter = ('age_verified', 'email_notifications', 'sms_notifications')
+    search_fields = ('user__username', 'user__email', 'user__first_name', 'user__last_name')
+    readonly_fields = ('created_at', 'updated_at', 'net_profit', 'win_ratio', 'balance')
     fieldsets = (
-        ('Informations de Base', {
-            'fields': ('user',)
+        ('User Account', {
+            'fields': ('user',),
         }),
-        ('Vérification', {
-            'fields': ('age_verified', 'verification_date')
+        ('Financial', {
+            'fields': ('total_spent', 'total_won', 'games_played', 'net_profit', 'balance'),
         }),
-        ('Préférences de Notification', {
-            'fields': ('email_notifications', 'sms_notifications')
+        ('Compliance', {
+            'fields': ('age_verified', 'verification_date'),
         }),
-        ('Statistiques', {
-            'fields': (
-                'total_spent', 'total_won', 'games_played',
-                'net_profit', 'win_ratio'
-            ),
-            'classes': ('collapse',)
+        ('Preferences', {
+            'fields': ('email_notifications', 'sms_notifications'),
         }),
-        ('Dates', {
+        ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['verify_users']
-    
-    def user_link(self, obj):
-        """Lien vers l'utilisateur."""
-        url = reverse('admin:auth_user_change', args=[obj.user.id])
-        return format_html('<a href="{}">{}</a>', url, obj.user.username)
-    user_link.short_description = 'Utilisateur'
-    
-    def email(self, obj):
-        """Email de l'utilisateur."""
-        return obj.user.email
-    email.short_description = 'Email'
-    
-    def total_spent_display(self, obj):
-        """Affichage des dépenses."""
-        return format_html('${:,.2f}', obj.total_spent)
-    total_spent_display.short_description = 'Total Dépensé'
-    
-    def total_won_display(self, obj):
-        """Affichage des gains."""
-        return format_html(
-            '<span style="color: green; font-weight: bold;">${:,.2f}</span>',
-            obj.total_won
-        )
-    total_won_display.short_description = 'Total Gagné'
-    
-    def verify_users(self, request, queryset):
-        """Action pour vérifier les utilisateurs."""
-        from django.utils import timezone
-        updated = queryset.update(age_verified=True, verification_date=timezone.now())
-        self.message_user(request, f'{updated} utilisateurs vérifiés.')
-    verify_users.short_description = 'Vérifier les utilisateurs sélectionnés'
+
+    ordering = ('-created_at',)
+
+    def net_profit(self, obj):
+        return obj.net_profit
+    net_profit.short_description = 'Net Profit'
+
+    def win_ratio(self, obj):
+        return f"{obj.win_ratio:.1f}%"
+    win_ratio.short_description = 'Win Ratio'
+
+    def balance(self, obj):
+        return obj.balance
+    balance.short_description = 'Main Wallet Balance'
 
 
-# ============================================================================
-# COMPANY & COMPANYUSER ADMIN
-# ============================================================================
-
-class CompanyUserInline(admin.TabularInline):
-    """Inline pour les utilisateurs d'une entreprise."""
-    model = CompanyUser
-    extra = 0
-    readonly_fields = ('created_at',)
-    fields = ('user', 'role', 'can_create_games', 'can_view_finances', 'created_at')
-
+# ---------------------------------------------------------------------------
+# Company
+# ---------------------------------------------------------------------------
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les entreprises."""
-    
-    list_display = (
-        'name', 'registration_number', 'contact_email', 'verified_status',
-        'is_active', 'balance_display', 'total_games_count', 'active_games_count', 'created_at'
-    )
-    list_filter = ('verified', 'is_active', 'created_at')
+    list_display = ('name', 'registration_number', 'contact_email', 'verified', 'is_active', 'balance', 'total_games', 'active_games', 'created_at')
+    list_filter = ('verified', 'is_active')
     search_fields = ('name', 'registration_number', 'contact_email')
-    readonly_fields = ('created_at', 'updated_at', 'verified_at', 'total_games_count', 'active_games_count')
+    readonly_fields = ('created_at', 'updated_at', 'verified_at', 'total_games', 'active_games')
     inlines = [CompanyUserInline]
-    
     fieldsets = (
-        ('Informations de Base', {
-            'fields': ('name', 'registration_number', 'contact_email', 'contact_phone')
+        ('Basic Information', {
+            'fields': ('name', 'registration_number'),
         }),
-        ('Adresse', {
-            'fields': ('address',)
+        ('Contact', {
+            'fields': ('contact_email', 'contact_phone', 'address'),
         }),
-        ('Vérification', {
-            'fields': ('verified', 'verified_at', 'is_active')
+        ('Status', {
+            'fields': ('verified', 'is_active', 'balance'),
         }),
-        ('Finances', {
-            'fields': ('balance',)
+        ('Statistics', {
+            'fields': ('total_games', 'active_games'),
         }),
-        ('Statistiques', {
-            'fields': ('total_games_count', 'active_games_count'),
-            'classes': ('collapse',)
-        }),
-        ('Dates', {
-            'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at', 'verified_at'),
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['verify_companies', 'activate_companies', 'deactivate_companies']
-    
-    def verified_status(self, obj):
-        """Statut de vérification avec icône."""
-        if obj.verified:
-            return format_html('<span style="color: green;">✓ Vérifié</span>')
-        return format_html('<span style="color: red;">✗ Non vérifié</span>')
-    verified_status.short_description = 'Statut'
-    
-    def balance_display(self, obj):
-        """Affichage du solde."""
-        color = 'green' if obj.balance > 0 else 'red' if obj.balance < 0 else 'black'
-        return format_html(
-            '<span style="color: {};">${:,.2f}</span>',
-            color, obj.balance
-        )
-    balance_display.short_description = 'Solde'
-    
-    def total_games_count(self, obj):
-        """Total des jeux."""
-        return obj.total_games
-    total_games_count.short_description = 'Total Jeux'
-    
-    def active_games_count(self, obj):
-        """Jeux actifs."""
-        return obj.active_games
-    active_games_count.short_description = 'Jeux Actifs'
-    
-    def verify_companies(self, request, queryset):
-        """Vérifier les entreprises."""
-        from django.utils import timezone
-        updated = queryset.update(verified=True, verified_at=timezone.now())
-        self.message_user(request, f'{updated} entreprises vérifiées.')
-    verify_companies.short_description = 'Vérifier les entreprises sélectionnées'
-    
-    def activate_companies(self, request, queryset):
-        """Activer les entreprises."""
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f'{updated} entreprises activées.')
-    activate_companies.short_description = 'Activer'
-    
-    def deactivate_companies(self, request, queryset):
-        """Désactiver les entreprises."""
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f'{updated} entreprises désactivées.')
-    deactivate_companies.short_description = 'Désactiver'
+    ordering = ('name',)
 
+    def total_games(self, obj):
+        return obj.total_games
+    total_games.short_description = 'Total Games'
+
+    def active_games(self, obj):
+        return obj.active_games
+    active_games.short_description = 'Active Games'
+
+
+# ---------------------------------------------------------------------------
+# CompanyUser
+# ---------------------------------------------------------------------------
 
 @admin.register(CompanyUser)
 class CompanyUserAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les utilisateurs d'entreprise."""
-    
-    list_display = ('user', 'company', 'role', 'can_create_games', 'can_view_finances', 'created_at')
-    list_filter = ('role', 'can_create_games', 'can_view_finances', 'created_at')
+    list_display = ('user', 'company', 'role', 'is_active', 'can_create_games', 'can_view_finances', 'can_manage_users', 'created_at')
+    list_filter = ('role', 'is_active', 'can_create_games', 'can_view_finances', 'can_manage_users')
     search_fields = ('user__username', 'company__name')
+    autocomplete_fields = ['user', 'company']
     readonly_fields = ('created_at', 'updated_at')
+    ordering = ('company', 'role')
 
 
-# ============================================================================
-# GAME ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Game
+# ---------------------------------------------------------------------------
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les jeux."""
-    
     list_display = (
-        'name', 'company_display', 'status_display', 'ticket_price_display',
-        'prize_amount_display', 'total_sales_display', 'created_at'
+        'name', 'company', 'status', 'ticket_price', 'prize_amount',
+        'total_tickets_sold', 'progression_percentage', 'next_draw', 'created_at',
     )
-    list_filter = ('status', 'created_at', 'company')
-    search_fields = ('name', 'slug', 'description')
-    readonly_fields = (
-        'slug', 'total_sales_display', 'platform_fee_amount', 'organizer_profit',
-        'created_at', 'updated_at', 'published_at'
-    )
+    list_filter = ('status', 'company')
+    search_fields = ('name', 'slug', 'company__name')
     prepopulated_fields = {'slug': ('name',)}
-    
+    readonly_fields = (
+        'created_at', 'updated_at', 'published_at',
+        'total_sales', 'platform_fee_amount', 'organizer_profit',
+        'progression_percentage', 'ready_for_draw', 'winners_list',
+    )
+    inlines = [GameFinanceInline]
     fieldsets = (
-        ('Informations de Base', {
-            'fields': ('name', 'slug', 'description', 'status')
+        ('Basic Information', {
+            'fields': ('name', 'slug', 'description', 'company'),
         }),
-        ('Entreprise Organisatrice', {
-            'fields': ('company',)
+        ('Pricing & Prize', {
+            'fields': ('ticket_price', 'prize_amount', 'platform_fee_percent'),
         }),
-        ('Configuration du Jeu', {
-            'fields': (
-                'min_numbers', 'max_numbers', 'number_range',
-                'has_powerball', 'powerball_range'
-            )
-        }),
-        ('Tarification', {
-            'fields': ('ticket_price', 'prize_amount', 'platform_fee_percent')
+        ('Game Rules', {
+            'fields': ('number_range',),
         }),
         ('Timing', {
-            'fields': ('next_draw', 'ticket_sale_end')
+            'fields': ('next_draw',),
         }),
-        ('Statistiques & Finances', {
-            'fields': ('total_tickets_sold', 'total_sales_display', 'platform_fee_amount', 'organizer_profit'),
-            'classes': ('collapse',)
+        ('Status', {
+            'fields': ('status', 'total_tickets_sold'),
         }),
-        ('Dates', {
+        ('Computed Stats', {
+            'fields': ('total_sales', 'platform_fee_amount', 'organizer_profit', 'progression_percentage', 'ready_for_draw'),
+            'classes': ('collapse',),
+        }),
+        ('Timestamps', {
             'fields': ('created_at', 'updated_at', 'published_at'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['publish_games', 'close_games', 'activate_games']
-    
-    def company_display(self, obj):
-        """Affichage de l'entreprise."""
-        if obj.company:
-            return format_html('<span style="color: purple;">🏛️ {}</span>', obj.company.name)
-        return format_html('<span style="color: red;">Aucune entreprise</span>')
-    company_display.short_description = 'Entreprise'
-    
-    def status_display(self, obj):
-        """Affichage du statut avec couleur."""
-        colors = {
-            'draft': 'gray',
-            'pending': 'orange',
-            'active': 'green',
-            'closed': 'blue',
-            'canceled': 'red'
-        }
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">{}</span>',
-            colors.get(obj.status, 'black'),
-            obj.get_status_display()
-        )
-    status_display.short_description = 'Statut'
-    
-    def ticket_price_display(self, obj):
-        """Affichage du prix du billet."""
-        return format_html('${:.2f}', obj.ticket_price)
-    ticket_price_display.short_description = 'Prix Billet'
-    
-    def prize_amount_display(self, obj):
-        """Affichage du prix total."""
-        return format_html(
-            '<span style="color: gold; font-weight: bold;">${:,.2f}</span>',
-            obj.prize_amount
-        )
-    prize_amount_display.short_description = 'Prix Total'
-    
-    def total_sales_display(self, obj):
-        """Affichage du total des ventes."""
-        total = obj.total_sales
-        return format_html('${:,.2f}', total)
-    total_sales_display.short_description = 'Ventes Totales'
-    
-    def publish_games(self, request, queryset):
-        """Publier les jeux."""
-        updated = queryset.update(status='active')
-        self.message_user(request, f'{updated} jeux publiés.')
-    publish_games.short_description = 'Publier les jeux sélectionnés'
-    
-    def close_games(self, request, queryset):
-        """Fermer les jeux."""
-        updated = queryset.update(status='closed')
-        self.message_user(request, f'{updated} jeux fermés.')
-    close_games.short_description = 'Fermer'
-    
-    def activate_games(self, request, queryset):
-        """Activer les jeux."""
-        updated = queryset.update(status='active')
-        self.message_user(request, f'{updated} jeux activés.')
-    activate_games.short_description = 'Activer'
+    ordering = ('-created_at',)
+
+    def progression_percentage(self, obj):
+        pct = obj.progression_percentage
+        color = 'green' if pct >= 75 else 'orange' if pct >= 40 else 'red'
+        return format_html('<span style="color:{}">{:.1f}%</span>', color, pct)
+    progression_percentage.short_description = 'Progress'
+
+    def ready_for_draw(self, obj):
+        return obj.ready_for_draw
+    ready_for_draw.boolean = True
+    ready_for_draw.short_description = 'Ready for Draw'
+
+    def total_sales(self, obj):
+        return f"${obj.total_sales:,.2f}"
+    total_sales.short_description = 'Total Sales'
+
+    def platform_fee_amount(self, obj):
+        return f"${obj.platform_fee_amount:,.2f}"
+    platform_fee_amount.short_description = 'Platform Fee'
+
+    def organizer_profit(self, obj):
+        return f"${obj.organizer_profit:,.2f}"
+    organizer_profit.short_description = 'Organizer Profit'
+
+    def winners_list(self, obj):
+        return ', '.join(str(w) for w in obj.winners_list)
+    winners_list.short_description = 'Winners'
 
 
-# ============================================================================
-# TICKET ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Ticket
+# ---------------------------------------------------------------------------
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les billets."""
-    
-    list_display = (
-        'ticket_id', 'game', 'user_link', 'numbers_display_short',
-        'status_display', 'win_amount_display', 'created_at'
-    )
-    list_filter = ('status', 'checked', 'created_at', 'draw_date')
-    search_fields = ('ticket_id', 'user__username')
-    readonly_fields = (
-        'ticket_id', 'match_count', 'has_powerball_match', 'prize_tier',
-        'win_amount', 'checked', 'checked_at', 'created_at'
-    )
-    
+    list_display = ('ticket_id', 'user', 'game', 'status', 'win_amount', 'match_count', 'checked', 'draw_date', 'created_at')
+    list_filter = ('status', 'checked', 'game')
+    search_fields = ('ticket_id', 'user__username', 'game__name')
+    readonly_fields = ('ticket_id', 'created_at', 'checked_at', 'is_winner')
+    autocomplete_fields = ['user', 'game', 'draw']
     fieldsets = (
-        ('Informations du Billet', {
-            'fields': ('ticket_id', 'game', 'user', 'draw', 'draw_date')
+        ('Identification', {
+            'fields': ('ticket_id',),
         }),
-        ('Numéros', {
-            'fields': ('numbers', 'powerball')
+        ('Ownership', {
+            'fields': ('user', 'game', 'draw'),
         }),
-        ('Statut & Résultats', {
-            'fields': (
-                'status', 'match_count', 'has_powerball_match',
-                'prize_tier', 'win_amount'
-            )
+        ('Numbers & Draw', {
+            'fields': ('numbers', 'draw_date'),
         }),
-        ('Vérification', {
-            'fields': ('checked', 'checked_at'),
-            'classes': ('collapse',)
+        ('Status & Results', {
+            'fields': ('status', 'win_amount', 'match_count', 'checked', 'is_winner'),
         }),
-        ('Dates', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
+        ('Timestamps', {
+            'fields': ('created_at', 'checked_at'),
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['check_winners', 'refund_tickets']
-    
-    def user_link(self, obj):
-        """Lien vers l'utilisateur."""
-        url = reverse('admin:auth_user_change', args=[obj.user.id])
-        return format_html('<a href="{}">{}</a>', url, obj.user.username)
-    user_link.short_description = 'Utilisateur'
-    
-    def numbers_display_short(self, obj):
-        """Affichage court des numéros."""
-        nums = ', '.join(str(n) for n in obj.numbers)
-        if obj.powerball:
-            nums += f' + PB:{obj.powerball}'
-        return nums[:40] + '...' if len(nums) > 40 else nums
-    numbers_display_short.short_description = 'Numéros'
-    
-    def status_display(self, obj):
-        """Affichage du statut."""
-        colors = {
-            'pending': 'orange',
-            'won': 'green',
-            'lost': 'red',
-            'refunded': 'blue'
-        }
-        return format_html(
-            '<span style="color: {};">{}</span>',
-            colors.get(obj.status, 'black'),
-            obj.get_status_display()
-        )
-    status_display.short_description = 'Statut'
-    
-    def win_amount_display(self, obj):
-        """Affichage du montant gagné."""
-        if obj.win_amount and obj.win_amount > 0:
-            return format_html(
-                '<span style="color: green; font-weight: bold;">${:,.2f}</span>',
-                obj.win_amount
-            )
-        return '-'
-    win_amount_display.short_description = 'Montant Gagné'
-    
-    def check_winners(self, request, queryset):
-        """Vérifier les gagnants."""
-        count = 0
-        for ticket in queryset:
-            if ticket.draw:
-                ticket.check_win(ticket.draw)
-                count += 1
-        self.message_user(request, f'{count} billets vérifiés.')
-    check_winners.short_description = 'Vérifier les gagnants'
-    
-    def refund_tickets(self, request, queryset):
-        """Rembourser les billets."""
-        updated = queryset.update(status='refunded')
-        self.message_user(request, f'{updated} billets remboursés.')
-    refund_tickets.short_description = 'Rembourser'
+    ordering = ('-created_at',)
+
+    def is_winner(self, obj):
+        return obj.is_winner
+    is_winner.boolean = True
+    is_winner.short_description = 'Winner?'
 
 
-# ============================================================================
-# DRAW ADMIN
-# ============================================================================
-
-class WinnerInline(admin.TabularInline):
-    """Inline pour les gagnants d'un tirage."""
-    model = Winner
-    extra = 0
-    readonly_fields = ('user', 'ticket', 'prize_tier', 'prize_amount', 'claimed', 'paid')
-    can_delete = False
-    fields = ('user', 'ticket', 'prize_tier', 'prize_amount', 'claimed', 'paid')
-
+# ---------------------------------------------------------------------------
+# Draw
+# ---------------------------------------------------------------------------
 
 @admin.register(Draw)
 class DrawAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les tirages."""
-    
     list_display = (
-        'game', 'draw_number', 'draw_date', 'winning_numbers_short',
-        'prize_pool_display', 'processed', 'has_jackpot_winner'
+        'draw_number', 'game', 'draw_date', 'jackpot_amount', 'jackpot_won',
+        'total_tickets', 'total_winners', 'total_prize_paid', 'processed',
     )
-    list_filter = ('processed', 'draw_date', 'game')
+    list_filter = ('processed', 'jackpot_won', 'game')
     search_fields = ('game__name', 'draw_number')
-    readonly_fields = (
-        'draw_number', 'processed', 'processed_at', 'total_tickets',
-        'total_winners', 'has_jackpot_winner', 'created_at'
-    )
-    inlines = [WinnerInline]
-    
+    readonly_fields = ('created_at', 'updated_at', 'processed_at', 'winning_numbers_display', 'prize_pool_breakdown')
+    inlines = [TicketInline]
     fieldsets = (
-        ('Informations du Tirage', {
-            'fields': ('game', 'draw_number', 'draw_date', 'prize_pool')
+        ('Draw Info', {
+            'fields': ('game', 'draw_number', 'draw_date', 'winning_numbers', 'winning_numbers_display'),
         }),
-        ('Numéros Gagnants', {
-            'fields': ('winning_numbers', 'winning_powerball')
+        ('Jackpot', {
+            'fields': ('jackpot_amount', 'jackpot_won'),
         }),
-        ('Traitement', {
-            'fields': ('processed', 'processed_at')
+        ('Statistics', {
+            'fields': ('total_tickets', 'total_winners', 'total_prize_paid', 'prize_pool_breakdown'),
         }),
-        ('Statistiques', {
-            'fields': ('total_tickets', 'total_winners', 'has_jackpot_winner'),
-            'classes': ('collapse',)
+        ('Processing', {
+            'fields': ('processed', 'processed_at', 'created_by', 'verified_by'),
         }),
-        ('Dates', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['process_draws', 'generate_random_numbers']
-    
-    def winning_numbers_short(self, obj):
-        """Affichage court des numéros gagnants."""
-        if obj.winning_numbers:
-            nums = ', '.join(str(n) for n in obj.winning_numbers)
-            if obj.winning_powerball:
-                nums += f' + PB:{obj.winning_powerball}'
-            return nums
-        return 'Non défini'
-    winning_numbers_short.short_description = 'Numéros Gagnants'
-    
-    def prize_pool_display(self, obj):
-        """Affichage de la cagnotte."""
-        return format_html(
-            '<span style="color: gold; font-weight: bold;">${:,.2f}</span>',
-            obj.prize_pool
-        )
-    prize_pool_display.short_description = 'Cagnotte'
-    
-    def has_jackpot_winner(self, obj):
-        """Indicateur de gagnant du jackpot."""
-        # Check if there's a jackpot winner
-        has_winner = obj.winners.filter(prize_tier__icontains='Match').exists()
-        if has_winner:
-            return format_html('<span style="color: green;">✓ Oui</span>')
-        return format_html('<span style="color: gray;">✗ Non</span>')
-    has_jackpot_winner.short_description = 'Jackpot Gagné'
-    
-    def process_draws(self, request, queryset):
-        """Traiter les tirages."""
-        count = 0
-        for draw in queryset.filter(processed=False):
-            draw.process_draw()
-            count += 1
-        self.message_user(request, f'{count} tirages traités.')
-    process_draws.short_description = 'Traiter les tirages sélectionnés'
-    
-    def generate_random_numbers(self, request, queryset):
-        """Générer des numéros aléatoires."""
-        import random
-        count = 0
-        for draw in queryset.filter(processed=False):
-            if not draw.winning_numbers:
-                numbers = sorted(random.sample(range(1, draw.game.number_range + 1), draw.game.max_numbers))
-                draw.winning_numbers = numbers
-                if draw.game.has_powerball:
-                    draw.winning_powerball = random.randint(1, draw.game.powerball_range)
-                draw.save()
-                count += 1
-        self.message_user(request, f'{count} tirages avec numéros générés.')
-    generate_random_numbers.short_description = 'Générer numéros aléatoires'
+    autocomplete_fields = ['game']
+    ordering = ('-draw_date',)
+
+    def winning_numbers_display(self, obj):
+        return obj.winning_numbers_display
+    winning_numbers_display.short_description = 'Winning Numbers (Sorted)'
+
+    def prize_pool_breakdown(self, obj):
+        bd = obj.prize_pool_breakdown
+        return f"Jackpot: ${bd['jackpot']:,.2f} | Other: ${bd['other_prizes']:,.2f} | Total: ${bd['total']:,.2f}"
+    prize_pool_breakdown.short_description = 'Prize Pool Breakdown'
 
 
-# ============================================================================
-# WINNER ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Winner
+# ---------------------------------------------------------------------------
 
 @admin.register(Winner)
 class WinnerAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les gagnants."""
-    
-    list_display = (
-        'user_link', 'draw', 'prize_tier_display', 'prize_amount_display',
-        'claimed', 'paid', 'net_amount_display', 'created_at'
-    )
-    list_filter = ('claimed', 'paid', 'prize_tier', 'created_at')
-    search_fields = ('user__username', 'ticket__ticket_id')
-    readonly_fields = (
-        'net_amount_display', 'tax_percentage_calculated',
-        'days_since_win', 'created_at', 'claimed_at', 'paid_at'
-    )
-    
+    list_display = ('user', 'draw', 'prize_amount', 'tax_withheld', 'net_amount', 'claimed', 'claimed_at', 'paid', 'paid_at')
+    list_filter = ('claimed', 'paid', 'payout_method')
+    search_fields = ('user__username', 'ticket__ticket_id', 'payout_reference')
+    readonly_fields = ('created_at', 'updated_at', 'net_amount', 'days_since_win', 'tax_percentage_calculated')
+    autocomplete_fields = ['user', 'ticket', 'draw']
     fieldsets = (
-        ('Informations du Gagnant', {
-            'fields': ('user', 'ticket', 'draw')
+        ('Winner Info', {
+            'fields': ('user', 'ticket', 'draw'),
         }),
-        ('Prix', {
-            'fields': (
-                'prize_tier', 'prize_amount', 'tax_percentage',
-                'tax_withheld', 'net_amount_display'
-            )
+        ('Prize', {
+            'fields': ('prize_amount', 'tax_withheld', 'tax_percentage', 'net_amount', 'tax_percentage_calculated'),
         }),
-        ('Réclamation & Paiement', {
-            'fields': (
-                'claimed', 'claimed_at', 'paid', 'paid_at',
-                'payout_method', 'payout_reference'
-            )
+        ('Claim', {
+            'fields': ('claimed', 'claimed_at'),
         }),
-        ('Statistiques', {
-            'fields': ('tax_percentage_calculated', 'days_since_win'),
-            'classes': ('collapse',)
+        ('Payment', {
+            'fields': ('paid', 'paid_at', 'payout_method', 'payout_reference'),
         }),
-        ('Dates', {
-            'fields': ('created_at',),
-            'classes': ('collapse',)
+        ('Info', {
+            'fields': ('days_since_win', 'created_at', 'updated_at'),
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['mark_as_claimed', 'process_payments']
-    
-    def user_link(self, obj):
-        """Lien vers l'utilisateur."""
-        url = reverse('admin:auth_user_change', args=[obj.user.id])
-        return format_html('<a href="{}">{}</a>', url, obj.user.username)
-    user_link.short_description = 'Utilisateur'
-    
-    def prize_tier_display(self, obj):
-        """Affichage du niveau de prix."""
-        colors = {
-            'jackpot': 'gold',
-            'second': 'silver',
-            'third': '#cd7f32',
-        }
-        # Simple color based on prize amount
-        color = 'gold' if obj.prize_amount > 10000 else 'silver' if obj.prize_amount > 1000 else 'green'
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">{}</span>',
-            color,
-            obj.prize_tier
-        )
-    prize_tier_display.short_description = 'Niveau'
-    
-    def prize_amount_display(self, obj):
-        """Affichage du montant du prix."""
-        return format_html(
-            '<span style="color: green; font-weight: bold;">${:,.2f}</span>',
-            obj.prize_amount
-        )
-    prize_amount_display.short_description = 'Montant Prix'
-    
-    def net_amount_display(self, obj):
-        """Affichage du montant net."""
-        net = obj.net_amount()
-        return format_html('${:,.2f}', net)
-    net_amount_display.short_description = 'Montant Net'
-    
-    def tax_percentage_calculated(self, obj):
-        """Calcul du pourcentage de taxe."""
-        return obj.tax_percentage_calculated()
-    tax_percentage_calculated.short_description = '% Taxe Calculé'
-    
+    ordering = ('-prize_amount',)
+
+    def net_amount(self, obj):
+        return f"${obj.net_amount:,.2f}"
+    net_amount.short_description = 'Net Amount'
+
     def days_since_win(self, obj):
-        """Jours depuis le gain."""
-        return obj.days_since_win()
-    days_since_win.short_description = 'Jours Depuis Gain'
-    
-    def mark_as_claimed(self, request, queryset):
-        """Marquer comme réclamé."""
-        count = 0
-        for winner in queryset:
-            winner.claim_prize()
-            count += 1
-        self.message_user(request, f'{count} prix réclamés.')
-    mark_as_claimed.short_description = 'Marquer comme réclamé'
-    
-    def process_payments(self, request, queryset):
-        """Traiter les paiements."""
-        count = 0
-        for winner in queryset.filter(claimed=True, paid=False):
-            success = winner.process_payment(payout_method='wallet', reference=f'ADMIN-{winner.id}')
-            if success:
-                count += 1
-        self.message_user(request, f'{count} paiements traités.')
-    process_payments.short_description = 'Traiter les paiements'
+        return obj.days_since_win
+    days_since_win.short_description = 'Days Since Win'
+
+    def tax_percentage_calculated(self, obj):
+        return f"{obj.tax_percentage_calculated:.2f}%"
+    tax_percentage_calculated.short_description = 'Effective Tax %'
 
 
-# ============================================================================
-# PAYMENT ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# Payment
+# ---------------------------------------------------------------------------
 
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les paiements."""
-    
     list_display = (
-        'transaction_id', 'user_link', 'payment_type_display',
-        'amount_display', 'status_display', 'payment_method',
-        'created_at'
+        'transaction_id', 'user', 'payment_type', 'payment_method',
+        'amount', 'processing_fee', 'net_amount', 'status', 'created_at',
     )
-    list_filter = ('status', 'payment_type', 'payment_method', 'created_at')
-    search_fields = ('transaction_id', 'gateway_transaction_id', 'user__username')
-    readonly_fields = (
-        'transaction_id', 'net_amount', 'processing_fee',
-        'age_in_minutes', 'created_at', 'updated_at'
-    )
-    
+    list_filter = ('status', 'payment_type', 'payment_method')
+    search_fields = ('transaction_id', 'internal_reference', 'user__username', 'gateway_transaction_id')
+    readonly_fields = ('created_at', 'updated_at', 'completed_at', 'is_successful', 'formatted_amount', 'age_in_minutes')
+    autocomplete_fields = ['user', 'game', 'ticket']
     fieldsets = (
-        ('Informations du Paiement', {
-            'fields': ('transaction_id', 'user', 'payment_type', 'internal_reference')
+        ('Transaction IDs', {
+            'fields': ('transaction_id', 'internal_reference', 'gateway_transaction_id'),
         }),
-        ('Montants', {
-            'fields': (
-                'amount', 'processing_fee', 'net_amount'
-            )
+        ('Parties', {
+            'fields': ('user', 'game', 'ticket'),
         }),
-        ('Statut & Méthode', {
-            'fields': (
-                'status', 'payment_method',
-                'gateway_transaction_id', 'gateway_response'
-            )
+        ('Payment Details', {
+            'fields': ('amount', 'processing_fee', 'net_amount', 'payment_type', 'payment_method', 'status'),
         }),
-        ('Relations', {
-            'fields': ('ticket', 'game'),
-            'classes': ('collapse',)
+        ('Gateway', {
+            'fields': ('gateway_response',),
+            'classes': ('collapse',),
         }),
-        ('Métadonnées', {
-            'fields': ('ip_address', 'user_agent'),
-            'classes': ('collapse',)
+        ('Metadata', {
+            'fields': ('ip_address', 'user_agent', 'is_successful', 'formatted_amount', 'age_in_minutes'),
+            'classes': ('collapse',),
         }),
-        ('Dates', {
-            'fields': ('created_at', 'updated_at', 'age_in_minutes'),
-            'classes': ('collapse',)
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at', 'completed_at'),
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['mark_as_completed', 'mark_as_failed']
-    
-    def user_link(self, obj):
-        """Lien vers l'utilisateur."""
-        if obj.user:
-            url = reverse('admin:auth_user_change', args=[obj.user.id])
-            return format_html('<a href="{}">{}</a>', url, obj.user.username)
-        return '-'
-    user_link.short_description = 'Utilisateur'
-    
-    def payment_type_display(self, obj):
-        """Affichage du type de paiement."""
-        colors = {
-            'ticket': 'blue',
-            'payout': 'green',
-            'refund': 'orange',
-            'commission': 'purple',
-            'deposit': 'teal',
-            'withdrawal': 'brown'
-        }
-        return format_html(
-            '<span style="color: {};">{}</span>',
-            colors.get(obj.payment_type, 'black'),
-            obj.get_payment_type_display()
-        )
-    payment_type_display.short_description = 'Type'
-    
-    def amount_display(self, obj):
-        """Affichage du montant."""
-        return format_html('${:,.2f}', obj.amount)
-    amount_display.short_description = 'Montant'
-    
-    def status_display(self, obj):
-        """Affichage du statut."""
-        colors = {
-            'pending': 'orange',
-            'processing': 'blue',
-            'completed': 'green',
-            'failed': 'red',
-            'canceled': 'gray',
-            'refunded': 'purple'
-        }
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">{}</span>',
-            colors.get(obj.status, 'black'),
-            obj.get_status_display()
-        )
-    status_display.short_description = 'Statut'
-    
+    ordering = ('-created_at',)
+
+    def is_successful(self, obj):
+        return obj.is_successful
+    is_successful.boolean = True
+    is_successful.short_description = 'Successful?'
+
+    def formatted_amount(self, obj):
+        return obj.formatted_amount
+    formatted_amount.short_description = 'Formatted Amount'
+
     def age_in_minutes(self, obj):
-        """Âge du paiement en minutes."""
-        return obj.age_in_minutes()
-    age_in_minutes.short_description = 'Âge (minutes)'
-    
-    def mark_as_completed(self, request, queryset):
-        """Marquer comme complété."""
-        count = 0
-        for payment in queryset.filter(status='pending'):
-            payment.mark_as_completed()
-            count += 1
-        self.message_user(request, f'{count} paiements marqués comme complétés.')
-    mark_as_completed.short_description = 'Marquer comme complété'
-    
-    def mark_as_failed(self, request, queryset):
-        """Marquer comme échoué."""
-        updated = queryset.update(status='failed')
-        self.message_user(request, f'{updated} paiements marqués comme échoués.')
-    mark_as_failed.short_description = 'Marquer comme échoué'
+        return f"{obj.age_in_minutes:.1f} min"
+    age_in_minutes.short_description = 'Age (minutes)'
 
 
-# ============================================================================
-# GAMEFINANCE ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# GameFinance
+# ---------------------------------------------------------------------------
 
 @admin.register(GameFinance)
 class GameFinanceAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les finances des jeux."""
-    
     list_display = (
-        'game', 'total_revenue_display', 'platform_fees_display',
-        'organizer_profit_display', 'settled', 'settled_at'
+        'game', 'total_sales', 'total_tickets', 'platform_fee_amount',
+        'organizer_profit', 'total_prize_pool', 'prize_paid_out',
+        'settled', 'prize_paid', 'fees_settled', 'profit_paid',
     )
-    list_filter = ('settled', 'created_at', 'settled_at')
+    list_filter = ('settled', 'prize_paid', 'fees_settled', 'profit_paid')
     search_fields = ('game__name',)
+    autocomplete_fields = ['game']
     readonly_fields = (
+        'created_at', 'updated_at',
         'platform_fee_percentage', 'profit_margin', 'payout_ratio',
-        'created_at', 'updated_at', 'settled_at'
+        'last_sale_at', 'prize_settled_at', 'profit_paid_at', 'settled_at',
     )
-    
     fieldsets = (
-        ('Jeu', {
-            'fields': ('game',)
+        ('Game', {
+            'fields': ('game',),
         }),
-        ('Revenus', {
-            'fields': ('total_revenue', 'total_tickets_sold')
+        ('Sales', {
+            'fields': ('total_sales', 'total_tickets', 'last_sale_at'),
         }),
-        ('Frais', {
-            'fields': ('platform_fees', 'gateway_fees')
+        ('Revenue Distribution', {
+            'fields': ('platform_fee_amount', 'organizer_profit'),
         }),
-        ('Profits & Paiements', {
-            'fields': ('organizer_profit', 'total_prize_payout')
+        ('Prize', {
+            'fields': ('total_prize_pool', 'prize_paid_out', 'prize_remaining'),
         }),
-        ('Règlement', {
-            'fields': ('settled', 'settled_at', 'settlement_reference')
+        ('Settlement', {
+            'fields': ('prize_paid', 'fees_settled', 'profit_paid', 'settled', 'prize_settled_at', 'profit_paid_at', 'settled_at'),
         }),
-        ('Statistiques', {
+        ('Analytics', {
             'fields': ('platform_fee_percentage', 'profit_margin', 'payout_ratio'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
         }),
-        ('Dates', {
+        ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['mark_as_settled', 'generate_report']
-    
-    def total_revenue_display(self, obj):
-        """Affichage du revenu total."""
-        return format_html('${:,.2f}', obj.total_revenue)
-    total_revenue_display.short_description = 'Revenu Total'
-    
-    def platform_fees_display(self, obj):
-        """Affichage des frais de plateforme."""
-        return format_html('${:,.2f}', obj.platform_fees)
-    platform_fees_display.short_description = 'Frais Plateforme'
-    
-    def organizer_profit_display(self, obj):
-        """Affichage du profit organisateur."""
-        return format_html(
-            '<span style="color: green; font-weight: bold;">${:,.2f}</span>',
-            obj.organizer_profit
-        )
-    organizer_profit_display.short_description = 'Profit Organisateur'
-    
+    ordering = ('-created_at',)
+
     def platform_fee_percentage(self, obj):
-        """Pourcentage de frais plateforme."""
-        return obj.platform_fee_percentage()
-    platform_fee_percentage.short_description = '% Frais'
-    
+        return f"{obj.platform_fee_percentage:.2f}%"
+    platform_fee_percentage.short_description = 'Platform Fee %'
+
     def profit_margin(self, obj):
-        """Marge de profit."""
-        return obj.profit_margin()
-    profit_margin.short_description = 'Marge'
-    
+        return f"{obj.profit_margin:.2f}%"
+    profit_margin.short_description = 'Profit Margin'
+
     def payout_ratio(self, obj):
-        """Ratio de paiement."""
-        return obj.payout_ratio()
-    payout_ratio.short_description = 'Ratio Paiement'
-    
-    def mark_as_settled(self, request, queryset):
-        """Marquer comme réglé."""
-        from django.utils import timezone
-        count = 0
-        for finance in queryset.filter(settled=False):
-            finance.settled = True
-            finance.settled_at = timezone.now()
-            finance.save()
-            count += 1
-        self.message_user(request, f'{count} finances réglées.')
-    mark_as_settled.short_description = 'Marquer comme réglé'
-    
-    def generate_report(self, request, queryset):
-        """Générer un rapport."""
-        self.message_user(request, 'Fonctionnalité de rapport à implémenter.')
-    generate_report.short_description = 'Générer rapport'
+        return f"{obj.payout_ratio:.2f}%"
+    payout_ratio.short_description = 'Payout Ratio'
 
 
-# ============================================================================
-# SYNDICATE & SYNDICATEMEMBER ADMIN
-# ============================================================================
-
-class SyndicateMemberInline(admin.TabularInline):
-    """Inline pour les membres d'un syndicat."""
-    model = SyndicateMember
-    extra = 0
-    readonly_fields = ('joined_at',)
-    fields = ('user', 'shares', 'share_of_winnings', 'winnings_paid', 'joined_at')
-
+# ---------------------------------------------------------------------------
+# Syndicate
+# ---------------------------------------------------------------------------
 
 @admin.register(Syndicate)
 class SyndicateAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les syndicats."""
-    
-    list_display = (
-        'name', 'game', 'creator', 'total_shares', 'current_members_count',
-        'is_active', 'fill_percentage_display', 'created_at'
-    )
-    list_filter = ('is_active', 'created_at', 'game')
-    search_fields = ('name', 'creator__username')
-    readonly_fields = (
-        'current_members_count', 'available_shares_count',
-        'fill_percentage_display', 'created_at', 'updated_at'
-    )
+    list_display = ('name', 'game', 'creator', 'max_members', 'current_members', 'total_shares', 'available_shares', 'is_active', 'is_full', 'created_at')
+    list_filter = ('is_active', 'is_full', 'game')
+    search_fields = ('name', 'creator__username', 'game__name')
+    readonly_fields = ('created_at', 'updated_at', 'current_members', 'available_shares', 'fill_percentage')
     inlines = [SyndicateMemberInline]
-    
+    autocomplete_fields = ['creator', 'game']
     fieldsets = (
-        ('Informations du Syndicat', {
-            'fields': ('name', 'description', 'game', 'creator')
+        ('Basic Info', {
+            'fields': ('name', 'description', 'creator', 'game'),
         }),
-        ('Parts', {
-            'fields': ('total_shares', 'share_price')
+        ('Structure', {
+            'fields': ('max_members', 'ticket_price', 'share_price', 'total_shares', 'numbers'),
         }),
-        ('Statut', {
-            'fields': ('is_active',)
+        ('Status', {
+            'fields': ('is_active', 'is_full'),
         }),
-        ('Statistiques', {
-            'fields': (
-                'current_members_count', 'available_shares_count',
-                'fill_percentage_display'
-            ),
-            'classes': ('collapse',)
+        ('Statistics', {
+            'fields': ('current_members', 'available_shares', 'fill_percentage'),
         }),
-        ('Dates', {
+        ('Timestamps', {
             'fields': ('created_at', 'updated_at'),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
         }),
     )
-    
-    actions = ['close_syndicates']
-    
-    def current_members_count(self, obj):
-        """Nombre de membres actuels."""
-        return obj.current_members()
-    current_members_count.short_description = 'Membres'
-    
-    def available_shares_count(self, obj):
-        """Parts disponibles."""
-        return obj.available_shares()
-    available_shares_count.short_description = 'Parts Disponibles'
-    
-    def fill_percentage_display(self, obj):
-        """Pourcentage de remplissage."""
-        percentage = obj.fill_percentage()
-        color = 'green' if percentage >= 75 else 'orange' if percentage >= 50 else 'red'
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">{:.0f}%</span>',
-            color, percentage
-        )
-    fill_percentage_display.short_description = '% Rempli'
-    
-    def close_syndicates(self, request, queryset):
-        """Fermer les syndicats."""
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f'{updated} syndicats fermés.')
-    close_syndicates.short_description = 'Fermer les syndicats'
+    ordering = ('-created_at',)
 
+    def current_members(self, obj):
+        return obj.current_members
+    current_members.short_description = 'Members'
+
+    def available_shares(self, obj):
+        return obj.available_shares
+    available_shares.short_description = 'Available Shares'
+
+    def fill_percentage(self, obj):
+        return f"{obj.fill_percentage:.1f}%"
+    fill_percentage.short_description = 'Fill %'
+
+
+# ---------------------------------------------------------------------------
+# SyndicateMember
+# ---------------------------------------------------------------------------
 
 @admin.register(SyndicateMember)
 class SyndicateMemberAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les membres de syndicat."""
-    
-    list_display = (
-        'user', 'syndicate', 'shares', 'share_of_winnings_display',
-        'winnings_paid', 'joined_at'
-    )
-    list_filter = ('winnings_paid', 'joined_at')
+    list_display = ('user', 'syndicate', 'shares', 'is_manager', 'paid', 'share_of_winnings', 'winnings_paid', 'joined_at')
+    list_filter = ('is_manager', 'paid', 'winnings_paid')
     search_fields = ('user__username', 'syndicate__name')
+    autocomplete_fields = ['user', 'syndicate', 'payment']
     readonly_fields = ('joined_at',)
-    
-    def share_of_winnings_display(self, obj):
-        """Affichage de la part des gains."""
-        if obj.share_of_winnings > 0:
-            return format_html(
-                '<span style="color: green;">${:,.2f}</span>',
-                obj.share_of_winnings
-            )
-        return '-'
-    share_of_winnings_display.short_description = 'Part des Gains'
+    ordering = ('-joined_at',)
 
 
-# ============================================================================
-# WALLET ADMIN
-# ============================================================================
-
-@admin.register(Wallet)
-class WalletAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les portefeuilles."""
-    
-    list_display = (
-        'user', 'wallet_type_display', 'balance_display', 'is_active'
-    )
-    list_filter = ('wallet_type', 'is_active')
-    search_fields = ('user__username',)
-    
-    fieldsets = (
-        ('Informations du Portefeuille', {
-            'fields': ('user', 'wallet_type', 'balance', 'is_active')
-        }),
-    )
-    
-    actions = ['activate_wallets', 'deactivate_wallets']
-    
-    def wallet_type_display(self, obj):
-        """Affichage du type de portefeuille."""
-        colors = {
-            'main': 'blue',
-            'bonus': 'orange',
-            'winnings': 'green'
-        }
-        return format_html(
-            '<span style="color: {};">{}</span>',
-            colors.get(obj.wallet_type, 'black'),
-            obj.get_wallet_type_display()
-        )
-    wallet_type_display.short_description = 'Type'
-    
-    def balance_display(self, obj):
-        """Affichage du solde."""
-        color = 'green' if obj.balance > 0 else 'red' if obj.balance < 0 else 'black'
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">${:,.2f}</span>',
-            color, obj.balance
-        )
-    balance_display.short_description = 'Solde'
-    
-    def activate_wallets(self, request, queryset):
-        """Activer les portefeuilles."""
-        updated = queryset.update(is_active=True)
-        self.message_user(request, f'{updated} portefeuilles activés.')
-    activate_wallets.short_description = 'Activer'
-    
-    def deactivate_wallets(self, request, queryset):
-        """Désactiver les portefeuilles."""
-        updated = queryset.update(is_active=False)
-        self.message_user(request, f'{updated} portefeuilles désactivés.')
-    deactivate_wallets.short_description = 'Désactiver'
-
-
-# ============================================================================
-# AUDITLOG ADMIN
-# ============================================================================
+# ---------------------------------------------------------------------------
+# AuditLog
+# ---------------------------------------------------------------------------
 
 @admin.register(AuditLog)
 class AuditLogAdmin(admin.ModelAdmin):
-    """Interface d'administration pour les journaux d'audit."""
-    
-    list_display = (
-        'action_display', 'user_link', 'level_display',
-        'ip_address', 'created_at'
-    )
-    list_filter = ('action', 'level', 'created_at')
-    search_fields = ('description', 'user__username', 'ip_address')
+    list_display = ('action', 'level', 'user', 'ip_address', 'created_at')
+    list_filter = ('action', 'level')
+    search_fields = ('user__username', 'description', 'ip_address')
     readonly_fields = (
-        'user', 'action', 'description', 'level', 'ip_address',
-        'user_agent', 'game', 'ticket', 'draw', 'payment',
-        'metadata', 'created_at'
+        'action', 'level', 'description', 'user', 'ip_address', 'user_agent',
+        'game', 'ticket', 'draw', 'payment', 'metadata', 'created_at',
     )
-    
     fieldsets = (
-        ('Action', {
-            'fields': ('action', 'description', 'level')
+        ('Event', {
+            'fields': ('action', 'level', 'description'),
         }),
-        ('Utilisateur', {
-            'fields': ('user', 'ip_address', 'user_agent')
+        ('Actor', {
+            'fields': ('user', 'ip_address', 'user_agent'),
         }),
-        ('Relations', {
+        ('Related Objects', {
             'fields': ('game', 'ticket', 'draw', 'payment'),
-            'classes': ('collapse',)
         }),
-        ('Métadonnées', {
+        ('Metadata', {
             'fields': ('metadata',),
-            'classes': ('collapse',)
+            'classes': ('collapse',),
         }),
-        ('Date', {
-            'fields': ('created_at',)
+        ('Timestamp', {
+            'fields': ('created_at',),
         }),
     )
-    
+    ordering = ('-created_at',)
+
     def has_add_permission(self, request):
-        """Empêcher l'ajout manuel."""
-        return False
-    
-    def has_delete_permission(self, request, obj=None):
-        """Empêcher la suppression."""
-        return False
-    
-    def action_display(self, obj):
-        """Affichage de l'action."""
-        return obj.get_action_display()
-    action_display.short_description = 'Action'
-    
-    def user_link(self, obj):
-        """Lien vers l'utilisateur."""
-        if obj.user:
-            url = reverse('admin:auth_user_change', args=[obj.user.id])
-            return format_html('<a href="{}">{}</a>', url, obj.user.username)
-        return '-'
-    user_link.short_description = 'Utilisateur'
-    
-    def level_display(self, obj):
-        """Affichage du niveau."""
-        colors = {
-            'info': 'blue',
-            'warning': 'orange',
-            'error': 'red',
-            'critical': 'darkred'
-        }
-        return format_html(
-            '<span style="color: {}; font-weight: bold;">{}</span>',
-            colors.get(obj.level, 'black'),
-            obj.get_level_display().upper()
-        )
-    level_display.short_description = 'Niveau'
+        return False  # Audit logs should only be created programmatically
+
+    def has_change_permission(self, request, obj=None):
+        return False  # Audit logs are immutable
+
+
+# ---------------------------------------------------------------------------
+# Wallet
+# ---------------------------------------------------------------------------
+
+@admin.register(Wallet)
+class WalletAdmin(admin.ModelAdmin):
+    list_display = ('user', 'wallet_type', 'balance', 'is_active')
+    list_filter = ('wallet_type', 'is_active')
+    search_fields = ('user__username',)
+    autocomplete_fields = ['user']
+    ordering = ('user', 'wallet_type')
