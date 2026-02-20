@@ -35,6 +35,4 @@ urlpatterns = [
     path("manage-games/edit/<int:game_id>/", views.edit_game, name="edit_game"),
     path("manage-games/delete/<int:game_id>/", views.delete_game, name="delete_game"),
     
-    # Language switcher
-    path("set-language/", views.set_language, name="set_language"),
 ]

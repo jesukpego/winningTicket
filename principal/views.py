@@ -137,7 +137,6 @@ def play_game(request, slug):
                     ticket_id=generate_ticket_id(),
                     draw_date=draw_date,
                     status='pending',
-                    prize_tier='None',
                     match_count=0
                 )
                 
@@ -584,28 +583,6 @@ def dashboard(request):
     return render(request, 'users/dashboard.html', context)
 
 
-# ======================================================
-# LANGUAGE SWITCHER
-# ======================================================
-
-def set_language(request):
-    """
-    Change la préférence de langue de l'utilisateur.
-    """
-    if request.method == 'POST':
-        language_code = request.POST.get('language')
-        
-        if language_code and language_code in [lang[0] for lang in settings.LANGUAGES]:
-            activate(language_code)
-            request.session['django_language'] = language_code
-            
-            next_url = request.POST.get('next', request.META.get('HTTP_REFERER', '/'))
-            response = redirect(next_url)
-            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language_code)
-            return response
-            
-    return redirect('home')
-# À RAJOUTER À LA FIN DE principal/views.py
 
 @login_required
 @user_passes_test(is_staff)
@@ -652,3 +629,4 @@ def delete_company(request, company_id):
         messages.success(request, _("L'entreprise a été supprimée."))
         return redirect('manage_companies')
     return render(request, 'admins/company_confirm_delete.html', {'company': company})
+

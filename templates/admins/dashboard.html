@@ -16,7 +16,8 @@
                 <i class="fas fa-user-shield text-2xl"></i>
             </div>
             <div>
-                <p class="text-[10px] font-black text-yellow-500 uppercase tracking-[0.3em] mb-1">{% trans "Console d'administration" %}</p>
+                <p class="text-[10px] font-black text-yellow-500 uppercase tracking-[0.3em] mb-1">{% trans "Console
+                    d'administration" %}</p>
                 <h1 class="text-3xl font-black text-white tracking-tighter uppercase">{{ user.username }}</h1>
             </div>
         </div>
@@ -102,7 +103,8 @@
                 <h2 class="text-2xl font-black text-white tracking-tight uppercase">{% trans "Progression des Jeux" %}
                 </h2>
                 <a href="{% url 'manage_games' %}"
-                    class="text-[10px] font-black text-slate-500 hover:text-white uppercase tracking-widest transition-colors">{% trans "Gérer tous les jeux" %}</a>
+                    class="text-[10px] font-black text-slate-500 hover:text-white uppercase tracking-widest transition-colors">{%
+                    trans "Gérer tous les jeux" %}</a>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -114,7 +116,8 @@
                             <h4
                                 class="text-xl font-black text-white tracking-tight group-hover:text-yellow-400 transition-colors uppercase">
                                 {{ game.name }}</h4>
-                            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">{% trans "Prochain Tirage" %} : {{ game.next_draw|date:"d M H:i" }}</p>
+                            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">{% trans
+                                "Prochain Tirage" %} : {{ game.next_draw|date:"d M H:i" }}</p>
                         </div>
                         <div
                             class="flex items-center gap-2 bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20">
@@ -127,14 +130,14 @@
                         <div
                             class="flex justify-between text-[10px] font-black text-slate-500 uppercase tracking-widest">
                             <span>{% trans "Vente des tickets" %}</span>
-                            <span class="text-white">{{ game.progress }}%</span>
+                            <span class="text-white">{{ game.progression_percentage }}%</span>
                         </div>
                         <div class="h-3 bg-slate-950 rounded-full overflow-hidden border border-slate-800 p-0.5">
                             <div class="h-full bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full transition-all duration-1000"
-                                style="width: {{ game.progress }} %"></div>
+                                style="width:{{ game.progression_percentage }}%"></div>
                         </div>
                         <div class="flex justify-between items-center pt-2">
-                            <p class="text-lg font-black text-white tracking-tight">{{ game.tickets_sold }} / {{ game.total_tickets }}</p>
+                            <p class="text-lg font-black text-white tracking-tight">{{ game.total_tickets_sold }} / {{game.number_range }}</p>
                             <button
                                 class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:border-yellow-400 transition-all">
                                 <i class="fas fa-cog text-xs"></i>
@@ -149,31 +152,62 @@
         <!-- Right Panel: Recent Activity & Quick Links -->
         <div class="space-y-8">
             <!-- Recent Transactions -->
+            <!-- Recent Transactions -->
             <div class="bg-slate-900/40 backdrop-blur-xl border border-slate-800/50 rounded-[40px] p-8">
-                <h3 class="text-lg font-black text-white uppercase tracking-tight mb-8">{% trans "Transactions Récentes"
-                    %}</h3>
-                <div class="space-y-6">
+
+                <h3 class="text-lg font-black text-white uppercase tracking-tight mb-8">
+                    {% trans "Transactions Récentes" %}
+                </h3>
+
+                <!-- Scroll Container -->
+                <div class="space-y-6 max-h-80 overflow-y-auto pr-2">
+
+                    {% for ticket in recent_transactions %}
                     <div class="flex gap-4">
+
+                        <!-- Icon -->
                         <div
                             class="w-10 h-10 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center text-emerald-500">
                             <i class="fas fa-arrow-down text-xs"></i>
                         </div>
+
+                        <!-- User + Type -->
                         <div>
-                            <p class="text-white text-sm font-bold">@alex_winner</p>
-                            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest">{% trans "Achat de ticket" %}</p>
+                            <p class="text-white text-sm font-bold">
+                                @{{ ticket.user.username }}
+                            </p>
+                            <p class="text-[10px] font-black text-slate-600 uppercase tracking-widest">
+                                {% trans "Achat de ticket" %}
+                            </p>
                         </div>
+
+                        <!-- Amount + Date -->
                         <div class="ml-auto text-right">
-                            <p class="text-sm font-black text-white">-$5.00</p>
-                            <p class="text-[8px] font-bold text-slate-600 uppercase">2 min ago</p>
+                            <p class="text-sm font-black text-white">
+                                -${{ ticket.game.ticket_price }}
+                            </p>
+                            <p class="text-[8px] font-bold text-slate-600 uppercase">
+                                {{ ticket.created_at|timesince }} ago
+                            </p>
                         </div>
+
                     </div>
-                    <!-- Mock more transactions -->
+                    {% empty %}
+                    <p class="text-slate-500 text-sm">
+                        {% trans "Aucune transaction pour le moment." %}
+                    </p>
+                    {% endfor %}
+
                 </div>
+
+                <!-- Button -->
                 <a href="{% url 'revenue_report' %}"
                     class="w-full mt-10 block text-center py-4 bg-slate-950 text-slate-400 rounded-2xl font-black text-[10px] uppercase tracking-widest border border-slate-800 hover:text-white hover:border-slate-700 transition-all">
                     {% trans "Toutes les transactions" %}
                 </a>
+
             </div>
+
 
             <!-- Ready for Draw Alert -->
             <div
@@ -181,7 +215,8 @@
                 <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-slate-950/10 rounded-full blur-2xl"></div>
                 <i
                     class="fas fa-bell text-slate-950/30 text-5xl absolute top-8 right-8 group-hover:rotate-12 transition-transform"></i>
-                <h3 class="text-slate-950 font-black text-xl uppercase tracking-tight mb-4 leading-tight">{% trans "Jeux prêts pour le tirage" %}</h3>
+                <h3 class="text-slate-950 font-black text-xl uppercase tracking-tight mb-4 leading-tight">{% trans "Jeux
+                    prêts pour le tirage" %}</h3>
                 <p class="text-slate-950/70 text-sm font-bold mb-6">3 jeux ont atteint le quota de tickets et sont prêts
                     à être tirés.</p>
                 <button

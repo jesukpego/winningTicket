@@ -122,11 +122,13 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # ==================== I18N ====================
-LANGUAGE_CODE = "fr-fr"  # Default language: French
+LANGUAGE_CODE = 'fr'  # Default language: French
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+# Ajoute ceci pour stabiliser le choix de la langue
+LANGUAGE_COOKIE_NAME = 'django_language'
 
 # Supported languages
 LANGUAGES = [
@@ -135,7 +137,7 @@ LANGUAGES = [
 ]
 # Locale paths for translation files
 LOCALE_PATHS = [
-    BASE_DIR / 'locale/',
+    BASE_DIR / 'config' / 'locale',
 ]
 
 # ==================== SECURITY (PROD ONLY) ====================
