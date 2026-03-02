@@ -630,3 +630,19 @@ def delete_company(request, company_id):
         return redirect('manage_companies')
     return render(request, 'admins/company_confirm_delete.html', {'company': company})
 
+
+from django.contrib.gis.geoip2 import GeoIP2
+
+def show_ip_country(request):
+    g = GeoIP2()
+
+    ip = request.META.get('REMOTE_ADDR')
+
+
+    try:
+        country = g.country(ip)
+        country_name = country["country_name"]
+    except:
+        country_name = "Unknown"
+
+    return HttpResponse(f"IP: {ip} | Country: {country_name}")

@@ -25,4 +25,10 @@ def sub(value, arg):
     except (ValueError, TypeError):
         return 0
 
-
+@register.filter(name='split')
+def split(value, key):
+    """
+    Sépare une chaîne de caractères par une clé donnée
+    Usage: {{ "item1,item2"|split:"," }}
+    """
+    return value.split(key)

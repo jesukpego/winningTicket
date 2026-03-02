@@ -1,185 +1,359 @@
 <!DOCTYPE html>
 {% load i18n %}
+{% load static %}
 <html lang="{{ LANGUAGE_CODE }}" class="h-full">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Winning Ticket - La Plateforme de Loterie{% endblock %}</title>
+    <title>{% block title %}Winning Ticket - L'Expérience Premium{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{% static 'images/favicon.svg' %}">
 
-    <!-- Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+    <!--
+    ╔═══════════════════════════════════════════════════════╗
+    ║  STRATÉGIE FONTS — 4 niveaux de fallback              ║
+    ║  1. Fichiers locaux Django static (100% fiable)       ║
+    ║  2. Bunny Fonts CDN (EU/GDPR, souvent plus rapide)    ║
+    ║  3. Google Fonts (backup classique)                   ║
+    ║  4. System font stack sans-serif (jamais de serif!)   ║
+    ╚═══════════════════════════════════════════════════════╝
+    Placer les fichiers dans : yourapp/static/fonts/
+      → syne-700.woff2      (google.com/fonts → Syne → Download)
+      → syne-800.woff2
+      → dm-sans-400.woff2   (google.com/fonts → DM Sans → Download)
+      → dm-sans-600.woff2
+    -->
 
-    <!-- Tailwind CSS -->
+    <!-- NIVEAU 1 : Fonts locales (servies par Django, zéro dépendance réseau) -->
+    <style>
+        @font-face {
+            font-family: 'Syne';
+            font-style: normal;
+            font-weight: 700;
+            font-display: swap;
+            src: url("{% static 'fonts/syne-700.woff' %}") format('woff'),
+                 local('Syne Bold'), local('Syne-Bold');
+        }
+        @font-face {
+            font-family: 'Syne';
+            font-style: normal;
+            font-weight: 800;
+            font-display: swap;
+            src: url("{% static 'fonts/syne-800.woff' %}") format('woff'),
+                 local('Syne ExtraBold'), local('Syne-ExtraBold');
+        }
+        @font-face {
+            font-family: 'DM Sans';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url("{% static 'fonts/dm-sans-400.woff' %}") format('woff'),
+                 local('DM Sans'), local('DMSans-Regular');
+        }
+        @font-face {
+            font-family: 'DM Sans';
+            font-style: normal;
+            font-weight: 600;
+            font-display: swap;
+            src: url("{% static 'fonts/dm-sans-600.woff' %}") format('woff'),
+                 local('DM Sans SemiBold'), local('DMSans-SemiBold');
+        }
+    </style>
+
+    <!-- NIVEAU 2 : Bunny Fonts (CDN EU — preconnect pour réduire la latence) -->
+    <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+    <link href="https://fonts.bunny.net/css?family=syne:600,700,800|dm-sans:400,500,600,700&display=swap" rel="stylesheet">
+
+    <!-- NIVEAU 3 : Google Fonts en renfort -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- NIVEAU 4 : Stacks système — JAMAIS de fallback serif -->
+    <style>
+        :root {
+            --font-brand: 'Syne',
+                          'Segoe UI', 'SF Pro Display',
+                          ui-sans-serif, system-ui,
+                          -apple-system, BlinkMacSystemFont,
+                          Arial, sans-serif;
+
+            --font-body:  'DM Sans',
+                          'Segoe UI', 'SF Pro Text',
+                          ui-sans-serif, system-ui,
+                          -apple-system, BlinkMacSystemFont,
+                          Arial, sans-serif;
+        }
+
+        /* Appliqué en premier, avant tout — garantit qu'aucun serif n'apparaît */
+        html, body                              { font-family: var(--font-body) !important; }
+        h1, h2, h3, h4, h5, h6                 { font-family: var(--font-brand) !important; }
+        .font-brand, .section-title,
+        .btn-premium, [class*="font-brand"]     { font-family: var(--font-brand) !important; }
+    </style>
+
+    <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        brand: ['"Outfit"', 'sans-serif'],
-                        sans: ['"Inter"', 'sans-serif'],
+                        brand: ['Syne', 'Segoe UI', 'SF Pro Display', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        sans:  ['DM Sans', 'Segoe UI', 'SF Pro Text', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                     colors: {
-                        primary: {
-                            50: '#FFFDE7',
-                            100: '#FFF9C4',
-                            300: '#FFF176',
-                            400: '#FFEE58',
-                            500: '#FFD700', // Gold Main
-                            600: '#FBC02D',
-                            700: '#F9A825',
-                            800: '#F57F17',
-                            900: '#B8860B', // Gold Dark
-                        },
-                        navy: {
-                            600: '#1E40AF',
-                            700: '#0A2463', // Deep Navy Main
-                            800: '#071A4D', // Deep Navy Dark
-                            900: '#051235',
-                        }
+                        primary: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706' },
+                        navy:    { 900: '#0F1C2E' },
+                    },
+                    animation: {
+                        'glow':    'glow 3s infinite alternate',
+                        'float':   'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2s linear infinite',
+                    },
+                    keyframes: {
+                        glow:    { '0%': { opacity:'0.2', transform:'scale(1)' }, '100%': { opacity:'0.5', transform:'scale(1.15)' } },
+                        float:   { '0%,100%': { transform:'translateY(0)' }, '50%': { transform:'translateY(-12px)' } },
+                        shimmer: { '0%': { backgroundPosition:'-200% 0' }, '100%': { backgroundPosition:'200% 0' } },
                     }
                 }
             }
         }
     </script>
 
-    <!-- Font Awesome -->
+    <!-- Theme init AVANT le premier paint pour éviter le flash blanc→sombre -->
+    <script>
+        (function(){
+            var t = localStorage.getItem('wt-theme') || 'light';
+            document.documentElement.classList.toggle('dark', t === 'dark');
+        })();
+    </script>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Custom CSS -->
     <style>
-        html {
-            scroll-behavior: smooth;
+        /* ═══════════════════════════════════════════════════
+           DESIGN TOKENS
+        ═══════════════════════════════════════════════════ */
+        :root {
+            /* LIGHT — Bleu ardoise pâle + Or ambré (moins éblouissant) */
+            --c-bg:             #F0F4FA;
+            --c-bg-alt:         #E6ECF5;
+            --c-surface:        rgba(255,255,255,0.88);
+            --c-surface-solid:  #FFFFFF;
+            --c-surface-raised: #F8FAFD;
+            --c-border:         rgba(180,198,230,0.50);
+            --c-border-strong:  rgba(140,165,210,0.40);
+            --c-text:           #0F1C2E;
+            --c-text-muted:     #4A6080;
+            --c-text-soft:      #849AB8;
+            --c-accent:         #D97706;
+            --c-accent-bright:  #F59E0B;
+            --c-accent-light:   #FEF3C7;
+            --c-accent-glow:    rgba(245,158,11,0.20);
+            --c-blue:           #3B82F6;
+            --c-blue-light:     rgba(59,130,246,0.10);
+            --c-blue-glow:      rgba(59,130,246,0.18);
+            --c-shadow-sm:      0 2px 8px  rgba(15,28,60,0.06);
+            --c-shadow-md:      0 8px 32px rgba(15,28,60,0.09);
+            --c-shadow-lg:      0 20px 60px rgba(15,28,60,0.11);
+            --c-shadow-glow:    0 8px 32px rgba(245,158,11,0.26);
         }
 
+        html.dark {
+            /* DARK — Deep Navy Premium */
+            --c-bg:             #070D1A;
+            --c-bg-alt:         #0C1525;
+            --c-surface:        rgba(15,25,45,0.65);
+            --c-surface-solid:  #0F1929;
+            --c-surface-raised: #131F33;
+            --c-border:         rgba(50,70,100,0.45);
+            --c-border-strong:  rgba(80,100,140,0.35);
+            --c-text:           #F0EAE0;
+            --c-text-muted:     #8899BB;
+            --c-text-soft:      #5A6A88;
+            --c-accent:         #F59E0B;
+            --c-accent-bright:  #FBBF24;
+            --c-accent-light:   rgba(245,158,11,0.12);
+            --c-accent-glow:    rgba(245,158,11,0.15);
+            --c-blue:           #60A5FA;
+            --c-blue-light:     rgba(96,165,250,0.10);
+            --c-blue-glow:      rgba(96,165,250,0.15);
+            --c-shadow-sm:      0 2px 8px  rgba(0,0,0,0.25);
+            --c-shadow-md:      0 8px 32px rgba(0,0,0,0.35);
+            --c-shadow-lg:      0 20px 60px rgba(0,0,0,0.5);
+            --c-shadow-glow:    0 8px 32px rgba(245,158,11,0.20);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           BASE
+        ═══════════════════════════════════════════════════ */
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         body {
-            font-family: 'Inter', sans-serif;
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6,
-        .font-brand {
-            font-family: 'Outfit', sans-serif;
-            letter-spacing: -0.02em;
+        /* ═══════════════════════════════════════════════════
+           COMPONENTS
+        ═══════════════════════════════════════════════════ */
+        .glass-card {
+            background: var(--c-surface);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border: 1px solid var(--c-border);
+            box-shadow: var(--c-shadow-md);
+            border-radius: 20px;
+        }
+        .glass-card-raised {
+            background: var(--c-surface-solid);
+            border: 1px solid var(--c-border-strong);
+            box-shadow: var(--c-shadow-lg);
+            border-radius: 24px;
         }
 
-        .gradient-bg {
-            background: radial-gradient(circle at top right, #051235, #020617);
+        .btn-premium {
+            background: linear-gradient(135deg, var(--c-accent-bright) 0%, var(--c-accent) 100%);
+            color: #0F1C2E;
+            font-family: var(--font-brand) !important;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -0.01em;
+            box-shadow: var(--c-shadow-glow);
             position: relative;
             overflow: hidden;
+            text-decoration: none;
         }
-
-        .gradient-bg::before {
+        .btn-premium::before {
             content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 80%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(234, 179, 8, 0.05), transparent 70%);
-            pointer-events: none;
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.3s;
         }
+        .btn-premium:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px var(--c-accent-glow); }
+        .btn-premium:hover::before { opacity: 1; }
 
-        .card-hover {
-            transition: all 0.3s ease;
+        .blob { position: absolute; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; }
+        .blob-gold { background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(245,158,11,0.08) 60%, transparent 100%); width:550px; height:550px; }
+        .blob-warm { background: radial-gradient(circle, rgba(99,155,255,0.10) 0%, transparent 70%); width:420px; height:420px; }
+
+        .section-tag {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 14px;
+            background: var(--c-accent-light);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 99px;
+            font-family: var(--font-body);
+            font-size: 0.72rem; font-weight: 700;
+            color: var(--c-accent);
+            letter-spacing: 0.08em; text-transform: uppercase;
         }
-
-        .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-            color: #020617;
+        .section-title {
+            font-family: var(--font-brand) !important;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            color: var(--c-text);
+        }
+        .gold-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--c-accent-bright), transparent);
+            border: none; margin: 0;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px -5px rgba(245, 158, 11, 0.4);
-            filter: brightness(1.1);
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--c-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--c-border-strong); border-radius: 99px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--c-accent); }
+        ::selection { background: rgba(245,158,11,0.22); color: var(--c-text); }
 
-        .btn-primary:active {
-            transform: translateY(0) scale(0.95);
+        /* ═══════════════════════════════════════════════════
+           ANIMATIONS
+        ═══════════════════════════════════════════════════ */
+        @keyframes fadeInUp    { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+        @keyframes fadeInRight { from { opacity:0; transform:translateX(28px); } to { opacity:1; transform:translateX(0); } }
+        @keyframes scaleIn     { from { opacity:0; transform:scale(0.92); }     to { opacity:1; transform:scale(1); } }
+
+        .animate-fade-in-up    { animation: fadeInUp    0.6s ease both; }
+        .animate-fade-in-right { animation: fadeInRight 0.5s ease both; }
+        .animate-scale-in      { animation: scaleIn     0.5s ease both; }
+
+        .reveal {
+            opacity: 0; transform: translateY(32px);
+            transition: opacity 0.65s cubic-bezier(.215,.61,.355,1),
+                        transform 0.65s cubic-bezier(.215,.61,.355,1);
         }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
     </style>
 </head>
 
-<body class="min-h-full bg-slate-950 text-white selection:bg-yellow-400/30">
+<body>
+    <div class="blob blob-gold fixed top-[-100px] left-[-100px] animate-glow pointer-events-none" style="z-index:0;"></div>
+    <div class="blob blob-warm fixed bottom-[-80px] right-[-80px] animate-glow pointer-events-none" style="animation-delay:-2s; z-index:0;"></div>
+
     {% include 'base/header.html' %}
 
-    <!-- Messages -->
     {% if messages %}
-    <div class="fixed top-20 right-4 z-50 space-y-2">
+    <div class="fixed top-24 right-6 z-[200] space-y-3 max-w-sm">
         {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} backdrop-blur-md bg-slate-900/80 border border-slate-700/50 
-                    {% if message.tags == 'success' %}border-l-4 border-l-emerald-500 text-emerald-400
-                    {% elif message.tags == 'error' %}border-l-4 border-l-rose-500 text-rose-400
-                    {% elif message.tags == 'warning' %}border-l-4 border-l-amber-500 text-amber-400
-                    {% else %}border-l-4 border-l-sky-500 text-sky-400{% endif %}
-                    px-4 py-4 rounded-2xl shadow-2xl max-w-sm animate-fade-in-right">
-            <div class="flex">
-                <div class="flex-shrink-0">
-                    {% if message.tags == 'success' %}
-                    <i class="fas fa-check-circle text-green-500"></i>
-                    {% elif message.tags == 'error' %}
-                    <i class="fas fa-exclamation-triangle text-red-500"></i>
-                    {% elif message.tags == 'warning' %}
-                    <i class="fas fa-exclamation-circle text-yellow-500"></i>
-                    {% else %}
-                    <i class="fas fa-info-circle text-blue-500"></i>
-                    {% endif %}
-                </div>
-                <div class="ml-3">
-                    <p class="text-sm font-medium">{{ message }}</p>
-                </div>
-                <div class="ml-auto pl-3">
-                    <button onclick="this.parentElement.parentElement.parentElement.remove()"
-                        class="text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
+        <div class="glass-card-raised px-5 py-4 flex items-center gap-4 animate-fade-in-right border-l-4
+            {% if message.tags == 'success' %}border-l-emerald-500{% else %}border-l-amber-400{% endif %}
+            transition-all duration-500">
+            <span class="text-xl flex-shrink-0">{% if message.tags == 'success' %}✅{% else %}✨{% endif %}</span>
+            <p class="text-sm font-semibold" style="color:var(--c-text)">{{ message }}</p>
         </div>
         {% endfor %}
     </div>
     {% endif %}
 
-    <!-- Main Content -->
-    <main class="{% block main_class %}{% endblock %}">
+    <main class="relative min-h-screen" style="z-index:1;">
         {% block content %}{% endblock %}
     </main>
 
     {% include 'base/footer.html' %}
 
-    <!-- JavaScript -->
     <script>
-        // Auto-hide messages after 5 seconds
-        setTimeout(() => {
-            document.querySelectorAll('.alert').forEach(alert => {
-                alert.style.transition = 'opacity 0.5s ease';
-                alert.style.opacity = '0';
-                setTimeout(() => alert.remove(), 500);
+        // Scroll reveal
+        const revealObs = new IntersectionObserver((entries) => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) {
+                    e.target.style.transitionDelay = (i * 0.07) + 's';
+                    e.target.classList.add('visible');
+                    revealObs.unobserve(e.target);
+                }
             });
-        }, 5000);
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+        // Theme toggle (appelé depuis le bouton dans header.html)
+        window.toggleTheme = function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('wt-theme', isDark ? 'dark' : 'light');
+        };
+
+        // Auto-dismiss flash messages après 4.5s
+        setTimeout(() => {
+            document.querySelectorAll('.animate-fade-in-right').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateX(20px)';
+                el.style.transition = '0.5s ease';
+                setTimeout(() => el.remove(), 500);
+            });
+        }, 4500);
     </script>
 
     {% block extra_js %}{% endblock %}
 </body>
-
 </html>

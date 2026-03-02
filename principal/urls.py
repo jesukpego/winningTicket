@@ -1,4 +1,6 @@
 from django.urls import path
+from .views import show_ip_country
+
 from . import views
 
 urlpatterns = [
@@ -34,5 +36,7 @@ urlpatterns = [
     path("manage-games/create/", views.create_game, name="create_game"),
     path("manage-games/edit/<int:game_id>/", views.edit_game, name="edit_game"),
     path("manage-games/delete/<int:game_id>/", views.delete_game, name="delete_game"),
-    
+    path("test-ip/", show_ip_country),  
 ]
+
+
