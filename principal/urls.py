@@ -31,7 +31,7 @@ urlpatterns = [
     path("manage-companies/edit/<int:company_id>/", views.edit_company, name="edit_company"),
     path("manage-companies/delete/<int:company_id>/", views.delete_company, name="delete_company"),
     
-    # Admin - Games
+    # Admin - Games##
     path("manage-games/", views.manage_games, name="manage_games"),
     path("manage-games/create/", views.create_game, name="create_game"),
     path("manage-games/edit/<int:game_id>/", views.edit_game, name="edit_game"),
