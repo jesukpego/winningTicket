@@ -144,13 +144,20 @@
         }
     </script>
 
-    <!-- Theme init AVANT le premier paint pour éviter le flash blanc→sombre -->
-    <!-- OVERRIDE FOR WHITE THEME CONSISTENCY -->
+    <!-- Theme init AVANT le premier paint pour éviter le flash -->
     <script>
             (function () {
-                document.documentElement.classList.remove('dark');
-                document.documentElement.classList.add('light');
-                localStorage.setItem('wt-theme', 'light');
+                // Read saved preference first — do NOT override it
+                var saved = localStorage.getItem('wt-theme');
+                if (saved === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.classList.remove('light');
+                } else {
+                    document.documentElement.classList.add('light');
+                    document.documentElement.classList.remove('dark');
+                    // Only set default if nothing was ever saved
+                    if (!saved) localStorage.setItem('wt-theme', 'light');
+                }
             })();
     </script>
 
@@ -161,7 +168,7 @@
            DESIGN TOKENS
         ═══════════════════════════════════════════════════ */
         :root {
-            /* LIGHT — Bleu ardoise pâle + Or ambré (moins éblouissant) */
+            /* LIGHT — même palette d'accent que le dark (or vif + bleu électrique) */
             --c-bg: #F0F4FA;
             --c-bg-alt: #E6ECF5;
             --c-surface: rgba(255, 255, 255, 0.88);
@@ -172,13 +179,15 @@
             --c-text: #0F1C2E;
             --c-text-muted: #4A6080;
             --c-text-soft: #849AB8;
-            --c-accent: #D97706;
-            --c-accent-bright: #F59E0B;
-            --c-accent-light: #FEF3C7;
-            --c-accent-glow: rgba(245, 158, 11, 0.20);
-            --c-blue: #3B82F6;
-            --c-blue-light: rgba(59, 130, 246, 0.10);
-            --c-blue-glow: rgba(59, 130, 246, 0.18);
+            /* ↓ même or vif que le dark mode */
+            --c-accent: #F59E0B;
+            --c-accent-bright: #FBBF24;
+            --c-accent-light: rgba(245, 158, 11, 0.12);
+            --c-accent-glow: rgba(245, 158, 11, 0.22);
+            /* ↓ même bleu électrique que le dark mode */
+            --c-blue: #2563EB;
+            --c-blue-light: rgba(37, 99, 235, 0.10);
+            --c-blue-glow: rgba(37, 99, 235, 0.18);
             --c-shadow-sm: 0 2px 8px rgba(15, 28, 60, 0.06);
             --c-shadow-md: 0 8px 32px rgba(15, 28, 60, 0.09);
             --c-shadow-lg: 0 20px 60px rgba(15, 28, 60, 0.11);
