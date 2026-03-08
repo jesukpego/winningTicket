@@ -3,12 +3,13 @@
 
 <hr class="gold-divider">
 
-<footer class="relative overflow-hidden transition-colors duration-400"
-        style="background-color: var(--c-surface-solid);">
+<footer class="premium-footer relative overflow-hidden transition-colors duration-400"
+    style="background-color: var(--c-bg);">
 
     <!-- Ambient glow -->
     <div class="absolute top-0 left-1/3 w-80 h-80 pointer-events-none"
-         style="background: radial-gradient(circle, var(--c-accent-glow) 0%, transparent 70%); filter: blur(80px);"></div>
+        style="background: radial-gradient(circle, var(--c-accent-glow) 0%, transparent 70%); filter: blur(80px);">
+    </div>
 
     <div class="max-w-7xl mx-auto px-6 lg:px-8 py-16 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-14">
@@ -17,26 +18,26 @@
             <div class="space-y-6">
                 <a href="/" class="inline-flex items-center gap-3 group">
                     <div class="w-10 h-10 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
-                         style="background: linear-gradient(135deg, var(--c-accent-bright), var(--c-accent));">
+                        style="background: linear-gradient(135deg, var(--c-accent-bright), var(--c-accent));">
                         <i class="fas fa-ticket-alt text-sm" style="color:#1C1509;"></i>
                     </div>
                     <h3 class="text-lg font-black tracking-tight uppercase"
-                        style="font-family:'Syne',sans-serif; color:var(--c-text);">
+                        style="font-family:var(--font-brand); color:var(--c-text);">
                         Winning<span style="color:var(--c-accent);">Ticket</span>
                     </h3>
                 </a>
 
                 <p class="text-sm leading-relaxed" style="color:var(--c-text-muted); max-width:220px;">
-                    {% trans "L'excellence de la loterie en ligne. Sécurité certifiée, gains instantanés et une expérience utilisateur inégalée." %}
+                    {% trans "L'excellence de la loterie en ligne. Sécurité certifiée, gains instantanés et une
+                    expérience utilisateur inégalée." %}
                 </p>
 
                 <!-- Social links -->
                 <div class="flex gap-2">
                     {% for icon in 'facebook-f,twitter,instagram'|split:',' %}
                     <a href="#"
-                       class="w-10 h-10 rounded-xl flex items-center justify-center text-sm transition-all duration-250 border group/social"
-                       style="border-color:var(--c-border); color:var(--c-text-muted);"
-                       aria-label="{{ icon }}">
+                        class="w-10 h-10 rounded-xl flex items-center justify-center text-sm transition-all duration-250 border group/social"
+                        style="border-color:var(--c-border); color:var(--c-text-muted);" aria-label="{{ icon }}">
                         <i class="fab fa-{{ icon }} group-hover/social:scale-110 transition-transform duration-200"></i>
                     </a>
                     {% endfor %}
@@ -53,11 +54,13 @@
                     {% for link in 'Accueil,Jeux,Résultats,Gagnants,À Propos'|split:',' %}
                     <li>
                         <a href="#"
-                           class="group flex items-center text-sm transition-all duration-200 hover:translate-x-1.5"
-                           style="color:var(--c-text-muted);">
-                            <span class="w-1.5 h-1.5 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0"
-                                  style="background:var(--c-accent);"></span>
-                            <span class="group-hover:font-semibold transition-all" style="color: inherit;">{{ link }}</span>
+                            class="group flex items-center text-sm transition-all duration-200 hover:translate-x-1.5"
+                            style="color:var(--c-text-muted);">
+                            <span
+                                class="w-1.5 h-1.5 rounded-full mr-3 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0"
+                                style="background:var(--c-accent);"></span>
+                            <span class="group-hover:font-semibold transition-all" style="color: inherit;">{{ link
+                                }}</span>
                         </a>
                     </li>
                     {% endfor %}
@@ -76,16 +79,16 @@
                 <form class="space-y-3" onsubmit="return false;">
                     <div class="relative">
                         <i class="fas fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-xs pointer-events-none"
-                           style="color:var(--c-text-soft);"></i>
-                        <input type="email"
-                               placeholder="votre@email.com"
-                               class="w-full pl-9 pr-4 py-3 text-sm rounded-xl border outline-none focus:ring-2 transition-all"
-                               style="background:var(--c-bg-alt); border-color:var(--c-border); color:var(--c-text);
-                                      focus-ring-color: rgba(245,158,11,0.3);"
-                               onfocus="this.style.borderColor='var(--c-accent)'"
-                               onblur="this.style.borderColor='var(--c-border)'">
+                            style="color:var(--c-text-soft);"></i>
+                        <input type="email" placeholder="votre@email.com"
+                            class="w-full pl-9 pr-4 py-3 text-sm rounded-xl border outline-none focus:ring-2 transition-all"
+                            style="background:var(--c-bg-alt); border-color:var(--c-border); color:var(--c-text);
+                                      --tw-ring-color: rgba(245,158,11,0.3);"
+                            onfocus="this.style.borderColor='var(--c-accent)'"
+                            onblur="this.style.borderColor='var(--c-border)'">
                     </div>
-                    <button type="submit" class="btn-premium w-full justify-center text-xs py-3 uppercase tracking-widest">
+                    <button type="submit"
+                        class="btn-premium w-full justify-center text-xs py-3 uppercase tracking-widest">
                         <i class="fas fa-paper-plane text-xs"></i>
                         {% trans "Rejoindre" %}
                     </button>
@@ -100,30 +103,36 @@
                 </h4>
                 <ul class="space-y-3">
                     <li>
-                        <a href="#" class="flex items-center gap-2 text-sm transition-all duration-200 hover:translate-x-1 group/link"
-                           style="color:var(--c-text-muted);">
-                            <i class="fas fa-question-circle text-xs group-hover/link:text-amber-500 transition-colors w-4"></i>
+                        <a href="#"
+                            class="flex items-center gap-2 text-sm transition-all duration-200 hover:translate-x-1 group/link"
+                            style="color:var(--c-text-muted);">
+                            <i
+                                class="fas fa-question-circle text-xs group-hover/link:text-amber-500 transition-colors w-4"></i>
                             {% trans "FAQ & Assistance" %}
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center gap-2 text-sm transition-all duration-200 hover:translate-x-1 group/link"
-                           style="color:var(--c-text-muted);">
-                            <i class="fas fa-shield-alt text-xs group-hover/link:text-amber-500 transition-colors w-4"></i>
+                        <a href="#"
+                            class="flex items-center gap-2 text-sm transition-all duration-200 hover:translate-x-1 group/link"
+                            style="color:var(--c-text-muted);">
+                            <i
+                                class="fas fa-shield-alt text-xs group-hover/link:text-amber-500 transition-colors w-4"></i>
                             {% trans "Centre de Sécurité" %}
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="flex items-center gap-2 text-sm transition-all duration-200 hover:translate-x-1 group/link"
-                           style="color:var(--c-text-muted);">
-                            <i class="fas fa-file-alt text-xs group-hover/link:text-amber-500 transition-colors w-4"></i>
+                        <a href="#"
+                            class="flex items-center gap-2 text-sm transition-all duration-200 hover:translate-x-1 group/link"
+                            style="color:var(--c-text-muted);">
+                            <i
+                                class="fas fa-file-alt text-xs group-hover/link:text-amber-500 transition-colors w-4"></i>
                             {% trans "Mentions Légales" %}
                         </a>
                     </li>
                     <!-- System status badge -->
                     <li class="mt-4">
                         <div class="inline-flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold"
-                             style="background:rgba(16,185,129,0.1); color:#059669; border:1px solid rgba(16,185,129,0.2);">
+                            style="background:rgba(16,185,129,0.1); color:#059669; border:1px solid rgba(16,185,129,0.2);">
                             <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0"></span>
                             {% trans "Systèmes Opérationnels" %}
                         </div>
@@ -146,11 +155,9 @@
                     </p>
                     <div class="flex items-center gap-4 opacity-50">
                         <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg"
-                             alt="Stripe" class="h-4"
-                             style="filter: var(--payment-logo-filter, none);">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg"
-                             alt="PayPal" class="h-4"
-                             style="filter: var(--payment-logo-filter, none);">
+                            alt="Stripe" class="h-4" style="filter: var(--payment-logo-filter, none);">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal"
+                            class="h-4" style="filter: var(--payment-logo-filter, none);">
                     </div>
                 </div>
 
@@ -158,28 +165,26 @@
                 <div class="flex flex-wrap items-center justify-center gap-3">
                     <!-- 18+ badge -->
                     <div class="flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-bold"
-                         style="background:var(--c-surface-solid); border-color:rgba(239,68,68,0.25); color:var(--c-text-muted);">
+                        style="background:var(--c-surface-solid); border-color:rgba(239,68,68,0.25); color:var(--c-text-muted);">
                         <span class="px-1.5 py-0.5 rounded text-white text-[10px] font-black"
-                              style="background:#dc2626;">18+</span>
+                            style="background:#dc2626;">18+</span>
                         <span class="text-[9px] font-bold tracking-tighter uppercase">RESPONSIBLE GAMING</span>
                     </div>
 
                     <!-- Language selector -->
                     <div class="flex items-center gap-2 px-3 py-2 rounded-xl border"
-                         style="background:var(--c-surface-solid); border-color:var(--c-border);">
+                        style="background:var(--c-surface-solid); border-color:var(--c-border);">
                         <form action="{% url 'set_language' %}" method="post" class="flex items-center gap-2">
                             {% csrf_token %}
                             <i class="fas fa-globe text-xs" style="color:var(--c-text-muted);"></i>
                             <select name="language" onchange="this.form.submit()"
-                                    class="bg-transparent text-[11px] font-bold outline-none cursor-pointer"
-                                    style="color:var(--c-text);">
+                                class="bg-transparent text-[11px] font-bold outline-none cursor-pointer"
+                                style="color:var(--c-text);">
                                 {% get_current_language as LANGUAGE_CODE %}
                                 {% get_available_languages as LANGUAGES %}
                                 {% get_language_info_list for LANGUAGES as languages %}
                                 {% for language in languages %}
-                                <option value="{{ language.code }}"
-                                        {% if language.code == LANGUAGE_CODE %}selected{% endif %}
-                                        style="background:var(--c-surface-solid); color:var(--c-text);">
+                                <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %} style="background:var(--c-surface-solid); color:var(--c-text);">
                                     {{ language.name_local|upper }}
                                 </option>
                                 {% endfor %}
@@ -191,22 +196,34 @@
 
             <!-- Responsible gaming disclaimer -->
             <p class="text-[10px] leading-relaxed text-center mt-8 mx-auto max-w-2xl italic"
-               style="color:var(--c-text-soft); opacity:0.7;">
-                {% trans "Le jeu peut être addictif et entraîner des pertes financières. Jouez de manière responsable. L'accès est strictement interdit aux mineurs. Ligne d'aide : 09 74 75 13 13." %}
+                style="color:var(--c-text-soft); opacity:0.7;">
+                {% trans "Le jeu peut être addictif et entraîner des pertes financières. Jouez de manière responsable.
+                L'accès est strictement interdit aux mineurs. Ligne d'aide : 09 74 75 13 13." %}
             </p>
         </div>
     </div>
 </footer>
 
 <style>
-    /* Payment logo adaptation per theme */
-    html:not(.dark) footer img[alt="Stripe"],
-    html:not(.dark) footer img[alt="PayPal"] {
-        filter: none;
+    /* Force Dark Mode Theme for the Footer */
+    footer.premium-footer {
+        background-color: #070D1A !important;
+        --c-bg: #070D1A;
+        --c-bg-alt: #0C1525;
+        --c-surface: rgba(15, 25, 45, 0.65);
+        --c-surface-solid: #0F1929;
+        --c-surface-raised: #131F33;
+        --c-border: rgba(50, 70, 100, 0.45);
+        --c-border-strong: rgba(80, 100, 140, 0.35);
+        --c-text: #F0EAE0;
+        --c-text-muted: #8899BB;
+        --c-text-soft: #5A6A88;
     }
-    html.dark footer img[alt="Stripe"],
-    html.dark footer img[alt="PayPal"] {
-        filter: grayscale(1) brightness(2);
+
+    /* Payment logo adaptation per theme */
+    footer.premium-footer img[alt="Stripe"],
+    footer.premium-footer img[alt="PayPal"] {
+        filter: grayscale(1) brightness(2) !important;
     }
 
     /* Social icon hover */

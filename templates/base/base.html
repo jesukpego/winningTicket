@@ -18,10 +18,6 @@
     ║  4. System font stack sans-serif (jamais de serif!)   ║
     ╚═══════════════════════════════════════════════════════╝
     Placer les fichiers dans : yourapp/static/fonts/
-      → syne-700.woff2      (google.com/fonts → Syne → Download)
-      → syne-800.woff2
-      → dm-sans-400.woff2   (google.com/fonts → DM Sans → Download)
-      → dm-sans-600.woff2
     -->
 
     <!-- NIVEAU 1 : Fonts locales (servies par Django, zéro dépendance réseau) -->
@@ -32,64 +28,90 @@
             font-weight: 700;
             font-display: swap;
             src: url("{% static 'fonts/syne-700.woff' %}") format('woff'),
-                 local('Syne Bold'), local('Syne-Bold');
+            local('Syne Bold'),
+            local('Syne-Bold');
         }
+
         @font-face {
             font-family: 'Syne';
             font-style: normal;
             font-weight: 800;
             font-display: swap;
             src: url("{% static 'fonts/syne-800.woff' %}") format('woff'),
-                 local('Syne ExtraBold'), local('Syne-ExtraBold');
+            local('Syne ExtraBold'),
+            local('Syne-ExtraBold');
         }
+
         @font-face {
             font-family: 'DM Sans';
             font-style: normal;
             font-weight: 400;
             font-display: swap;
             src: url("{% static 'fonts/dm-sans-400.woff' %}") format('woff'),
-                 local('DM Sans'), local('DMSans-Regular');
+            local('DM Sans'),
+            local('DMSans-Regular');
         }
+
         @font-face {
             font-family: 'DM Sans';
             font-style: normal;
             font-weight: 600;
             font-display: swap;
             src: url("{% static 'fonts/dm-sans-600.woff' %}") format('woff'),
-                 local('DM Sans SemiBold'), local('DMSans-SemiBold');
+            local('DM Sans SemiBold'),
+            local('DMSans-SemiBold');
         }
     </style>
 
     <!-- NIVEAU 2 : Bunny Fonts (CDN EU — preconnect pour réduire la latence) -->
     <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
-    <link href="https://fonts.bunny.net/css?family=syne:600,700,800|dm-sans:400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900|dm-sans:400,500,600,700&display=swap"
+        rel="stylesheet">
 
     <!-- NIVEAU 3 : Google Fonts en renfort -->
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- NIVEAU 4 : Stacks système — JAMAIS de fallback serif -->
     <style>
         :root {
-            --font-brand: 'Syne',
-                          'Segoe UI', 'SF Pro Display',
-                          ui-sans-serif, system-ui,
-                          -apple-system, BlinkMacSystemFont,
-                          Arial, sans-serif;
+            --font-brand: 'Inter',
+                'Segoe UI', 'SF Pro Display',
+                ui-sans-serif, system-ui,
+                -apple-system, BlinkMacSystemFont,
+                Arial, sans-serif;
 
-            --font-body:  'DM Sans',
-                          'Segoe UI', 'SF Pro Text',
-                          ui-sans-serif, system-ui,
-                          -apple-system, BlinkMacSystemFont,
-                          Arial, sans-serif;
+            --font-body: 'DM Sans',
+                'Segoe UI', 'SF Pro Text',
+                ui-sans-serif, system-ui,
+                -apple-system, BlinkMacSystemFont,
+                Arial, sans-serif;
         }
 
         /* Appliqué en premier, avant tout — garantit qu'aucun serif n'apparaît */
-        html, body                              { font-family: var(--font-body) !important; }
-        h1, h2, h3, h4, h5, h6                 { font-family: var(--font-brand) !important; }
-        .font-brand, .section-title,
-        .btn-premium, [class*="font-brand"]     { font-family: var(--font-brand) !important; }
+        html,
+        body {
+            font-family: var(--font-body) !important;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-brand) !important;
+        }
+
+        .font-brand,
+        .section-title,
+        .btn-premium,
+        [class*="font-brand"] {
+            font-family: var(--font-brand) !important;
+        }
     </style>
 
     <!-- Tailwind CDN -->
@@ -100,22 +122,22 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        brand: ['Syne', 'Segoe UI', 'SF Pro Display', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-                        sans:  ['DM Sans', 'Segoe UI', 'SF Pro Text', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        brand: ['Inter', 'Segoe UI', 'SF Pro Display', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        sans: ['DM Sans', 'Segoe UI', 'SF Pro Text', 'ui-sans-serif', 'system-ui', 'sans-serif'],
                     },
                     colors: {
                         primary: { 400: '#FBBF24', 500: '#F59E0B', 600: '#D97706' },
-                        navy:    { 900: '#0F1C2E' },
+                        navy: { 900: '#0F1C2E' },
                     },
                     animation: {
-                        'glow':    'glow 3s infinite alternate',
-                        'float':   'float 6s ease-in-out infinite',
+                        'glow': 'glow 3s infinite alternate',
+                        'float': 'float 6s ease-in-out infinite',
                         'shimmer': 'shimmer 2s linear infinite',
                     },
                     keyframes: {
-                        glow:    { '0%': { opacity:'0.2', transform:'scale(1)' }, '100%': { opacity:'0.5', transform:'scale(1.15)' } },
-                        float:   { '0%,100%': { transform:'translateY(0)' }, '50%': { transform:'translateY(-12px)' } },
-                        shimmer: { '0%': { backgroundPosition:'-200% 0' }, '100%': { backgroundPosition:'200% 0' } },
+                        glow: { '0%': { opacity: '0.2', transform: 'scale(1)' }, '100%': { opacity: '0.5', transform: 'scale(1.15)' } },
+                        float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-12px)' } },
+                        shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
                     }
                 }
             }
@@ -123,11 +145,13 @@
     </script>
 
     <!-- Theme init AVANT le premier paint pour éviter le flash blanc→sombre -->
+    <!-- OVERRIDE FOR WHITE THEME CONSISTENCY -->
     <script>
-        (function(){
-            var t = localStorage.getItem('wt-theme') || 'light';
-            document.documentElement.classList.toggle('dark', t === 'dark');
-        })();
+            (function () {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                localStorage.setItem('wt-theme', 'light');
+            })();
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -138,59 +162,65 @@
         ═══════════════════════════════════════════════════ */
         :root {
             /* LIGHT — Bleu ardoise pâle + Or ambré (moins éblouissant) */
-            --c-bg:             #F0F4FA;
-            --c-bg-alt:         #E6ECF5;
-            --c-surface:        rgba(255,255,255,0.88);
-            --c-surface-solid:  #FFFFFF;
+            --c-bg: #F0F4FA;
+            --c-bg-alt: #E6ECF5;
+            --c-surface: rgba(255, 255, 255, 0.88);
+            --c-surface-solid: #FFFFFF;
             --c-surface-raised: #F8FAFD;
-            --c-border:         rgba(180,198,230,0.50);
-            --c-border-strong:  rgba(140,165,210,0.40);
-            --c-text:           #0F1C2E;
-            --c-text-muted:     #4A6080;
-            --c-text-soft:      #849AB8;
-            --c-accent:         #D97706;
-            --c-accent-bright:  #F59E0B;
-            --c-accent-light:   #FEF3C7;
-            --c-accent-glow:    rgba(245,158,11,0.20);
-            --c-blue:           #3B82F6;
-            --c-blue-light:     rgba(59,130,246,0.10);
-            --c-blue-glow:      rgba(59,130,246,0.18);
-            --c-shadow-sm:      0 2px 8px  rgba(15,28,60,0.06);
-            --c-shadow-md:      0 8px 32px rgba(15,28,60,0.09);
-            --c-shadow-lg:      0 20px 60px rgba(15,28,60,0.11);
-            --c-shadow-glow:    0 8px 32px rgba(245,158,11,0.26);
+            --c-border: rgba(180, 198, 230, 0.50);
+            --c-border-strong: rgba(140, 165, 210, 0.40);
+            --c-text: #0F1C2E;
+            --c-text-muted: #4A6080;
+            --c-text-soft: #849AB8;
+            --c-accent: #D97706;
+            --c-accent-bright: #F59E0B;
+            --c-accent-light: #FEF3C7;
+            --c-accent-glow: rgba(245, 158, 11, 0.20);
+            --c-blue: #3B82F6;
+            --c-blue-light: rgba(59, 130, 246, 0.10);
+            --c-blue-glow: rgba(59, 130, 246, 0.18);
+            --c-shadow-sm: 0 2px 8px rgba(15, 28, 60, 0.06);
+            --c-shadow-md: 0 8px 32px rgba(15, 28, 60, 0.09);
+            --c-shadow-lg: 0 20px 60px rgba(15, 28, 60, 0.11);
+            --c-shadow-glow: 0 8px 32px rgba(245, 158, 11, 0.26);
         }
 
         html.dark {
             /* DARK — Deep Navy Premium */
-            --c-bg:             #070D1A;
-            --c-bg-alt:         #0C1525;
-            --c-surface:        rgba(15,25,45,0.65);
-            --c-surface-solid:  #0F1929;
+            --c-bg: #070D1A;
+            --c-bg-alt: #0C1525;
+            --c-surface: rgba(15, 25, 45, 0.65);
+            --c-surface-solid: #0F1929;
             --c-surface-raised: #131F33;
-            --c-border:         rgba(50,70,100,0.45);
-            --c-border-strong:  rgba(80,100,140,0.35);
-            --c-text:           #F0EAE0;
-            --c-text-muted:     #8899BB;
-            --c-text-soft:      #5A6A88;
-            --c-accent:         #F59E0B;
-            --c-accent-bright:  #FBBF24;
-            --c-accent-light:   rgba(245,158,11,0.12);
-            --c-accent-glow:    rgba(245,158,11,0.15);
-            --c-blue:           #60A5FA;
-            --c-blue-light:     rgba(96,165,250,0.10);
-            --c-blue-glow:      rgba(96,165,250,0.15);
-            --c-shadow-sm:      0 2px 8px  rgba(0,0,0,0.25);
-            --c-shadow-md:      0 8px 32px rgba(0,0,0,0.35);
-            --c-shadow-lg:      0 20px 60px rgba(0,0,0,0.5);
-            --c-shadow-glow:    0 8px 32px rgba(245,158,11,0.20);
+            --c-border: rgba(50, 70, 100, 0.45);
+            --c-border-strong: rgba(80, 100, 140, 0.35);
+            --c-text: #F0EAE0;
+            --c-text-muted: #8899BB;
+            --c-text-soft: #5A6A88;
+            --c-accent: #F59E0B;
+            --c-accent-bright: #FBBF24;
+            --c-accent-light: rgba(245, 158, 11, 0.12);
+            --c-accent-glow: rgba(245, 158, 11, 0.15);
+            --c-blue: #60A5FA;
+            --c-blue-light: rgba(96, 165, 250, 0.10);
+            --c-blue-glow: rgba(96, 165, 250, 0.15);
+            --c-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+            --c-shadow-md: 0 8px 32px rgba(0, 0, 0, 0.35);
+            --c-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+            --c-shadow-glow: 0 8px 32px rgba(245, 158, 11, 0.20);
         }
 
         /* ═══════════════════════════════════════════════════
            BASE
         ═══════════════════════════════════════════════════ */
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             background-color: var(--c-bg);
             color: var(--c-text);
@@ -210,6 +240,7 @@
             box-shadow: var(--c-shadow-md);
             border-radius: 20px;
         }
+
         .glass-card-raised {
             background: var(--c-surface-solid);
             border: 1px solid var(--c-border-strong);
@@ -221,45 +252,111 @@
             background: linear-gradient(135deg, var(--c-accent-bright) 0%, var(--c-accent) 100%);
             color: #0F1C2E;
             font-family: var(--font-brand) !important;
-            font-weight: 700;
-            padding: 0.75rem 1.5rem;
+            font-weight: 800;
+            padding: 1rem 2.2rem;
             border-radius: 14px;
             border: none;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.6rem;
             letter-spacing: -0.01em;
             box-shadow: var(--c-shadow-glow);
             position: relative;
             overflow: hidden;
             text-decoration: none;
         }
+
         .btn-premium::before {
             content: '';
-            position: absolute; inset: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.28) 0%, transparent 60%);
-            opacity: 0; transition: opacity 0.3s;
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
         }
-        .btn-premium:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 12px 40px var(--c-accent-glow); }
-        .btn-premium:hover::before { opacity: 1; }
 
-        .blob { position: absolute; border-radius: 50%; filter: blur(90px); z-index: 0; pointer-events: none; }
-        .blob-gold { background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, rgba(245,158,11,0.08) 60%, transparent 100%); width:550px; height:550px; }
-        .blob-warm { background: radial-gradient(circle, rgba(99,155,255,0.10) 0%, transparent 70%); width:420px; height:420px; }
+        .btn-premium::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: skewX(-20deg);
+            transition: all 0.6s ease;
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 15px 45px var(--c-accent-glow);
+        }
+
+        .btn-premium:hover::before {
+            opacity: 1;
+        }
+
+        .btn-premium:hover::after {
+            left: 200%;
+        }
+
+        .pulse-effect {
+            animation: pulse-ring 2.5s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% {
+                box-shadow: 0 0 0 0 var(--c-accent-glow);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px transparent;
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 transparent;
+            }
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blob-gold {
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(245, 158, 11, 0.08) 60%, transparent 100%);
+            width: 550px;
+            height: 550px;
+        }
+
+        .blob-warm {
+            background: radial-gradient(circle, rgba(99, 155, 255, 0.10) 0%, transparent 70%);
+            width: 420px;
+            height: 420px;
+        }
 
         .section-tag {
-            display: inline-flex; align-items: center; gap: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             padding: 5px 14px;
             background: var(--c-accent-light);
-            border: 1px solid rgba(245,158,11,0.3);
+            border: 1px solid rgba(245, 158, 11, 0.3);
             border-radius: 99px;
             font-family: var(--font-body);
-            font-size: 0.72rem; font-weight: 700;
+            font-size: 0.72rem;
+            font-weight: 700;
             color: var(--c-accent);
-            letter-spacing: 0.08em; text-transform: uppercase;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
         }
+
         .section-title {
             font-family: var(--font-brand) !important;
             font-weight: 800;
@@ -267,41 +364,106 @@
             letter-spacing: -0.03em;
             color: var(--c-text);
         }
+
         .gold-divider {
             height: 2px;
             background: linear-gradient(90deg, transparent, var(--c-accent-bright), transparent);
-            border: none; margin: 0;
+            border: none;
+            margin: 0;
         }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--c-bg); }
-        ::-webkit-scrollbar-thumb { background: var(--c-border-strong); border-radius: 99px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--c-accent); }
-        ::selection { background: rgba(245,158,11,0.22); color: var(--c-text); }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--c-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--c-border-strong);
+            border-radius: 99px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--c-accent);
+        }
+
+        ::selection {
+            background: rgba(245, 158, 11, 0.22);
+            color: var(--c-text);
+        }
 
         /* ═══════════════════════════════════════════════════
            ANIMATIONS
         ═══════════════════════════════════════════════════ */
-        @keyframes fadeInUp    { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
-        @keyframes fadeInRight { from { opacity:0; transform:translateX(28px); } to { opacity:1; transform:translateX(0); } }
-        @keyframes scaleIn     { from { opacity:0; transform:scale(0.92); }     to { opacity:1; transform:scale(1); } }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
 
-        .animate-fade-in-up    { animation: fadeInUp    0.6s ease both; }
-        .animate-fade-in-right { animation: fadeInRight 0.5s ease both; }
-        .animate-scale-in      { animation: scaleIn     0.5s ease both; }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.92);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease both;
+        }
+
+        .animate-fade-in-right {
+            animation: fadeInRight 0.5s ease both;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.5s ease both;
+        }
 
         .reveal {
-            opacity: 0; transform: translateY(32px);
-            transition: opacity 0.65s cubic-bezier(.215,.61,.355,1),
-                        transform 0.65s cubic-bezier(.215,.61,.355,1);
+            opacity: 0;
+            transform: translateY(32px);
+            transition: opacity 0.65s cubic-bezier(.215, .61, .355, 1),
+                transform 0.65s cubic-bezier(.215, .61, .355, 1);
         }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 
 <body>
-    <div class="blob blob-gold fixed top-[-100px] left-[-100px] animate-glow pointer-events-none" style="z-index:0;"></div>
-    <div class="blob blob-warm fixed bottom-[-80px] right-[-80px] animate-glow pointer-events-none" style="animation-delay:-2s; z-index:0;"></div>
+    <div class="blob blob-gold fixed top-[-100px] left-[-100px] animate-glow pointer-events-none" style="z-index:0;">
+    </div>
+    <div class="blob blob-warm fixed bottom-[-80px] right-[-80px] animate-glow pointer-events-none"
+        style="animation-delay:-2s; z-index:0;"></div>
 
     {% include 'base/header.html' %}
 
@@ -338,7 +500,7 @@
         document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
         // Theme toggle (appelé depuis le bouton dans header.html)
-        window.toggleTheme = function() {
+        window.toggleTheme = function () {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('wt-theme', isDark ? 'dark' : 'light');
         };
@@ -356,4 +518,5 @@
 
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>

@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <span class="hidden md:block font-brand font-800 text-lg tracking-tight transition-colors duration-300 group-hover:text-amber-600"
-                          style="font-family:'Syne',sans-serif; font-weight:800; color:var(--c-text); letter-spacing:-0.02em;">
+                          style="font-family:var(--font-brand); font-weight:800; color:var(--c-text); letter-spacing:-0.02em;">
                         Winning<span style="color:var(--c-accent);">Ticket</span>
                     </span>
                 </a>
@@ -180,7 +180,7 @@
                     <div class="hidden sm:flex flex-col items-end px-4 py-1.5 rounded-xl border"
                          style="background:var(--c-accent-light); border-color:rgba(245,158,11,0.25);">
                         <span class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--c-text-soft);">{% trans "Solde" %}</span>
-                        <span class="text-sm font-black" style="color:var(--c-accent); font-family:'Syne',sans-serif;">
+                        <span class="text-sm font-black" style="color:var(--c-accent); font-family:var(--font-brand);">
                             ${{ user.wallets.first.balance|default:"0.00"|floatformat:2 }}
                         </span>
                     </div>
@@ -189,7 +189,7 @@
                     <div class="relative group">
                         <button class="flex items-center gap-2 p-1 rounded-full transition-all duration-200 hover:ring-2 hover:ring-amber-400/40">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center font-black text-sm shadow-md"
-                                 style="background:linear-gradient(135deg, var(--c-accent-bright), var(--c-accent)); color:#1C1509; font-family:'Syne',sans-serif;">
+                                 style="background:linear-gradient(135deg, var(--c-accent-bright), var(--c-accent)); color:#1C1509; font-family:var(--font-brand);">
                                 {{ user.username|slice:":1"|upper }}
                             </div>
                         </button>
@@ -199,7 +199,7 @@
                              style="background:var(--c-surface-solid); border:1px solid var(--c-border); border-radius:20px; box-shadow:var(--c-shadow-lg);">
                             <!-- Header -->
                             <div class="p-5 border-b" style="background:var(--c-bg-alt); border-color:var(--c-border);">
-                                <p class="font-bold text-sm" style="color:var(--c-text); font-family:'Syne',sans-serif;">{{ user.get_full_name|default:user.username }}</p>
+                                <p class="font-bold text-sm" style="color:var(--c-text); font-family:var(--font-brand);">{{ user.get_full_name|default:user.username }}</p>
                                 <p class="text-xs mt-1 truncate" style="color:var(--c-text-muted);">{{ user.email }}</p>
                             </div>
                             <!-- Links -->
